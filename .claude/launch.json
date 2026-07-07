@@ -6,6 +6,12 @@
       "runtimeExecutable": "npx",
       "runtimeArgs": ["--yes", "serve", "-l", "8123", "."],
       "port": 8123
+    },
+    {
+      "name": "loca-doc",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["--yes", "http-server", "-p", "8124", "-c-1", "."],
+      "port": 8124
     }
   ]
 }

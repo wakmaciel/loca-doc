@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Contratos de Locação Residencial — Goiânia/Trindade (GO)</title>
 <meta name="theme-color" content="#B4232D">
 <link rel="manifest" href="manifest.webmanifest">
@@ -29,7 +29,7 @@
     --serif: Georgia, 'Times New Roman', serif;
     --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   }
-  *{box-sizing:border-box;}
+  *{box-sizing:border-box; touch-action:manipulation;}
   body{
     margin:0;
     background:var(--paper);
@@ -129,7 +129,7 @@
   label .opt{ font-weight:400; color:#8a8a8a; font-size:0.78rem; }
   input[type=text], input[type=number], input[type=date], input[type=email], select, textarea{
     width:100%; padding:9px 11px; border:1px solid var(--paper-line); border-radius:6px;
-    font-size:0.94rem; font-family:var(--sans); color:var(--ink); background:#FEFEFC;
+    font-size:16px; font-family:var(--sans); color:var(--ink); background:#FEFEFC;
   }
   input:focus, select:focus, textarea:focus{ outline:2px solid var(--accent); outline-offset:1px; border-color:var(--accent); }
   .radio-group{ display:flex; flex-wrap:wrap; gap:10px; }
@@ -162,7 +162,7 @@
     .contract-actions{ width:100%; }
   }
 
-  /* ---------- Loading overlay (also used to safely render contract for PDF capture) ---------- */
+  /* ---------- Loading overlay ---------- */
   #loadingOverlay{
     position:fixed; inset:0; background:#F6F3EC; z-index:99999;
     display:none; align-items:center; justify-content:center; flex-direction:column; gap:14px;
@@ -174,26 +174,6 @@
   }
   #loadingOverlay p{ font-family:var(--serif); color:var(--ink); font-size:1rem; }
   @keyframes spin{ to{ transform:rotate(360deg); } }
-
-  /* Contract template used only for PDF rendering */
-  #contractRoot{
-    position:fixed; top:0; left:0; z-index:99998;
-    width:210mm; background:#ffffff; color:#111;
-    font-family:'Times New Roman', Times, serif; font-size:11.5pt; line-height:1.5;
-    padding:14mm 16mm;
-    display:none;
-  }
-  #contractRoot h1{ text-align:center; font-size:16pt; color:#1F3A4D; margin:0 0 4px; }
-  #contractRoot .subtitle{ text-align:center; font-style:italic; font-size:9.5pt; color:#555; margin:0 0 20px; }
-  #contractRoot p{ text-align:justify; margin:0 0 9px; }
-  #contractRoot h2{ font-size:12pt; color:#1F3A4D; margin:16px 0 8px; page-break-after:avoid; break-after:avoid; }
-  #contractRoot ul{ margin:0 0 9px; padding-left:22px; }
-  #contractRoot li{ text-align:justify; margin-bottom:5px; }
-  #contractRoot .party-block{ margin-bottom:6px; }
-  #contractRoot .sig-block{ margin-top:34px; }
-  #contractRoot .sig-line{ border-bottom:1px solid #333; width:80%; margin:34px 0 4px; }
-  #contractRoot .avoid-break{ page-break-inside:avoid; break-inside:avoid; }
-  #contractRoot strong{ color:#111; }
 </style>
 </head>
 <body>
@@ -255,7 +235,7 @@
           </div>
           <div class="row">
             <div class="field"><label for="locadorRg">RG *</label><input type="text" id="locadorRg" required></div>
-            <div class="field"><label for="locadorCpf">CPF *</label><input type="text" id="locadorCpf" required placeholder="000.000.000-00"></div>
+            <div class="field"><label for="locadorCpf">CPF *</label><input type="text" id="locadorCpf" required placeholder="000.000.000-00" inputmode="numeric" maxlength="14"></div>
           </div>
           <div class="row">
             <div class="field full"><label for="locadorEndereco">Endereço completo *</label><input type="text" id="locadorEndereco" required></div>
@@ -282,14 +262,14 @@
           </div>
           <div class="row">
             <div class="field"><label for="locatarioRg">RG *</label><input type="text" id="locatarioRg" required></div>
-            <div class="field"><label for="locatarioCpf">CPF *</label><input type="text" id="locatarioCpf" required placeholder="000.000.000-00"></div>
+            <div class="field"><label for="locatarioCpf">CPF *</label><input type="text" id="locatarioCpf" required placeholder="000.000.000-00" inputmode="numeric" maxlength="14"></div>
           </div>
           <div class="row">
             <div class="field full"><label for="locatarioEndereco">Endereço completo (atual) *</label><input type="text" id="locatarioEndereco" required></div>
           </div>
           <div class="row">
             <div class="field"><label for="locatarioEmail">E-mail <span class="opt">(opcional)</span></label><input type="email" id="locatarioEmail"></div>
-            <div class="field"><label for="locatarioWhats">WhatsApp <span class="opt">(opcional)</span></label><input type="text" id="locatarioWhats"></div>
+            <div class="field"><label for="locatarioWhats">WhatsApp <span class="opt">(opcional)</span></label><input type="text" id="locatarioWhats" inputmode="tel" maxlength="15" placeholder="(62) 90000-0000"></div>
           </div>
         </fieldset>
       </div>
@@ -309,7 +289,7 @@
                 <option>Trindade – GO</option>
               </select>
             </div>
-            <div class="field"><label for="imovelCep">CEP *</label><input type="text" id="imovelCep" required placeholder="00000-000"></div>
+            <div class="field"><label for="imovelCep">CEP *</label><input type="text" id="imovelCep" required placeholder="00000-000" inputmode="numeric" maxlength="9"></div>
           </div>
         </fieldset>
       </div>
@@ -319,8 +299,8 @@
         <fieldset>
           <legend><span class="num">4</span> Condições Financeiras</legend>
           <div class="row">
-            <div class="field"><label for="valorAluguel">Valor do aluguel (R$) *</label><input type="number" step="0.01" min="0" id="valorAluguel" required></div>
-            <div class="field"><label for="diaVencimento">Dia do vencimento *</label><input type="number" min="1" max="31" id="diaVencimento" required></div>
+            <div class="field"><label for="valorAluguel">Valor do aluguel (R$) *</label><input type="text" id="valorAluguel" required inputmode="numeric" placeholder="0,00"></div>
+            <div class="field"><label for="diaVencimento">Dia do vencimento *</label><input type="text" id="diaVencimento" required inputmode="numeric" maxlength="2" placeholder="Ex.: 10"></div>
           </div>
           <div class="field full">
             <label for="valorExtenso">Valor por extenso <span class="opt">(preenchido automaticamente — confira antes de gerar)</span></label>
@@ -352,7 +332,7 @@
           <div class="conditional" id="toleranciaWrap" style="display:none;">
             <div class="field" style="max-width:180px;">
               <label for="diasTolerancia">Dias de tolerância</label>
-              <input type="number" min="1" max="30" id="diasTolerancia" value="5">
+              <input type="text" id="diasTolerancia" value="5" inputmode="numeric" maxlength="2">
             </div>
           </div>
         </fieldset>
@@ -372,7 +352,7 @@
           <div class="conditional" id="caucaoWrap">
             <div class="field" style="max-width:220px;">
               <label for="valorCaucao">Valor da caução (R$) *</label>
-              <input type="number" step="0.01" min="0" id="valorCaucao">
+              <input type="text" id="valorCaucao" inputmode="numeric" placeholder="0,00">
             </div>
           </div>
 
@@ -392,7 +372,7 @@
             </div>
             <div class="row">
               <div class="field"><label for="fiadorRg">RG *</label><input type="text" id="fiadorRg"></div>
-              <div class="field"><label for="fiadorCpf">CPF *</label><input type="text" id="fiadorCpf"></div>
+              <div class="field"><label for="fiadorCpf">CPF *</label><input type="text" id="fiadorCpf" placeholder="000.000.000-00" inputmode="numeric" maxlength="14"></div>
             </div>
             <div class="row">
               <div class="field full"><label for="fiadorEndereco">Endereço completo *</label><input type="text" id="fiadorEndereco"></div>
@@ -429,7 +409,7 @@
           <legend><span class="num">7</span> Prazo da Locação</legend>
           <div class="row">
             <div class="field"><label for="dataInicio">Data de início *</label><input type="date" id="dataInicio" required></div>
-            <div class="field"><label for="prazoLocacao">Prazo *</label><input type="text" id="prazoLocacao" required placeholder="Ex.: 12 (doze) meses"></div>
+            <div class="field"><label for="prazoLocacao">Prazo em meses * <span class="opt">(só o número — o texto "12 (doze) meses" é gerado automaticamente)</span></label><input type="text" id="prazoLocacao" required placeholder="Ex.: 12" inputmode="numeric" maxlength="3"></div>
           </div>
         </fieldset>
       </div>
@@ -460,11 +440,11 @@
           <legend><span class="num">9</span> Testemunhas <span class="opt" style="font-weight:400;">(opcional, mas recomendado)</span></legend>
           <div class="row">
             <div class="field"><label for="test1Nome">Nome da testemunha 1</label><input type="text" id="test1Nome"></div>
-            <div class="field"><label for="test1Cpf">CPF da testemunha 1</label><input type="text" id="test1Cpf"></div>
+            <div class="field"><label for="test1Cpf">CPF da testemunha 1</label><input type="text" id="test1Cpf" placeholder="000.000.000-00" inputmode="numeric" maxlength="14"></div>
           </div>
           <div class="row">
             <div class="field"><label for="test2Nome">Nome da testemunha 2</label><input type="text" id="test2Nome"></div>
-            <div class="field"><label for="test2Cpf">CPF da testemunha 2</label><input type="text" id="test2Cpf"></div>
+            <div class="field"><label for="test2Cpf">CPF da testemunha 2</label><input type="text" id="test2Cpf" placeholder="000.000.000-00" inputmode="numeric" maxlength="14"></div>
           </div>
         </fieldset>
       </div>
@@ -489,10 +469,7 @@
   <p id="loadingText">Gerando PDF...</p>
 </div>
 
-<!-- Off-screen (only shown during capture) contract template rendered into PDF -->
-<div id="contractRoot"></div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 /* =========================================================
    Número por extenso (PT-BR)
@@ -548,7 +525,7 @@ function numToWords(num) {
 }
 function capitalize(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
 function valorPorExtenso(valor) {
-  valor = Math.round(parseFloat(valor) * 100) / 100;
+  valor = Math.round(parseMoney(valor) * 100) / 100;
   if (isNaN(valor)) return '';
   const reais = Math.floor(valor);
   const centavos = Math.round((valor - reais) * 100);
@@ -577,9 +554,55 @@ function esc(str) {
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 function fmtMoney(v) {
-  const n = parseFloat(v);
+  const n = parseMoney(v);
   if (isNaN(n)) return '';
   return n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+/* =========================================================
+   Máscaras de campos numéricos
+   ========================================================= */
+function soDigitos(v) { return String(v == null ? '' : v).replace(/\D/g, ''); }
+function maskCPF(v) {
+  v = soDigitos(v).slice(0, 11);
+  v = v.replace(/^(\d{3})(\d)/, '$1.$2');
+  v = v.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
+  v = v.replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4');
+  return v;
+}
+function maskCEP(v) {
+  v = soDigitos(v).slice(0, 8);
+  return v.replace(/^(\d{5})(\d)/, '$1-$2');
+}
+function maskFone(v) {
+  v = soDigitos(v).slice(0, 11);
+  if (v.length > 10) return v.replace(/^(\d{2})(\d{5})(\d{1,4})/, '($1) $2-$3');
+  if (v.length > 6)  return v.replace(/^(\d{2})(\d{4})(\d{1,4})/, '($1) $2-$3');
+  if (v.length > 2)  return v.replace(/^(\d{2})(\d+)/, '($1) $2');
+  return v;
+}
+function maskMoney(v) {
+  const d = soDigitos(v).replace(/^0+(?=\d)/, '').slice(0, 12);
+  if (!d) return '';
+  const n = parseInt(d, 10) / 100;
+  return n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+/* Aceita tanto o formato mascarado "1.500,50" quanto o antigo "1500.5" */
+function parseMoney(v) {
+  if (v === undefined || v === null || v === '') return NaN;
+  v = String(v).trim();
+  if (v.indexOf(',') >= 0) return parseFloat(v.replace(/\./g, '').replace(',', '.'));
+  return parseFloat(v);
+}
+function moneyParaCampo(v) {
+  const n = parseMoney(v);
+  return isNaN(n) ? '' : n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+/* "12" (ou o formato antigo "12 (doze) meses") -> "12 (doze) meses" */
+function prazoTexto(p) {
+  const n = parseInt(soDigitos(p), 10);
+  if (!n) return esc(p);
+  return `${n} (${numToWords(n)}) ${n === 1 ? 'mês' : 'meses'}`;
 }
 function fmtDateLong(isoDate) {
   if (!isoDate) return '';
@@ -804,12 +827,13 @@ function limparFormulario() {
 function preencherFormulario(d) {
   const set = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined) el.value = val; };
   set('locadorNome', d.locadorNome); set('locadorEstadoCivil', d.locadorEstadoCivil); set('locadorProfissao', d.locadorProfissao);
-  set('locadorRg', d.locadorRg); set('locadorCpf', d.locadorCpf); set('locadorEndereco', d.locadorEndereco);
+  const comMascara = (mask, val) => (val === undefined ? undefined : mask(val));
+  set('locadorRg', d.locadorRg); set('locadorCpf', comMascara(maskCPF, d.locadorCpf)); set('locadorEndereco', d.locadorEndereco);
   set('locatarioNome', d.locatarioNome); set('locatarioEstadoCivil', d.locatarioEstadoCivil); set('locatarioProfissao', d.locatarioProfissao);
-  set('locatarioRg', d.locatarioRg); set('locatarioCpf', d.locatarioCpf); set('locatarioEndereco', d.locatarioEndereco);
-  set('locatarioEmail', d.locatarioEmail); set('locatarioWhats', d.locatarioWhats);
-  set('imovelEndereco', d.imovelEndereco); set('imovelCidade', d.imovelCidade); set('imovelCep', d.imovelCep);
-  set('valorAluguel', d.valorAluguel); set('diaVencimento', d.diaVencimento); set('formaPagamento', d.formaPagamento);
+  set('locatarioRg', d.locatarioRg); set('locatarioCpf', comMascara(maskCPF, d.locatarioCpf)); set('locatarioEndereco', d.locatarioEndereco);
+  set('locatarioEmail', d.locatarioEmail); set('locatarioWhats', comMascara(maskFone, d.locatarioWhats));
+  set('imovelEndereco', d.imovelEndereco); set('imovelCidade', d.imovelCidade); set('imovelCep', comMascara(maskCEP, d.imovelCep));
+  set('valorAluguel', comMascara(moneyParaCampo, d.valorAluguel)); set('diaVencimento', d.diaVencimento); set('formaPagamento', d.formaPagamento);
   set('valorExtenso', d.valorExtenso);
   set('indiceReajuste', d.indiceReajuste); set('indiceOutro', d.indiceOutro);
   document.getElementById('temTolerancia').checked = !!d.temTolerancia;
@@ -820,17 +844,17 @@ function preencherFormulario(d) {
   const garantiaVal = d.garantia || 'caucao';
   const radio = document.querySelector(`input[name=garantia][value="${garantiaVal}"]`);
   if (radio) { radio.checked = true; radio.dispatchEvent(new Event('change')); }
-  set('valorCaucao', d.valorCaucao);
+  set('valorCaucao', comMascara(moneyParaCampo, d.valorCaucao));
   set('fiadorNome', d.fiadorNome); set('fiadorEstadoCivil', d.fiadorEstadoCivil); set('fiadorProfissao', d.fiadorProfissao);
-  set('fiadorRg', d.fiadorRg); set('fiadorCpf', d.fiadorCpf); set('fiadorEndereco', d.fiadorEndereco);
+  set('fiadorRg', d.fiadorRg); set('fiadorCpf', comMascara(maskCPF, d.fiadorCpf)); set('fiadorEndereco', d.fiadorEndereco);
   set('seguroInfo', d.seguroInfo);
 
   const iptuRadio = document.querySelector(`input[name=iptu][value="${d.iptu || 'Locador'}"]`);
   if (iptuRadio) iptuRadio.checked = true;
 
-  set('dataInicio', d.dataInicio); set('prazoLocacao', d.prazoLocacao);
+  set('dataInicio', d.dataInicio); set('prazoLocacao', comMascara(soDigitos, d.prazoLocacao));
   set('comarca', d.comarca); set('dataAssinatura', d.dataAssinatura); set('cidadeAssinatura', d.cidadeAssinatura);
-  set('test1Nome', d.test1Nome); set('test1Cpf', d.test1Cpf); set('test2Nome', d.test2Nome); set('test2Cpf', d.test2Cpf);
+  set('test1Nome', d.test1Nome); set('test1Cpf', comMascara(maskCPF, d.test1Cpf)); set('test2Nome', d.test2Nome); set('test2Cpf', comMascara(maskCPF, d.test2Cpf));
 
   document.querySelectorAll('input[type=radio]:checked').forEach(r => {
     const opt = r.closest('.radio-option');
@@ -866,10 +890,22 @@ function coletarDados() {
 /* =========================================================
    Interações do formulário
    ========================================================= */
+function aplicarMascara(id, mask) {
+  const el = document.getElementById(id);
+  el.addEventListener('input', () => { el.value = mask(el.value); });
+}
+['locadorCpf','locatarioCpf','fiadorCpf','test1Cpf','test2Cpf'].forEach(id => aplicarMascara(id, maskCPF));
+aplicarMascara('imovelCep', maskCEP);
+aplicarMascara('locatarioWhats', maskFone);
+['valorAluguel','valorCaucao'].forEach(id => aplicarMascara(id, maskMoney));
+aplicarMascara('prazoLocacao', v => soDigitos(v).slice(0, 3));
+aplicarMascara('diaVencimento', v => soDigitos(v).slice(0, 2));
+aplicarMascara('diasTolerancia', v => soDigitos(v).slice(0, 2));
+
 const valorAluguelEl = document.getElementById('valorAluguel');
 const valorExtensoEl = document.getElementById('valorExtenso');
 valorAluguelEl.addEventListener('input', () => {
-  if (valorAluguelEl.value) valorExtensoEl.value = valorPorExtenso(valorAluguelEl.value);
+  valorExtensoEl.value = valorAluguelEl.value ? valorPorExtenso(valorAluguelEl.value) : '';
 });
 
 document.getElementById('indiceReajuste').addEventListener('change', function(){
@@ -993,7 +1029,7 @@ function montarContrato(d) {
   <p>2.2. É vedada a alteração da destinação do imóvel sem prévio e expresso consentimento do LOCADOR, sob pena de configurar infração contratual grave, ensejando rescisão imediata.</p>
 
   <h2>CLÁUSULA 3ª — DO PRAZO DA LOCAÇÃO</h2>
-  <p>3.1. O presente contrato é celebrado pelo prazo de ${esc(d.prazoLocacao)}, com início em ${fmtDateLong(d.dataInicio)}, encerrando-se automaticamente ao término do prazo estipulado, independentemente de notificação, nos termos do art. 56 da Lei nº 8.245/1991.</p>
+  <p>3.1. O presente contrato é celebrado pelo prazo de ${prazoTexto(d.prazoLocacao)}, com início em ${fmtDateLong(d.dataInicio)}, encerrando-se automaticamente ao término do prazo estipulado, independentemente de notificação, nos termos do art. 56 da Lei nº 8.245/1991.</p>
   <p>3.2. Findo o prazo ajustado e permanecendo o LOCATÁRIO na posse do imóvel por mais de 30 (trinta) dias sem oposição do LOCADOR, presumir-se-á prorrogada a locação por prazo indeterminado, nos termos legais, aplicando-se, ainda, a cláusula de renovação automática prevista neste instrumento.</p>
 
   <h2>CLÁUSULA 4ª — DA RENOVAÇÃO AUTOMÁTICA</h2>
@@ -1142,33 +1178,183 @@ function montarContrato(d) {
 }
 
 /* =========================================================
-   Geração de PDF
-   (o contrato é renderizado por trás de um overlay de carregamento,
-   pois html2canvas não captura corretamente elementos fora da tela)
+   Geração de PDF — texto nativo com jsPDF
+   (substitui a captura por html2canvas, que gerava PDF em
+   branco quando o canvas excedia o limite de pixels do
+   navegador, especialmente no iPhone/Safari)
    ========================================================= */
+
+/* Converte o HTML do contrato em blocos estruturados para o jsPDF */
+function blocosDoContrato(html) {
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  function runsDe(el) {
+    const runs = [];
+    (function walk(n, bold) {
+      Array.from(n.childNodes).forEach(c => {
+        if (c.nodeType === 3) runs.push({ t: c.nodeValue.replace(/\s+/g, ' '), b: bold });
+        else if (c.nodeType === 1) {
+          if (c.tagName === 'BR') runs.push({ br: true });
+          else walk(c, bold || c.tagName === 'STRONG' || c.tagName === 'B');
+        }
+      });
+    })(el, false);
+    return runs;
+  }
+  const lista = [];
+  Array.from(tmp.children).forEach(el => {
+    const tag = el.tagName;
+    if (tag === 'H1') lista.push({ tipo: 'h1', runs: runsDe(el) });
+    else if (tag === 'H2') lista.push({ tipo: 'h2', runs: runsDe(el) });
+    else if (tag === 'P') lista.push({ tipo: el.classList.contains('subtitle') ? 'sub' : 'p', runs: runsDe(el) });
+    else if (tag === 'UL') Array.from(el.querySelectorAll('li')).forEach(li => lista.push({ tipo: 'li', runs: runsDe(li) }));
+    else if (tag === 'DIV' && el.classList.contains('sig-block')) {
+      const p = el.querySelector('p');
+      lista.push({ tipo: 'sig', runs: p ? runsDe(p) : [] });
+    }
+  });
+  return lista;
+}
+
+function montarDocumentoPDF(d) {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait', compress: true });
+  const PT = 0.352778; // 1pt em mm
+  const PH = 297, ML = 18, MT = 18, MB = 20;
+  const CW = 210 - ML - 18; // largura útil
+  let y = MT;
+
+  function setFonte(size, bold, italic) {
+    doc.setFont('times', bold && italic ? 'bolditalic' : bold ? 'bold' : italic ? 'italic' : 'normal');
+    doc.setFontSize(size);
+  }
+  function quebraPagina(altura) {
+    if (y + altura > PH - MB) { doc.addPage(); y = MT; }
+  }
+
+  /* Mede somando caractere a caractere: o getTextWidth do jsPDF aplica
+     kerning na medição mas não na renderização, o que faria palavras
+     largas invadirem o espaço da palavra seguinte */
+  const cacheLarguras = {};
+  function larguraTexto(t, size, bold, italic) {
+    const chave = size + (bold ? 'b' : 'n') + (italic ? 'i' : 'n');
+    const mapa = cacheLarguras[chave] || (cacheLarguras[chave] = {});
+    setFonte(size, bold, italic);
+    let total = 0;
+    for (const ch of String(t)) {
+      let w = mapa[ch];
+      if (w === undefined) { w = doc.getTextWidth(ch); mapa[ch] = w; }
+      total += w;
+    }
+    return total;
+  }
+
+  /* Agrupa os runs em "palavras" preservando trechos com estilos mistos
+     colados (ex.: negrito seguido de vírgula) */
+  function palavras(runs) {
+    const out = [];
+    let atual = null;
+    const fecha = () => { if (atual && atual.seg.length) out.push(atual); atual = null; };
+    runs.forEach(r => {
+      if (r.br) { fecha(); out.push({ br: true }); return; }
+      String(r.t).split(/(\s+)/).forEach(p => {
+        if (!p) return;
+        if (/^\s+$/.test(p)) { fecha(); return; }
+        if (!atual) atual = { seg: [] };
+        atual.seg.push({ t: p, b: !!r.b });
+      });
+    });
+    fecha();
+    return out;
+  }
+
+  function paragrafo(runs, opts) {
+    opts = opts || {};
+    const size = opts.size || 11.5;
+    const italic = !!opts.italic;
+    const indent = opts.indent || 0;
+    const largura = CW - indent;
+    const lh = size * PT * 1.45;
+
+    const larguraPalavra = w => w.seg.reduce((s, sg) => s + larguraTexto(sg.t, size, sg.b || opts.bold, italic), 0);
+    const esp = larguraTexto(' ', size, false, italic);
+
+    // quebra em linhas
+    const linhas = [];
+    let linha = [], w = 0;
+    palavras(runs).forEach(word => {
+      if (word.br) { linhas.push({ palavras: linha, w, dura: true }); linha = []; w = 0; return; }
+      const pw = larguraPalavra(word);
+      if (linha.length && w + esp + pw > largura) { linhas.push({ palavras: linha, w, dura: false }); linha = [word]; w = pw; }
+      else { w += (linha.length ? esp : 0) + pw; linha.push(word); }
+    });
+    if (linha.length) linhas.push({ palavras: linha, w, dura: true });
+
+    if (opts.cor) doc.setTextColor(opts.cor[0], opts.cor[1], opts.cor[2]);
+    linhas.forEach((ln, i) => {
+      quebraPagina(lh);
+      y += lh;
+      let x = ML + indent;
+      let espaco = esp;
+      if (opts.align === 'center') x = ML + indent + (largura - ln.w) / 2;
+      else if (opts.align === 'justify' && !ln.dura && ln.palavras.length > 1) {
+        espaco = esp + (largura - ln.w) / (ln.palavras.length - 1);
+      }
+      if (opts.marcador && i === 0) { setFonte(size, false, false); doc.text('•', ML + indent - 4, y); }
+      ln.palavras.forEach(word => {
+        word.seg.forEach(sg => {
+          setFonte(size, sg.b || opts.bold, italic);
+          doc.text(sg.t, x, y);
+          x += larguraTexto(sg.t, size, sg.b || opts.bold, italic);
+        });
+        x += espaco;
+      });
+    });
+    doc.setTextColor(0, 0, 0);
+    y += (opts.depois !== undefined ? opts.depois : 2.2);
+  }
+
+  const azul = [31, 58, 77];
+  const lhCorpo = 11.5 * PT * 1.45;
+
+  blocosDoContrato(montarContrato(d)).forEach(b => {
+    if (b.tipo === 'h1') paragrafo(b.runs, { size: 16, bold: true, align: 'center', cor: azul, depois: 1.5 });
+    else if (b.tipo === 'sub') paragrafo(b.runs, { size: 9.5, italic: true, align: 'center', depois: 6 });
+    else if (b.tipo === 'h2') {
+      // mantém o título junto com pelo menos duas linhas do texto seguinte
+      quebraPagina(12 * PT * 1.45 + 2 * lhCorpo + 6);
+      y += 2.5;
+      paragrafo(b.runs, { size: 12, bold: true, cor: azul, depois: 1.2 });
+    }
+    else if (b.tipo === 'li') paragrafo(b.runs, { align: 'justify', indent: 7, marcador: true, depois: 1.4 });
+    else if (b.tipo === 'sig') {
+      quebraPagina(14 + 5 + lhCorpo + 4);
+      y += 14;
+      doc.setDrawColor(51, 51, 51);
+      doc.setLineWidth(0.3);
+      doc.line(ML, y, ML + CW * 0.8, y);
+      y += 1.5;
+      paragrafo(b.runs, { depois: 1 });
+    }
+    else paragrafo(b.runs, { align: 'justify', depois: 2.2 });
+  });
+
+  return doc;
+}
+
 async function gerarPDF(dados) {
-  const root = document.getElementById('contractRoot');
   const overlay = document.getElementById('loadingOverlay');
-  root.innerHTML = montarContrato(dados);
-  root.style.display = 'block';
   overlay.style.display = 'flex';
-
-  const nomeArquivo = `Contrato_Locacao_${(dados.locatarioNome || 'contrato').replace(/[^a-zA-Z0-9]+/g,'_')}.pdf`;
-  const opt = {
-    margin: [12, 14, 16, 14],
-    filename: nomeArquivo,
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true, scrollX: 0, scrollY: 0 },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-    pagebreak: { mode: ['css', 'avoid-all'] }
-  };
-
   try {
-    await html2pdf().set(opt).from(root).save();
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+      throw new Error('Biblioteca de PDF não carregada. Verifique a conexão com a internet e recarregue a página.');
+    }
+    await new Promise(r => setTimeout(r, 60)); // deixa o overlay aparecer
+    const nomeArquivo = `Contrato_Locacao_${(dados.locatarioNome || 'contrato').replace(/[^a-zA-Z0-9]+/g,'_')}.pdf`;
+    const doc = montarDocumentoPDF(dados);
+    doc.save(nomeArquivo);
     return true;
   } finally {
-    root.style.display = 'none';
-    root.innerHTML = '';
     overlay.style.display = 'none';
   }
 }
@@ -1291,6 +1477,16 @@ document.getElementById('inputImportar').addEventListener('change', async (e) =>
   }
   e.target.value = '';
 });
+
+/* =========================================================
+   Bloqueio de zoom por pinça no iOS (PWA)
+   (o zoom por duplo toque é bloqueado pelo touch-action:manipulation
+    no CSS, e o zoom automático ao focar campos é evitado pelo
+    font-size de 16px nos inputs)
+   ========================================================= */
+['gesturestart','gesturechange','gestureend'].forEach(ev =>
+  document.addEventListener(ev, e => e.preventDefault(), { passive: false })
+);
 
 /* =========================================================
    Inicialização
