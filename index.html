@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contratos de Locação Residencial — Goiânia/Trindade (GO)</title>
+<style>
+  :root{
+    --ink:#1F3A4D;
+    --ink-soft:#3D5A73;
+    --paper:#F6F3EC;
+    --paper-line:#DCD5C3;
+    --card:#FFFFFF;
+    --accent:#8B2E2E;
+    --accent-soft:#F4E7E1;
+    --ok:#2F6F4F;
+    --ok-soft:#E5F0EA;
+    --warn:#8A6D1D;
+    --warn-soft:#F6EFD9;
+    --radius:10px;
+    --serif: Georgia, 'Times New Roman', serif;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    background-image:linear-gradient(var(--paper-line) 1px, transparent 1px);
+    background-size:100% 32px;
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.5;
+    padding-bottom:60px;
+  }
+  header.top{
+    max-width:820px;
+    margin:0 auto;
+    padding:32px 20px 16px;
+    display:flex;
+    gap:16px;
+    align-items:center;
+  }
+  .seal{ flex:0 0 auto; width:50px;height:50px; }
+  header.top h1{ font-family:var(--serif); font-size:1.35rem; margin:0 0 3px; color:var(--ink); }
+  header.top p{ margin:0; color:var(--ink-soft); font-size:0.86rem; }
+  main{ max-width:820px; margin:0 auto; padding:0 20px; }
+
+  /* ---------- List view ---------- */
+  .list-toolbar{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:16px; gap:10px; flex-wrap:wrap;
+  }
+  .list-toolbar h2{ font-family:var(--serif); font-size:1.15rem; margin:0; color:var(--ink); }
+  .btn{
+    display:inline-flex; align-items:center; gap:6px;
+    background:var(--accent); color:#fff; border:none;
+    padding:10px 16px; border-radius:7px; font-size:0.9rem;
+    font-family:var(--sans); font-weight:600; cursor:pointer;
+    text-decoration:none;
+  }
+  .btn:hover{ background:#742525; }
+  .btn.secondary{ background:#fff; color:var(--ink); border:1px solid var(--paper-line); }
+  .btn.secondary:hover{ background:var(--paper); }
+  .btn.small{ padding:7px 11px; font-size:0.8rem; }
+  .btn.ghost{ background:transparent; color:var(--accent); border:1px solid transparent; padding:7px 10px; }
+  .btn.ghost:hover{ background:var(--accent-soft); }
+  .btn:disabled{ opacity:0.5; cursor:not-allowed; }
+
+  .empty-state{
+    background:var(--card); border:1px dashed var(--paper-line); border-radius:var(--radius);
+    padding:40px 20px; text-align:center; color:var(--ink-soft);
+  }
+  .empty-state p{ margin:0 0 14px; }
+
+  .contract-card{
+    background:var(--card); border:1px solid var(--paper-line); border-radius:var(--radius);
+    padding:16px 18px; margin-bottom:12px;
+    display:flex; justify-content:space-between; gap:14px; flex-wrap:wrap;
+  }
+  .contract-info h3{ margin:0 0 4px; font-family:var(--serif); font-size:1.02rem; color:var(--ink); }
+  .contract-info .meta{ font-size:0.8rem; color:var(--ink-soft); }
+  .badge{
+    display:inline-block; font-size:0.72rem; font-weight:700; letter-spacing:0.02em;
+    padding:3px 9px; border-radius:20px; margin-top:6px; text-transform:uppercase;
+  }
+  .badge.rascunho{ background:var(--paper-line); color:var(--ink-soft); }
+  .badge.gerado{ background:var(--warn-soft); color:var(--warn); }
+  .badge.assinado{ background:var(--ok-soft); color:var(--ok); }
+  .contract-actions{
+    display:flex; flex-wrap:wrap; gap:6px; align-items:flex-start;
+  }
+  .file-btn{ position:relative; overflow:hidden; }
+  .file-btn input[type=file]{
+    position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%;
+  }
+
+  /* ---------- Form view ---------- */
+  .form-topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:16px; gap:10px; flex-wrap:wrap;
+  }
+  .form-topbar h2{ font-family:var(--serif); font-size:1.15rem; margin:0; color:var(--ink); }
+  .card{
+    background:var(--card); border:1px solid var(--paper-line); border-radius:var(--radius);
+    padding:26px 26px 10px; margin-bottom:22px; box-shadow:0 1px 2px rgba(31,58,77,0.04);
+  }
+  fieldset{ border:none; padding:0; margin:0 0 6px; }
+  legend{
+    font-family:var(--serif); font-size:1.05rem; color:var(--accent);
+    padding:0; margin-bottom:14px; display:flex; align-items:baseline; gap:8px;
+  }
+  legend .num{
+    font-size:0.75rem; font-weight:600; color:var(--ink-soft);
+    border:1px solid var(--paper-line); border-radius:50%; width:22px;height:22px;
+    display:inline-flex; align-items:center; justify-content:center; font-family:var(--sans);
+  }
+  .row{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .field{ margin-bottom:14px; }
+  .field.full{ grid-column:1 / -1; }
+  label{ display:block; font-size:0.82rem; color:var(--ink-soft); margin-bottom:5px; font-weight:600; }
+  label .opt{ font-weight:400; color:#8a8a8a; font-size:0.78rem; }
+  input[type=text], input[type=number], input[type=date], input[type=email], select, textarea{
+    width:100%; padding:9px 11px; border:1px solid var(--paper-line); border-radius:6px;
+    font-size:0.94rem; font-family:var(--sans); color:var(--ink); background:#FEFEFC;
+  }
+  input:focus, select:focus, textarea:focus{ outline:2px solid var(--accent); outline-offset:1px; border-color:var(--accent); }
+  .radio-group{ display:flex; flex-wrap:wrap; gap:10px; }
+  .radio-option{
+    border:1px solid var(--paper-line); border-radius:6px; padding:8px 12px; font-size:0.88rem;
+    display:flex; align-items:center; gap:7px; cursor:pointer; flex:1 1 auto;
+  }
+  .radio-option input{ width:auto; }
+  .radio-option.checked{ border-color:var(--accent); background:var(--accent-soft); }
+  .conditional{ border-left:2px solid var(--accent-soft); padding-left:14px; margin:6px 0 16px; }
+  .checkbox-line{ display:flex; align-items:center; gap:8px; font-size:0.9rem; margin-bottom:10px; }
+  .checkbox-line input{ width:auto; }
+
+  .sticky-bar{
+    position:sticky; bottom:0;
+    background:linear-gradient(to top, var(--paper) 65%, transparent);
+    padding:18px 0 0; display:flex; gap:10px; flex-wrap:wrap;
+  }
+  .sticky-bar .btn{ flex:1 1 auto; justify-content:center; }
+  #statusMsg{ width:100%; text-align:center; font-size:0.85rem; margin-top:4px; min-height:1.2em; color:var(--ink-soft); }
+  #statusMsg.error{ color:var(--accent); font-weight:600; }
+  #statusMsg.ok{ color:var(--ok); font-weight:600; }
+
+  footer{ max-width:820px; margin:0 auto; padding:10px 20px 30px; font-size:0.78rem; color:#9a9a9a; text-align:center; }
+
+  @media (max-width:560px){
+    .row{ grid-template-columns:1fr; }
+    .card{ padding:20px 16px 6px; }
+    .contract-card{ flex-direction:column; }
+    .contract-actions{ width:100%; }
+  }
+
+  /* ---------- Loading overlay (also used to safely render contract for PDF capture) ---------- */
+  #loadingOverlay{
+    position:fixed; inset:0; background:#F6F3EC; z-index:99999;
+    display:none; align-items:center; justify-content:center; flex-direction:column; gap:14px;
+  }
+  #loadingOverlay .spinner{
+    width:40px; height:40px; border-radius:50%;
+    border:4px solid var(--paper-line); border-top-color:var(--accent);
+    animation:spin 0.9s linear infinite;
+  }
+  #loadingOverlay p{ font-family:var(--serif); color:var(--ink); font-size:1rem; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+
+  /* Contract template used only for PDF rendering */
+  #contractRoot{
+    position:fixed; top:0; left:0; z-index:99998;
+    width:210mm; background:#ffffff; color:#111;
+    font-family:'Times New Roman', Times, serif; font-size:11.5pt; line-height:1.5;
+    padding:14mm 16mm;
+    display:none;
+  }
+  #contractRoot h1{ text-align:center; font-size:16pt; color:#1F3A4D; margin:0 0 4px; }
+  #contractRoot .subtitle{ text-align:center; font-style:italic; font-size:9.5pt; color:#555; margin:0 0 20px; }
+  #contractRoot p{ text-align:justify; margin:0 0 9px; }
+  #contractRoot h2{ font-size:12pt; color:#1F3A4D; margin:16px 0 8px; page-break-after:avoid; break-after:avoid; }
+  #contractRoot ul{ margin:0 0 9px; padding-left:22px; }
+  #contractRoot li{ text-align:justify; margin-bottom:5px; }
+  #contractRoot .party-block{ margin-bottom:6px; }
+  #contractRoot .sig-block{ margin-top:34px; }
+  #contractRoot .sig-line{ border-bottom:1px solid #333; width:80%; margin:34px 0 4px; }
+  #contractRoot .avoid-break{ page-break-inside:avoid; break-inside:avoid; }
+  #contractRoot strong{ color:#111; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <svg class="seal" viewBox="0 0 100 100" aria-hidden="true">
+    <circle cx="50" cy="50" r="46" fill="none" stroke="#8B2E2E" stroke-width="2.5"/>
+    <circle cx="50" cy="50" r="38" fill="none" stroke="#8B2E2E" stroke-width="1"/>
+    <text x="50" y="46" text-anchor="middle" font-family="Georgia, serif" font-size="11" fill="#1F3A4D">CONTRATO</text>
+    <text x="50" y="60" text-anchor="middle" font-family="Georgia, serif" font-size="9" fill="#1F3A4D">DE LOCAÇÃO</text>
+  </svg>
+  <div>
+    <h1>Contratos de Locação Residencial</h1>
+    <p>Goiânia e Trindade (GO) · Os contratos ficam salvos neste navegador</p>
+  </div>
+</header>
+
+<main>
+
+  <!-- ===================== LISTA ===================== -->
+  <section id="viewList">
+    <div class="list-toolbar">
+      <h2>Meus contratos</h2>
+      <button class="btn" id="btnNovoContrato" type="button">+ Novo contrato</button>
+    </div>
+    <div id="listaVazia" class="empty-state" style="display:none;">
+      <p>Nenhum contrato salvo ainda.</p>
+      <button class="btn secondary" type="button" id="btnNovoContratoVazio">Criar o primeiro contrato</button>
+    </div>
+    <div id="listaContratos"></div>
+    <div style="text-align:center; margin-top:18px;">
+      <button class="btn ghost small" id="btnExportar" type="button">Exportar backup (.json)</button>
+      <button class="btn ghost small file-btn" type="button">Importar backup
+        <input type="file" id="inputImportar" accept="application/json">
+      </button>
+    </div>
+  </section>
+
+  <!-- ===================== FORMULÁRIO ===================== -->
+  <section id="viewForm" style="display:none;">
+    <div class="form-topbar">
+      <button class="btn secondary small" id="btnVoltar" type="button">← Voltar aos contratos</button>
+      <h2 id="formTitulo">Novo contrato</h2>
+    </div>
+
+    <form id="contractForm" novalidate>
+
+      <!-- 1. LOCADOR -->
+      <div class="card">
+        <fieldset>
+          <legend><span class="num">1</span> Dados do Locador (quem está alugando o imóvel)</legend>
+          <div class="row">
+            <div class="field full"><label for="locadorNome">Nome completo *</label><input type="text" id="locadorNome" required></div>
+          </div>
+          <div class="row">
+            <div class="field"><label for="locadorEstadoCivil">Estado civil *</label>
+              <select id="locadorEstadoCivil" required>
+                <option value="">Selecione</option>
+                <option>solteiro(a)</option><option>casado(a)</option><option>divorciado(a)</option>
+                <option>viúvo(a)</option><option>separado(a) judicialmente</option><option>união estável</option>
+              </select>
+            </div>
+            <div class="field"><label for="locadorProfissao">Profissão *</label><input type="text" id="locadorProfissao" required></div>
+          </div>
+          <div class="row">
+            <div class="field"><label for="locadorRg">RG *</label><input type="text" id="locadorRg" required></div>
+            <div class="field"><label for="locadorCpf">CPF *</label><input type="text" id="locadorCpf" required placeholder="000.000.000-00"></div>
+          </div>
+          <div class="row">
+            <div class="field full"><label for="locadorEndereco">Endereço completo *</label><input type="text" id="locadorEndereco" required></div>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- 2. LOCATARIO -->
+      <div class="card">
+        <fieldset>
+          <legend><span class="num">2</span> Dados do Locatário (quem vai morar no imóvel)</legend>
+          <div class="row">
+            <div class="field full"><label for="locatarioNome">Nome completo *</label><input type="text" id="locatarioNome" required></div>
+          </div>
+          <div class="row">
+            <div class="field"><label for="locatarioEstadoCivil">Estado civil *</label>
+              <select id="locatarioEstadoCivil" required>
+                <option value="">Selecione</option>
+                <option>solteiro(a)</option><option>casado(a)</option><option>divorciado(a)</option>
+                <option>viúvo(a)</option><option>separado(a) judicialmente</option><option>união estável</option>
+              </select>
+            </div>
+            <div class="field"><label for="locatarioProfissao">Profissão *</label><input type="text" id="locatarioProfissao" required></div>
+          </div>
+          <div class="row">
+            <div class="field"><label for="locatarioRg">RG *</label><input type="text" id="locatarioRg" required></div>
+            <div class="field"><label for="locatarioCpf">CPF *</label><input type="text" id="locatarioCpf" required placeholder="000.000.000-00"></div>
+          </div>
+          <div class="row">
+            <div class="field full"><label for="locatarioEndereco">Endereço completo (atual) *</label><input type="text" id="locatarioEndereco" required></div>
+          </div>
+          <div class="row">
+            <div class="field"><label for="locatarioEmail">E-mail <span class="opt">(opcional)</span></label><input type="email" id="locatarioEmail"></div>
+            <div class="field"><label for="locatarioWhats">WhatsApp <span class="opt">(opcional)</span></label><input type="text" id="locatarioWhats"></div>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- 3. IMOVEL -->
+      <div class="card">
+        <fieldset>
+          <legend><span class="num">3</span> O Imóvel</legend>
+          <div class="row">
+            <div class="field full"><label for="imovelEndereco">Endereço completo do imóvel *</label><input type="text" id="imovelEndereco" required></div>
+          </div>
+          <div class="row">
+            <div class="field"><label for="imovelCidade">Cidade *</label>
+              <select id="imovelCidade" required>
+                <option value="">Selecione</option>
+                <option>Goiânia – GO</option>
+                <option>Trindade – GO</option>
+              </select>
+            </div>
+            <div class="field"><label for="imovelCep">CEP *</label><input type="text" id="imovelCep" required placeholder="00000-000"></div>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- 4. CONDIÇÕES FINANCEIRAS -->
+      <div class="card">
+        <fieldset>
+          <legend><span class="num">4</span> Condições Financeiras</legend>
+          <div class="row">
+            <div class="field"><label for="valorAluguel">Valor do aluguel (R$) *</label><input type="number" step="0.01" min="0" id="valorAluguel" required></div>
+            <div class="field"><label for="diaVencimento">Dia do vencimento *</label><input type="number" min="1" max="31" id="diaVencimento" required></div>
+          </div>
+          <div class="field full">
+            <label for="valorExtenso">Valor por extenso <span class="opt">(preenchido automaticamente — confira antes de gerar)</span></label>
+            <input type="text" id="valorExtenso">
+          </div>
+          <div class="field full">
+            <label for="formaPagamento">Forma de pagamento *</label>
+            <input type="text" id="formaPagamento" required placeholder="Ex.: PIX, transferência bancária, depósito em conta">
+          </div>
+          <div class="row">
+            <div class="field">
+              <label for="indiceReajuste">Índice de reajuste anual *</label>
+              <select id="indiceReajuste" required>
+                <option value="IPCA/IBGE">IPCA/IBGE (recomendado)</option>
+                <option value="IGP-M/FGV">IGP-M/FGV</option>
+                <option value="INPC/IBGE">INPC/IBGE</option>
+                <option value="outro">Outro (especificar)</option>
+              </select>
+            </div>
+            <div class="field" id="indiceOutroWrap" style="display:none;">
+              <label for="indiceOutro">Qual índice?</label>
+              <input type="text" id="indiceOutro">
+            </div>
+          </div>
+          <div class="checkbox-line">
+            <input type="checkbox" id="temTolerancia">
+            <label for="temTolerancia" style="margin:0;">Aplicar tolerância de dias para pagamento em atraso, sem multa</label>
+          </div>
+          <div class="conditional" id="toleranciaWrap" style="display:none;">
+            <div class="field" style="max-width:180px;">
+              <label for="diasTolerancia">Dias de tolerância</label>
+              <input type="number" min="1" max="30" id="diasTolerancia" value="5">
+            </div>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- 5. GARANTIA -->
+      <div class="card">
+        <fieldset>
+          <legend><span class="num">5</span> Garantia Locatícia</legend>
+          <div class="radio-group" id="garantiaGroup">
+            <label class="radio-option"><input type="radio" name="garantia" value="caucao" checked> Caução em dinheiro</label>
+            <label class="radio-option"><input type="radio" name="garantia" value="fiador"> Fiador</label>
+            <label class="radio-option"><input type="radio" name="garantia" value="seguro"> Seguro-fiança</label>
+            <label class="radio-option"><input type="radio" name="garantia" value="nenhuma"> Não se aplica</label>
+          </div>
+
+          <div class="conditional" id="caucaoWrap">
+            <div class="field" style="max-width:220px;">
+              <label for="valorCaucao">Valor da caução (R$) *</label>
+              <input type="number" step="0.01" min="0" id="valorCaucao">
+            </div>
+          </div>
+
+          <div class="conditional" id="fiadorWrap" style="display:none;">
+            <div class="row">
+              <div class="field full"><label for="fiadorNome">Nome completo do fiador *</label><input type="text" id="fiadorNome"></div>
+            </div>
+            <div class="row">
+              <div class="field"><label for="fiadorEstadoCivil">Estado civil *</label>
+                <select id="fiadorEstadoCivil">
+                  <option value="">Selecione</option>
+                  <option>solteiro(a)</option><option>casado(a)</option><option>divorciado(a)</option>
+                  <option>viúvo(a)</option><option>união estável</option>
+                </select>
+              </div>
+              <div class="field"><label for="fiadorProfissao">Profissão *</label><input type="text" id="fiadorProfissao"></div>
+            </div>
+            <div class="row">
+              <div class="field"><label for="fiadorRg">RG *</label><input type="text" id="fiadorRg"></div>
+              <div class="field"><label for="fiadorCpf">CPF *</label><input type="text" id="fiadorCpf"></div>
+            </div>
+            <div class="row">
+              <div class="field full"><label for="fiadorEndereco">Endereço completo *</label><input type="text" id="fiadorEndereco"></div>
+            </div>
+          </div>
+
+          <div class="conditional" id="seguroWrap" style="display:none;">
+            <div class="field full">
+              <label for="seguroInfo">Seguradora / nº da apólice <span class="opt">(opcional)</span></label>
+              <input type="text" id="seguroInfo">
+            </div>
+          </div>
+
+          <div class="conditional" id="nenhumaWrap" style="display:none;">
+            <p class="hint" style="margin:0;">Nenhuma garantia locatícia será exigida neste contrato. O LOCATÁRIO permanece responsável por todas as demais obrigações contratuais.</p>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- 6. IPTU -->
+      <div class="card">
+        <fieldset>
+          <legend><span class="num">6</span> Responsabilidade pelo IPTU</legend>
+          <div class="radio-group">
+            <label class="radio-option"><input type="radio" name="iptu" value="Locador" checked> Locador paga o IPTU</label>
+            <label class="radio-option"><input type="radio" name="iptu" value="Locatário"> Locatário paga o IPTU</label>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- 7. PRAZO E DATAS -->
+      <div class="card">
+        <fieldset>
+          <legend><span class="num">7</span> Prazo da Locação</legend>
+          <div class="row">
+            <div class="field"><label for="dataInicio">Data de início *</label><input type="date" id="dataInicio" required></div>
+            <div class="field"><label for="prazoLocacao">Prazo *</label><input type="text" id="prazoLocacao" required placeholder="Ex.: 12 (doze) meses"></div>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- 8. FORO E ASSINATURA -->
+      <div class="card">
+        <fieldset>
+          <legend><span class="num">8</span> Foro e Local/Data da Assinatura</legend>
+          <div class="row">
+            <div class="field"><label for="comarca">Comarca do foro *</label>
+              <select id="comarca" required>
+                <option value="">Selecione</option>
+                <option>Goiânia – GO</option>
+                <option>Trindade – GO</option>
+              </select>
+            </div>
+            <div class="field"><label for="dataAssinatura">Data da assinatura *</label><input type="date" id="dataAssinatura" required></div>
+          </div>
+          <div class="row">
+            <div class="field full"><label for="cidadeAssinatura">Cidade da assinatura *</label><input type="text" id="cidadeAssinatura" required placeholder="Ex.: Goiânia – GO"></div>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- 9. TESTEMUNHAS -->
+      <div class="card">
+        <fieldset>
+          <legend><span class="num">9</span> Testemunhas <span class="opt" style="font-weight:400;">(opcional, mas recomendado)</span></legend>
+          <div class="row">
+            <div class="field"><label for="test1Nome">Nome da testemunha 1</label><input type="text" id="test1Nome"></div>
+            <div class="field"><label for="test1Cpf">CPF da testemunha 1</label><input type="text" id="test1Cpf"></div>
+          </div>
+          <div class="row">
+            <div class="field"><label for="test2Nome">Nome da testemunha 2</label><input type="text" id="test2Nome"></div>
+            <div class="field"><label for="test2Cpf">CPF da testemunha 2</label><input type="text" id="test2Cpf"></div>
+          </div>
+        </fieldset>
+      </div>
+
+    </form>
+
+    <div class="sticky-bar">
+      <button class="btn secondary" id="btnSalvarRascunho" type="button">Salvar rascunho</button>
+      <button class="btn" id="generateBtn" type="button">Salvar e Gerar PDF</button>
+      <div id="statusMsg"></div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Modelo de referência com base na Lei nº 8.245/1991. Os dados ficam salvos apenas neste navegador/dispositivo — não há envio para nenhum servidor. Recomenda-se revisão por advogado antes da assinatura.
+</footer>
+
+<div id="loadingOverlay">
+  <div class="spinner"></div>
+  <p id="loadingText">Gerando PDF...</p>
+</div>
+
+<!-- Off-screen (only shown during capture) contract template rendered into PDF -->
+<div id="contractRoot"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+/* =========================================================
+   Número por extenso (PT-BR)
+   ========================================================= */
+function numToWords(num) {
+  if (num === 0) return 'zero';
+  const unidades = ['', 'um', 'dois', 'três', 'quatro', 'cinco', 'seis', 'sete', 'oito', 'nove'];
+  const dez10 = ['dez','onze','doze','treze','catorze','quinze','dezesseis','dezessete','dezoito','dezenove'];
+  const dezenas = ['', '', 'vinte','trinta','quarenta','cinquenta','sessenta','setenta','oitenta','noventa'];
+  const centenas = ['', 'cento','duzentos','trezentos','quatrocentos','quinhentos','seiscentos','setecentos','oitocentos','novecentos'];
+  const scaleNames = [null, 'mil', ['milhão','milhões'], ['bilhão','bilhões']];
+
+  function trio(n) {
+    if (n === 0) return '';
+    if (n === 100) return 'cem';
+    const c = Math.floor(n / 100);
+    const r = n % 100;
+    let parts = [];
+    if (c > 0) parts.push(centenas[c]);
+    if (r > 0) {
+      if (r < 10) parts.push(unidades[r]);
+      else if (r < 20) parts.push(dez10[r - 10]);
+      else {
+        const d = Math.floor(r / 10);
+        const u = r % 10;
+        parts.push(u > 0 ? dezenas[d] + ' e ' + unidades[u] : dezenas[d]);
+      }
+    }
+    return parts.join(' e ');
+  }
+
+  const groups = [];
+  let temp = num;
+  while (temp > 0) { groups.unshift(temp % 1000); temp = Math.floor(temp / 1000); }
+  const n = groups.length;
+  const parts = [];
+  for (let i = 0; i < n; i++) {
+    const g = groups[i];
+    const scaleIndex = n - i - 1;
+    if (g === 0) continue;
+    let word;
+    if (scaleIndex === 1) word = (g === 1) ? 'mil' : trio(g) + ' mil';
+    else if (scaleIndex >= 2) { const names = scaleNames[scaleIndex]; word = (g === 1) ? ('um ' + names[0]) : (trio(g) + ' ' + names[1]); }
+    else word = trio(g);
+    parts.push({ text: word, value: g, scaleIndex });
+  }
+  if (parts.length === 0) return 'zero';
+  if (parts.length === 1) return parts[0].text;
+  const last = parts[parts.length - 1];
+  const head = parts.slice(0, -1).map(p => p.text);
+  const useE = last.scaleIndex === 0 && (last.value < 100 || last.value % 100 === 0);
+  return head.join(', ') + (useE ? ' e ' : ', ') + last.text;
+}
+function capitalize(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
+function valorPorExtenso(valor) {
+  valor = Math.round(parseFloat(valor) * 100) / 100;
+  if (isNaN(valor)) return '';
+  const reais = Math.floor(valor);
+  const centavos = Math.round((valor - reais) * 100);
+  let str;
+  if (reais === 0 && centavos === 0) return 'Zero reais';
+  if (reais === 0) str = '';
+  else {
+    const reaisWords = numToWords(reais);
+    const lastWord = reaisWords.split(' ').pop();
+    const needsDe = ['milhão','milhões','bilhão','bilhões'].includes(lastWord);
+    const unit = (reais === 1 ? 'real' : 'reais');
+    str = reaisWords + (needsDe ? ' de ' : ' ') + unit;
+  }
+  if (centavos > 0) {
+    if (str) str += ' e ';
+    str += numToWords(centavos) + (centavos === 1 ? ' centavo' : ' centavos');
+  }
+  return capitalize(str);
+}
+
+/* =========================================================
+   Utilidades
+   ========================================================= */
+function esc(str) {
+  if (str === undefined || str === null) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function fmtMoney(v) {
+  const n = parseFloat(v);
+  if (isNaN(n)) return '';
+  return n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function fmtDateLong(isoDate) {
+  if (!isoDate) return '';
+  const [y,m,d] = isoDate.split('-').map(Number);
+  const meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  return `${String(d).padStart(2,'0')} de ${meses[m-1]} de ${y}`;
+}
+function fmtDateShort(isoOrTimestamp) {
+  const dt = new Date(isoOrTimestamp);
+  return dt.toLocaleDateString('pt-BR') + ' ' + dt.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+}
+
+/* =========================================================
+   IndexedDB — armazenamento local dos contratos
+   ========================================================= */
+const DB_NAME = 'contratosLocacaoDB';
+const DB_VERSION = 1;
+const STORE = 'contratos';
+
+function abrirDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(STORE)) {
+        db.createObjectStore(STORE, { keyPath: 'id', autoIncrement: true });
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+async function dbAdd(record) {
+  const db = await abrirDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE, 'readwrite');
+    const req = tx.objectStore(STORE).add(record);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+async function dbPut(record) {
+  const db = await abrirDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE, 'readwrite');
+    const req = tx.objectStore(STORE).put(record);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+async function dbGet(id) {
+  const db = await abrirDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE, 'readonly');
+    const req = tx.objectStore(STORE).get(id);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+async function dbGetAll() {
+  const db = await abrirDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE, 'readonly');
+    const req = tx.objectStore(STORE).getAll();
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+async function dbDelete(id) {
+  const db = await abrirDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE, 'readwrite');
+    const req = tx.objectStore(STORE).delete(id);
+    req.onsuccess = () => resolve();
+    req.onerror = () => reject(req.error);
+  });
+}
+
+/* =========================================================
+   Estado do app / navegação entre telas
+   ========================================================= */
+let editingId = null; // null = novo contrato
+
+function irParaLista() {
+  editingId = null;
+  document.getElementById('viewForm').style.display = 'none';
+  document.getElementById('viewList').style.display = 'block';
+  renderLista();
+}
+function irParaFormulario(titulo) {
+  document.getElementById('viewList').style.display = 'none';
+  document.getElementById('viewForm').style.display = 'block';
+  document.getElementById('formTitulo').textContent = titulo;
+  window.scrollTo(0,0);
+}
+
+document.getElementById('btnNovoContrato').addEventListener('click', () => {
+  limparFormulario();
+  irParaFormulario('Novo contrato');
+});
+document.getElementById('btnNovoContratoVazio').addEventListener('click', () => {
+  limparFormulario();
+  irParaFormulario('Novo contrato');
+});
+document.getElementById('btnVoltar').addEventListener('click', irParaLista);
+
+/* =========================================================
+   Renderização da lista
+   ========================================================= */
+async function renderLista() {
+  const contratos = await dbGetAll();
+  const container = document.getElementById('listaContratos');
+  const vazio = document.getElementById('listaVazia');
+  container.innerHTML = '';
+  if (!contratos.length) { vazio.style.display = 'block'; return; }
+  vazio.style.display = 'none';
+
+  contratos.sort((a,b) => (b.atualizadoEm||0) - (a.atualizadoEm||0));
+
+  contratos.forEach(c => {
+    const d = c.dados || {};
+    const card = document.createElement('div');
+    card.className = 'contract-card';
+
+    const badgeClass = c.status === 'assinado' ? 'assinado' : (c.status === 'gerado' ? 'gerado' : 'rascunho');
+    const badgeText = c.status === 'assinado' ? 'Assinado' : (c.status === 'gerado' ? 'PDF gerado' : 'Rascunho');
+
+    card.innerHTML = `
+      <div class="contract-info">
+        <h3>${esc(d.locatarioNome || '(sem nome do locatário)')}</h3>
+        <div class="meta">${esc(d.imovelCidade || '')}${d.imovelEndereco ? ' · ' + esc(d.imovelEndereco) : ''}</div>
+        <div class="meta">Atualizado em ${fmtDateShort(c.atualizadoEm)}</div>
+        <span class="badge ${badgeClass}">${badgeText}</span>
+        ${c.arquivoAssinado ? `<div class="meta" style="margin-top:4px;">📎 ${esc(c.arquivoAssinado.nome)}</div>` : ''}
+      </div>
+      <div class="contract-actions">
+        <button class="btn secondary small" data-action="editar" data-id="${c.id}">Editar</button>
+        <button class="btn secondary small" data-action="pdf" data-id="${c.id}">Gerar PDF</button>
+        <button class="btn secondary small file-btn" data-action="anexo-label">
+          ${c.arquivoAssinado ? 'Substituir assinado' : 'Anexar assinado'}
+          <input type="file" accept="application/pdf,image/*" data-action="anexar" data-id="${c.id}">
+        </button>
+        ${c.arquivoAssinado ? `<button class="btn secondary small" data-action="baixar-assinado" data-id="${c.id}">Baixar assinado</button>` : ''}
+        <button class="btn ghost small" data-action="excluir" data-id="${c.id}">Excluir</button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+document.getElementById('listaContratos').addEventListener('click', async (e) => {
+  const btn = e.target.closest('button[data-action]');
+  if (!btn) return;
+  const id = Number(btn.dataset.id);
+  const action = btn.dataset.action;
+
+  if (action === 'editar') {
+    const registro = await dbGet(id);
+    if (!registro) return;
+    editingId = id;
+    limparFormulario();
+    preencherFormulario(registro.dados);
+    irParaFormulario('Editando: ' + (registro.dados.locatarioNome || 'contrato'));
+  }
+
+  if (action === 'pdf') {
+    const registro = await dbGet(id);
+    if (!registro) return;
+    await gerarPDFDeRegistro(registro);
+  }
+
+  if (action === 'baixar-assinado') {
+    const registro = await dbGet(id);
+    if (!registro || !registro.arquivoAssinado) return;
+    const url = URL.createObjectURL(registro.arquivoAssinado.blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = registro.arquivoAssinado.nome || 'contrato-assinado';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 3000);
+  }
+
+  if (action === 'excluir') {
+    if (!confirm('Tem certeza que deseja excluir este contrato? Esta ação não pode ser desfeita.')) return;
+    await dbDelete(id);
+    renderLista();
+  }
+});
+
+document.getElementById('listaContratos').addEventListener('change', async (e) => {
+  const input = e.target.closest('input[data-action="anexar"]');
+  if (!input || !input.files.length) return;
+  const id = Number(input.dataset.id);
+  const file = input.files[0];
+  const registro = await dbGet(id);
+  if (!registro) return;
+  registro.arquivoAssinado = { blob: file, nome: file.name, tipo: file.type, tamanho: file.size, uploadedAt: Date.now() };
+  registro.status = 'assinado';
+  registro.atualizadoEm = Date.now();
+  await dbPut(registro);
+  renderLista();
+});
+
+/* =========================================================
+   Formulário: limpar / preencher / coletar
+   ========================================================= */
+function limparFormulario() {
+  document.getElementById('contractForm').reset();
+  document.getElementById('indiceOutroWrap').style.display = 'none';
+  document.getElementById('toleranciaWrap').style.display = 'none';
+  ['caucaoWrap','fiadorWrap','seguroWrap','nenhumaWrap'].forEach(id => document.getElementById(id).style.display = 'none');
+  document.getElementById('caucaoWrap').style.display = 'block';
+  document.querySelectorAll('.radio-option').forEach(o => o.classList.remove('checked'));
+  document.querySelectorAll('input[type=radio]:checked').forEach(r => r.closest('.radio-option').classList.add('checked'));
+  document.getElementById('statusMsg').textContent = '';
+  document.getElementById('statusMsg').className = '';
+  document.querySelectorAll('input, select').forEach(el => el.style.borderColor = '');
+}
+
+function preencherFormulario(d) {
+  const set = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined) el.value = val; };
+  set('locadorNome', d.locadorNome); set('locadorEstadoCivil', d.locadorEstadoCivil); set('locadorProfissao', d.locadorProfissao);
+  set('locadorRg', d.locadorRg); set('locadorCpf', d.locadorCpf); set('locadorEndereco', d.locadorEndereco);
+  set('locatarioNome', d.locatarioNome); set('locatarioEstadoCivil', d.locatarioEstadoCivil); set('locatarioProfissao', d.locatarioProfissao);
+  set('locatarioRg', d.locatarioRg); set('locatarioCpf', d.locatarioCpf); set('locatarioEndereco', d.locatarioEndereco);
+  set('locatarioEmail', d.locatarioEmail); set('locatarioWhats', d.locatarioWhats);
+  set('imovelEndereco', d.imovelEndereco); set('imovelCidade', d.imovelCidade); set('imovelCep', d.imovelCep);
+  set('valorAluguel', d.valorAluguel); set('diaVencimento', d.diaVencimento); set('formaPagamento', d.formaPagamento);
+  set('valorExtenso', d.valorExtenso);
+  set('indiceReajuste', d.indiceReajuste); set('indiceOutro', d.indiceOutro);
+  document.getElementById('temTolerancia').checked = !!d.temTolerancia;
+  set('diasTolerancia', d.diasTolerancia || 5);
+  document.getElementById('indiceOutroWrap').style.display = d.indiceReajuste === 'outro' ? 'block' : 'none';
+  document.getElementById('toleranciaWrap').style.display = d.temTolerancia ? 'block' : 'none';
+
+  const garantiaVal = d.garantia || 'caucao';
+  const radio = document.querySelector(`input[name=garantia][value="${garantiaVal}"]`);
+  if (radio) { radio.checked = true; radio.dispatchEvent(new Event('change')); }
+  set('valorCaucao', d.valorCaucao);
+  set('fiadorNome', d.fiadorNome); set('fiadorEstadoCivil', d.fiadorEstadoCivil); set('fiadorProfissao', d.fiadorProfissao);
+  set('fiadorRg', d.fiadorRg); set('fiadorCpf', d.fiadorCpf); set('fiadorEndereco', d.fiadorEndereco);
+  set('seguroInfo', d.seguroInfo);
+
+  const iptuRadio = document.querySelector(`input[name=iptu][value="${d.iptu || 'Locador'}"]`);
+  if (iptuRadio) iptuRadio.checked = true;
+
+  set('dataInicio', d.dataInicio); set('prazoLocacao', d.prazoLocacao);
+  set('comarca', d.comarca); set('dataAssinatura', d.dataAssinatura); set('cidadeAssinatura', d.cidadeAssinatura);
+  set('test1Nome', d.test1Nome); set('test1Cpf', d.test1Cpf); set('test2Nome', d.test2Nome); set('test2Cpf', d.test2Cpf);
+
+  document.querySelectorAll('input[type=radio]:checked').forEach(r => {
+    const opt = r.closest('.radio-option');
+    if (opt) opt.classList.add('checked');
+  });
+}
+
+function coletarDados() {
+  const g = id => document.getElementById(id).value;
+  return {
+    locadorNome: g('locadorNome'), locadorEstadoCivil: g('locadorEstadoCivil'), locadorProfissao: g('locadorProfissao'),
+    locadorRg: g('locadorRg'), locadorCpf: g('locadorCpf'), locadorEndereco: g('locadorEndereco'),
+    locatarioNome: g('locatarioNome'), locatarioEstadoCivil: g('locatarioEstadoCivil'), locatarioProfissao: g('locatarioProfissao'),
+    locatarioRg: g('locatarioRg'), locatarioCpf: g('locatarioCpf'), locatarioEndereco: g('locatarioEndereco'),
+    locatarioEmail: g('locatarioEmail'), locatarioWhats: g('locatarioWhats'),
+    imovelEndereco: g('imovelEndereco'), imovelCidade: g('imovelCidade'), imovelCep: g('imovelCep'),
+    valorAluguel: g('valorAluguel'), diaVencimento: g('diaVencimento'), formaPagamento: g('formaPagamento'),
+    valorExtenso: g('valorExtenso'),
+    indiceReajuste: g('indiceReajuste'), indiceOutro: g('indiceOutro'),
+    temTolerancia: document.getElementById('temTolerancia').checked, diasTolerancia: g('diasTolerancia'),
+    garantia: document.querySelector('input[name=garantia]:checked').value,
+    valorCaucao: g('valorCaucao'),
+    fiadorNome: g('fiadorNome'), fiadorEstadoCivil: g('fiadorEstadoCivil'), fiadorProfissao: g('fiadorProfissao'),
+    fiadorRg: g('fiadorRg'), fiadorCpf: g('fiadorCpf'), fiadorEndereco: g('fiadorEndereco'),
+    seguroInfo: g('seguroInfo'),
+    iptu: document.querySelector('input[name=iptu]:checked').value,
+    dataInicio: g('dataInicio'), prazoLocacao: g('prazoLocacao'),
+    comarca: g('comarca'), dataAssinatura: g('dataAssinatura'), cidadeAssinatura: g('cidadeAssinatura'),
+    test1Nome: g('test1Nome'), test1Cpf: g('test1Cpf'), test2Nome: g('test2Nome'), test2Cpf: g('test2Cpf'),
+  };
+}
+
+/* =========================================================
+   Interações do formulário
+   ========================================================= */
+const valorAluguelEl = document.getElementById('valorAluguel');
+const valorExtensoEl = document.getElementById('valorExtenso');
+valorAluguelEl.addEventListener('input', () => {
+  if (valorAluguelEl.value) valorExtensoEl.value = valorPorExtenso(valorAluguelEl.value);
+});
+
+document.getElementById('indiceReajuste').addEventListener('change', function(){
+  document.getElementById('indiceOutroWrap').style.display = this.value === 'outro' ? 'block' : 'none';
+});
+document.getElementById('temTolerancia').addEventListener('change', function(){
+  document.getElementById('toleranciaWrap').style.display = this.checked ? 'block' : 'none';
+});
+document.querySelectorAll('input[name=garantia]').forEach(radio => {
+  radio.addEventListener('change', () => {
+    ['caucaoWrap','fiadorWrap','seguroWrap','nenhumaWrap'].forEach(id => document.getElementById(id).style.display = 'none');
+    const val = document.querySelector('input[name=garantia]:checked').value;
+    if (val === 'caucao') document.getElementById('caucaoWrap').style.display = 'block';
+    if (val === 'fiador') document.getElementById('fiadorWrap').style.display = 'block';
+    if (val === 'seguro') document.getElementById('seguroWrap').style.display = 'block';
+    if (val === 'nenhuma') document.getElementById('nenhumaWrap').style.display = 'block';
+  });
+});
+document.querySelectorAll('.radio-option').forEach(opt => {
+  const input = opt.querySelector('input');
+  input.addEventListener('change', () => {
+    document.querySelectorAll('.radio-option').forEach(o => {
+      if (o.querySelector('input').name === input.name) o.classList.remove('checked');
+    });
+    if (input.checked) opt.classList.add('checked');
+  });
+});
+document.querySelectorAll('input[type=radio]:checked').forEach(r => r.closest('.radio-option').classList.add('checked'));
+
+document.getElementById('imovelCidade').addEventListener('change', function(){
+  const comarca = document.getElementById('comarca');
+  const cidadeAssin = document.getElementById('cidadeAssinatura');
+  if (!comarca.value) comarca.value = this.value;
+  if (!cidadeAssin.value) cidadeAssin.value = this.value;
+});
+
+/* =========================================================
+   Validação
+   ========================================================= */
+function validar() {
+  const requiredIds = [
+    'locadorNome','locadorEstadoCivil','locadorProfissao','locadorRg','locadorCpf','locadorEndereco',
+    'locatarioNome','locatarioEstadoCivil','locatarioProfissao','locatarioRg','locatarioCpf','locatarioEndereco',
+    'imovelEndereco','imovelCidade','imovelCep',
+    'valorAluguel','diaVencimento','formaPagamento','indiceReajuste',
+    'dataInicio','prazoLocacao','comarca','dataAssinatura','cidadeAssinatura'
+  ];
+  let firstInvalid = null;
+  requiredIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el.value || !el.value.trim()) { if (!firstInvalid) firstInvalid = el; el.style.borderColor = '#8B2E2E'; }
+    else el.style.borderColor = '';
+  });
+  const garantia = document.querySelector('input[name=garantia]:checked').value;
+  if (garantia === 'caucao') {
+    const v = document.getElementById('valorCaucao');
+    if (!v.value) { if (!firstInvalid) firstInvalid = v; v.style.borderColor = '#8B2E2E'; }
+  }
+  if (garantia === 'fiador') {
+    ['fiadorNome','fiadorEstadoCivil','fiadorProfissao','fiadorRg','fiadorCpf','fiadorEndereco'].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el.value || !el.value.trim()) { if (!firstInvalid) firstInvalid = el; el.style.borderColor = '#8B2E2E'; }
+    });
+  }
+  if (firstInvalid) { firstInvalid.scrollIntoView({behavior:'smooth', block:'center'}); firstInvalid.focus(); return false; }
+  return true;
+}
+
+/* =========================================================
+   Cláusulas dinâmicas
+   ========================================================= */
+function clausulaGarantia(d) {
+  if (d.garantia === 'caucao') {
+    return `<p>8.1. Como garantia do fiel cumprimento das obrigações assumidas neste contrato, as partes elegem a modalidade de <strong>caução em dinheiro</strong>, nos termos do art. 37 da Lei nº 8.245/1991.</p>
+    <p>8.2. O valor da caução corresponde a R$ ${fmtMoney(d.valorCaucao)} (${esc(valorPorExtenso(d.valorCaucao))}), equivalente a até 3 (três) meses de aluguel, a qual será devolvida ao LOCATÁRIO ao final da locação, corrigida monetariamente, desde que constatada a inexistência de débitos ou danos ao imóvel.</p>`;
+  }
+  if (d.garantia === 'fiador') {
+    return `<p>8.1. Como garantia do fiel cumprimento das obrigações assumidas neste contrato, as partes elegem a modalidade de <strong>fiança</strong>, nos termos do art. 37 da Lei nº 8.245/1991, apresentando-se como fiador(a):</p>
+    <p>${esc(d.fiadorNome)}, ${esc(d.fiadorEstadoCivil)}, profissão ${esc(d.fiadorProfissao)}, portador(a) do RG nº ${esc(d.fiadorRg)} e inscrito(a) no CPF sob o nº ${esc(d.fiadorCpf)}, residente e domiciliado(a) em ${esc(d.fiadorEndereco)}, doravante denominado(a) simplesmente <strong>FIADOR(A)</strong>.</p>
+    <p>8.2. O FIADOR(A) responde solidariamente por todas as obrigações do LOCATÁRIO decorrentes deste contrato, incluindo aluguéis, encargos, multas e danos ao imóvel, renunciando expressamente aos benefícios de ordem previstos nos arts. 827 e 835 do Código Civil, permanecendo sua responsabilidade até a efetiva entrega das chaves e quitação integral de eventuais débitos, ainda que o contrato seja prorrogado por prazo indeterminado, salvo manifestação expressa de exoneração nos termos da lei.</p>`;
+  }
+  if (d.garantia === 'nenhuma') {
+    return `<p>8.1. As partes dispensam expressamente a exigência de garantia locatícia para o presente contrato, nos termos do art. 37 da Lei nº 8.245/1991, permanecendo o LOCATÁRIO responsável por todas as demais obrigações contratuais e legais decorrentes da locação.</p>`;
+  }
+  return `<p>8.1. Como garantia do fiel cumprimento das obrigações assumidas neste contrato, as partes elegem a modalidade de <strong>seguro-fiança</strong>, nos termos do art. 37 da Lei nº 8.245/1991${d.seguroInfo ? `, contratado junto a ${esc(d.seguroInfo)}` : ''}, cuja apólice deverá permanecer válida durante toda a vigência da locação, incluindo eventuais prorrogações.</p>`;
+}
+function clausulaIndice(d) {
+  return d.indiceReajuste === 'outro' ? esc(d.indiceOutro || 'índice a ser definido pelas partes') : esc(d.indiceReajuste);
+}
+function clausulaTolerancia(d) {
+  if (d.temTolerancia) {
+    return `Fica concedida tolerância de ${esc(d.diasTolerancia)} (dias) corridos para o pagamento do aluguel após o vencimento, sem incidência de multa, juros ou correção monetária, aplicando-se os encargos previstos na Cláusula 7ª somente após o decurso desse prazo.`;
+  }
+  return `Não há tolerância para o pagamento do aluguel após a data de vencimento estipulada, incidindo os encargos previstos na Cláusula 7ª a partir do primeiro dia de atraso.`;
+}
+
+/* =========================================================
+   Montagem do contrato completo (HTML)
+   ========================================================= */
+function montarContrato(d) {
+  return `
+  <h1>CONTRATO DE LOCAÇÃO RESIDENCIAL</h1>
+  <p class="subtitle">(Lei nº 8.245, de 18 de outubro de 1991 — Lei do Inquilinato)</p>
+
+  <p>Pelo presente instrumento particular de <strong>Contrato de Locação Residencial</strong>, de um lado:</p>
+
+  <p class="party-block"><strong>LOCADOR(A):</strong><br>
+  ${esc(d.locadorNome)}, nacionalidade brasileira, estado civil ${esc(d.locadorEstadoCivil)}, profissão ${esc(d.locadorProfissao)}, portador(a) do RG nº ${esc(d.locadorRg)} e inscrito(a) no CPF sob o nº ${esc(d.locadorCpf)}, residente e domiciliado(a) em ${esc(d.locadorEndereco)}, doravante denominado(a) simplesmente <strong>LOCADOR(A)</strong>;</p>
+
+  <p class="party-block"><strong>LOCATÁRIO(A):</strong><br>
+  ${esc(d.locatarioNome)}, nacionalidade brasileira, estado civil ${esc(d.locatarioEstadoCivil)}, profissão ${esc(d.locatarioProfissao)}, portador(a) do RG nº ${esc(d.locatarioRg)} e inscrito(a) no CPF sob o nº ${esc(d.locatarioCpf)}, residente e domiciliado(a) em ${esc(d.locatarioEndereco)}, doravante denominado(a) simplesmente <strong>LOCATÁRIO(A)</strong>;</p>
+
+  <p>Têm entre si, justo e contratado, o presente Contrato de Locação Residencial, que se regerá pela Lei nº 8.245/1991, pelo Código Civil Brasileiro e pelas cláusulas e condições a seguir estabelecidas:</p>
+
+  <h2>CLÁUSULA 1ª — DO OBJETO E IDENTIFICAÇÃO DO IMÓVEL</h2>
+  <p>1.1. O LOCADOR, na qualidade de legítimo proprietário e/ou possuidor com poderes de disposição, dá em locação ao LOCATÁRIO o imóvel residencial situado à ${esc(d.imovelEndereco)}, Município de ${esc(d.imovelCidade)}, Estado de Goiás, CEP ${esc(d.imovelCep)}, doravante denominado simplesmente "IMÓVEL".</p>
+  <p>1.2. O imóvel é entregue ao LOCATÁRIO em perfeitas condições de habitabilidade, higiene e funcionamento, conforme laudo de vistoria inicial que integra este contrato como Anexo I.</p>
+
+  <h2>CLÁUSULA 2ª — DA DESTINAÇÃO</h2>
+  <p>2.1. O imóvel destina-se exclusivamente a fins residenciais, sendo vedada qualquer utilização para fins comerciais, industriais, institucionais ou de qualquer outra natureza não residencial, salvo autorização expressa e por escrito do LOCADOR.</p>
+  <p>2.2. É vedada a alteração da destinação do imóvel sem prévio e expresso consentimento do LOCADOR, sob pena de configurar infração contratual grave, ensejando rescisão imediata.</p>
+
+  <h2>CLÁUSULA 3ª — DO PRAZO DA LOCAÇÃO</h2>
+  <p>3.1. O presente contrato é celebrado pelo prazo de ${esc(d.prazoLocacao)}, com início em ${fmtDateLong(d.dataInicio)}, encerrando-se automaticamente ao término do prazo estipulado, independentemente de notificação, nos termos do art. 56 da Lei nº 8.245/1991.</p>
+  <p>3.2. Findo o prazo ajustado e permanecendo o LOCATÁRIO na posse do imóvel por mais de 30 (trinta) dias sem oposição do LOCADOR, presumir-se-á prorrogada a locação por prazo indeterminado, nos termos legais, aplicando-se, ainda, a cláusula de renovação automática prevista neste instrumento.</p>
+
+  <h2>CLÁUSULA 4ª — DA RENOVAÇÃO AUTOMÁTICA</h2>
+  <p>4.1. Findo o prazo contratual, inexistindo manifestação expressa de qualquer das partes com antecedência mínima de 30 (trinta) dias do seu término, a locação será automaticamente prorrogada por prazo indeterminado, permanecendo em vigor todas as cláusulas do presente contrato, observada a Lei nº 8.245/1991.</p>
+
+  <h2>CLÁUSULA 5ª — DO VALOR DO ALUGUEL E FORMA DE PAGAMENTO</h2>
+  <p>5.1. O aluguel mensal é fixado em R$ ${fmtMoney(d.valorAluguel)} (${esc(d.valorExtenso || valorPorExtenso(d.valorAluguel))}), a ser pago até o dia ${esc(d.diaVencimento)} de cada mês, mediante ${esc(d.formaPagamento)}.</p>
+  <p>5.2. O não pagamento do aluguel e demais encargos no prazo estipulado sujeitará o LOCATÁRIO ao pagamento de multa moratória, juros e correção monetária, conforme Cláusula 7ª, sem prejuízo da ação de despejo por falta de pagamento.</p>
+  <p>5.3. ${clausulaTolerancia(d)}</p>
+
+  <h2>CLÁUSULA 6ª — DO REAJUSTE</h2>
+  <p>6.1. O valor do aluguel será reajustado anualmente, a cada 12 (doze) meses contados da data de início da locação, com base na variação acumulada do ${clausulaIndice(d)}, ou pelo índice que vier a substituí-lo em caso de extinção.</p>
+
+  <h2>CLÁUSULA 7ª — DA MULTA POR ATRASO, JUROS DE MORA E CORREÇÃO MONETÁRIA</h2>
+  <p>7.1. O atraso no pagamento do aluguel e/ou encargos sujeitará o LOCATÁRIO ao pagamento de multa moratória de 10% (dez por cento) sobre o valor devido.</p>
+  <p>7.2. Incidirão, ainda, juros de mora de 1% (um por cento) ao mês, calculados pro rata die, além de correção monetária pelo mesmo índice previsto na Cláusula 6ª, aplicado proporcionalmente ao período de atraso.</p>
+
+  <h2>CLÁUSULA 8ª — DA GARANTIA LOCATÍCIA</h2>
+  ${clausulaGarantia(d)}
+  <p>8.3. É vedada a cumulação de mais de uma modalidade de garantia para o mesmo contrato, conforme parágrafo único do art. 37 da Lei nº 8.245/1991.</p>
+
+  <h2>CLÁUSULA 9ª — DOS DIREITOS E DEVERES DO LOCADOR</h2>
+  <ul>
+    <li>Entregar o imóvel em condições de uso para os fins a que se destina;</li>
+    <li>Garantir, durante o prazo da locação, o uso pacífico do imóvel locado;</li>
+    <li>Responder pelos vícios ou defeitos anteriores à locação;</li>
+    <li>Fornecer ao LOCATÁRIO recibo discriminado dos pagamentos realizados;</li>
+    <li>Pagar as despesas extraordinárias de condomínio, quando houver;</li>
+    <li>Pagar os impostos e taxas incidentes sobre o imóvel, ressalvado o disposto na Cláusula 15ª quanto ao IPTU;</li>
+    <li>Realizar vistorias periódicas no imóvel, mediante aviso prévio de, no mínimo, 24 (vinte e quatro) horas.</li>
+  </ul>
+
+  <h2>CLÁUSULA 10ª — DOS DIREITOS E DEVERES DO LOCATÁRIO</h2>
+  <ul>
+    <li>Pagar pontualmente o aluguel e os encargos da locação nos prazos convencionados;</li>
+    <li>Usar o imóvel exclusivamente para fins residenciais, tratando-o com o mesmo cuidado como se seu fosse;</li>
+    <li>Restituir o imóvel, ao final da locação, no estado em que o recebeu, ressalvados os desgastes naturais decorrentes do uso normal;</li>
+    <li>Levar imediatamente ao conhecimento do LOCADOR o surgimento de qualquer dano, defeito estrutural ou vício cuja reparação a este incumba, bem como eventuais turbações de terceiros;</li>
+    <li>Realizar imediata comunicação ao LOCADOR sobre defeitos estruturais identificados no imóvel;</li>
+    <li>Não realizar modificações internas ou externas na estrutura do imóvel sem o consentimento prévio e por escrito do LOCADOR;</li>
+    <li>Não sublocar, ceder ou emprestar o imóvel, total ou parcialmente, sem o consentimento prévio e por escrito do LOCADOR;</li>
+    <li>Permitir a vistoria do imóvel pelo LOCADOR, mediante aviso prévio;</li>
+    <li>Pagar as despesas ordinárias de condomínio, quando houver, nos termos da Cláusula 14ª;</li>
+    <li>Cumprir integralmente a convenção de condomínio e os regulamentos internos, quando aplicável.</li>
+  </ul>
+
+  <h2>CLÁUSULA 11ª — DA CONSERVAÇÃO DO IMÓVEL E RESPONSABILIDADE POR DANOS</h2>
+  <p>11.1. O LOCATÁRIO obriga-se a manter o imóvel em perfeito estado de conservação e limpeza, respondendo por quaisquer danos causados ao imóvel, suas instalações, equipamentos e pertences, decorrentes de uso indevido, negligência, imprudência ou imperícia, sejam eles causados por si, por familiares, empregados, visitantes ou terceiros.</p>
+  <p>11.2. Excetuam-se da responsabilidade do LOCATÁRIO os danos decorrentes de desgaste natural pelo uso regular do imóvel, bem como vícios construtivos preexistentes.</p>
+
+  <h2>CLÁUSULA 12ª — DA VISTORIA INICIAL E FINAL</h2>
+  <p>12.1. As partes procederão à vistoria minuciosa do imóvel previamente à entrega das chaves, elaborando laudo descritivo (Anexo I), com registro fotográfico, do estado de conservação do imóvel, suas instalações, pintura, esquadrias, metais e equipamentos, o qual será assinado por ambas as partes.</p>
+  <p>12.2. Ao término da locação, será realizada vistoria final, no mesmo padrão da vistoria inicial, para verificação do estado de conservação do imóvel e apuração de eventuais danos, ressalvado o desgaste natural decorrente do uso regular.</p>
+  <p>12.3. É facultado ao LOCADOR realizar vistorias periódicas durante a vigência do contrato, mediante aviso prévio ao LOCATÁRIO com antecedência mínima de 24 (vinte e quatro) horas, em dia e horário previamente combinados.</p>
+
+  <h2>CLÁUSULA 13ª — DAS BENFEITORIAS</h2>
+  <p>13.1. As benfeitorias necessárias, ainda que não autorizadas, e as úteis, desde que autorizadas previamente e por escrito pelo LOCADOR, serão indenizáveis e permitem o exercício do direito de retenção, nos termos do art. 35 da Lei nº 8.245/1991.</p>
+  <p>13.2. As benfeitorias voluptuárias não serão indenizáveis, podendo ser levantadas pelo LOCATÁRIO ao final da locação, desde que sua retirada não danifique a estrutura do imóvel, ressalvado o direito do LOCADOR de retê-las mediante pagamento do valor de mercado.</p>
+  <p>13.3. As partes poderão, mediante cláusula específica por escrito, renunciar ao direito de indenização e retenção por benfeitorias, nos termos do parágrafo único do art. 35 da Lei nº 8.245/1991.</p>
+
+  <h2>CLÁUSULA 14ª — DAS DESPESAS DE CONDOMÍNIO</h2>
+  <p>14.1. As despesas ordinárias de condomínio, assim entendidas aquelas destinadas à administração e manutenção rotineira do imóvel (art. 23, §1º, da Lei nº 8.245/1991), correrão por conta exclusiva do LOCATÁRIO.</p>
+  <p>14.2. As despesas extraordinárias de condomínio, relativas a obras de reforma, benfeitorias, pintura de fachada, instalação de equipamentos de segurança, entre outras de caráter não rotineiro, correrão por conta exclusiva do LOCADOR.</p>
+
+  <h2>CLÁUSULA 15ª — DO IPTU E TAXAS</h2>
+  <p>15.1. O pagamento do Imposto Predial e Territorial Urbano (IPTU) incidente sobre o imóvel será de responsabilidade do <strong>${esc(d.iptu)}</strong>.</p>
+
+  <h2>CLÁUSULA 16ª — DA TRANSFERÊNCIA DAS CONTAS DE ÁGUA E ENERGIA ELÉTRICA</h2>
+  <p>16.1. O LOCATÁRIO obriga-se a realizar a transferência da titularidade das contas de água (SANEAGO) e energia elétrica (Equatorial Goiás) para seu próprio nome no prazo máximo de 30 (trinta) dias corridos após o início da locação.</p>
+  <p>16.2. Caso a transferência não seja realizada dentro do prazo, o LOCADOR poderá notificar o LOCATÁRIO para regularização em até 10 (dez) dias.</p>
+  <p>16.3. Persistindo a irregularidade, o fato constituirá infração contratual, autorizando a rescisão da locação, sem prejuízo da cobrança de eventuais danos e débitos.</p>
+  <p>16.4. Ao final da locação, todas as contas deverão estar integralmente quitadas, sendo obrigatória a retirada da titularidade do LOCATÁRIO antes da entrega das chaves.</p>
+
+  <h2>CLÁUSULA 17ª — DA SUBLOCAÇÃO, CESSÃO E ALTERAÇÕES ESTRUTURAIS</h2>
+  <p>17.1. É expressamente vedada a sublocação, total ou parcial, do imóvel, bem como a cessão ou empréstimo do contrato, sem prévia e expressa autorização escrita do LOCADOR.</p>
+  <p>17.2. É vedada a realização de qualquer alteração estrutural, reforma ou modificação nas instalações do imóvel sem autorização prévia e por escrito do LOCADOR.</p>
+  <p>17.3. O LOCATÁRIO obriga-se a comunicar imediatamente ao LOCADOR qualquer defeito estrutural, infiltração, vazamento ou anomalia identificada no imóvel, sob pena de responder pelos agravamentos decorrentes da omissão.</p>
+
+  <h2>CLÁUSULA 18ª — DA COMUNICAÇÃO ENTRE AS PARTES</h2>
+  <p>18.1. As comunicações entre as partes poderão ser realizadas, adicionalmente às formas previstas em lei, por e-mail e/ou WhatsApp${(d.locatarioEmail || d.locatarioWhats) ? `, nos seguintes contatos informados pelo Locatário: ${d.locatarioEmail ? 'e-mail ' + esc(d.locatarioEmail) : ''}${(d.locatarioEmail && d.locatarioWhats) ? ' / ' : ''}${d.locatarioWhats ? 'WhatsApp ' + esc(d.locatarioWhats) : ''}` : ''}.</p>
+  <p>18.2. As comunicações realizadas pelos meios acima serão consideradas válidas para fins de notificação, ciência e demais efeitos previstos neste contrato, sem prejuízo do direito de qualquer das partes de optar por notificação formal (extrajudicial ou judicial).</p>
+
+  <h2>CLÁUSULA 19ª — DA RESCISÃO ANTECIPADA E MULTA PROPORCIONAL</h2>
+  <p>19.1. Caso o LOCATÁRIO deseje devolver o imóvel antes do término do prazo contratual, deverá notificar o LOCADOR por escrito, com antecedência mínima de 30 (trinta) dias, ficando sujeito ao pagamento de multa compensatória proporcional ao período restante do contrato, nos termos do art. 4º da Lei nº 8.245/1991.</p>
+  <p>19.2. A multa de que trata o item 19.1 corresponderá a 3 (três) meses de aluguel, calculada proporcionalmente ao tempo restante do contrato, sendo vedada sua cobrança de forma integral quando restar prazo inferior ao total contratado.</p>
+  <p>19.3. Não será devida a multa proporcional caso a rescisão decorra de transferência de local de trabalho do LOCATÁRIO determinada pelo empregador, conforme §2º do art. 4º da Lei do Inquilinato, mediante comprovação e notificação com antecedência mínima de 30 (trinta) dias.</p>
+
+  <h2>CLÁUSULA 20ª — DAS HIPÓTESES DE RESCISÃO POR DESCUMPRIMENTO CONTRATUAL</h2>
+  <p>20.1. Constituem motivo para rescisão imediata do contrato, independentemente de notificação prévia, além das demais hipóteses previstas neste instrumento e na legislação aplicável:</p>
+  <ul>
+    <li>O não pagamento do aluguel e encargos nos prazos convencionados;</li>
+    <li>A utilização do imóvel para fins diversos do residencial;</li>
+    <li>A sublocação, cessão ou empréstimo não autorizados;</li>
+    <li>A realização de obras ou alterações estruturais não autorizadas;</li>
+    <li>O descumprimento da obrigação de transferência das contas de consumo, nos termos da Cláusula 16ª;</li>
+    <li>A prática de infração legal ou contratual grave por qualquer das partes;</li>
+    <li>O uso nocivo, perigoso ou que comprometa a segurança, o sossego ou a saúde dos demais condôminos ou vizinhos.</li>
+  </ul>
+  <p>20.2. Verificada qualquer das hipóteses acima, a parte prejudicada poderá promover a rescisão contratual e a competente ação de despejo, sem prejuízo da cobrança de perdas e danos, multas e encargos devidos.</p>
+
+  <h2>CLÁUSULA 21ª — DA ENTREGA DAS CHAVES</h2>
+  <p>21.1. Ao término da locação, por qualquer motivo, o LOCATÁRIO deverá restituir o imóvel livre e desocupado, com a entrega imediata das chaves ao LOCADOR ou a quem este indicar, mediante recibo, acompanhada da vistoria final prevista na Cláusula 12ª.</p>
+  <p>21.2. A não devolução das chaves e do imóvel desocupado no prazo devido sujeitará o LOCATÁRIO ao pagamento de aluguel e encargos proporcionais até a efetiva desocupação, sem prejuízo de outras medidas cabíveis.</p>
+  <p>21.3. A entrega das chaves fica condicionada à quitação integral de todos os débitos de aluguel, encargos, contas de consumo (água e energia elétrica) e eventuais danos apurados na vistoria final.</p>
+
+  <h2>CLÁUSULA 22ª — DA ASSINATURA ELETRÔNICA</h2>
+  <p>22.1. As partes concordam que este contrato poderá ser assinado eletronicamente por meio da plataforma GOV.BR, possuindo plena validade jurídica, nos termos da Lei nº 14.063/2020, do Código Civil e demais normas aplicáveis, dispensando-se, nesta hipótese, a assinatura física e o reconhecimento de firma, sem prejuízo da validade das testemunhas quando exigidas.</p>
+
+  <h2>CLÁUSULA 23ª — DAS DISPOSIÇÕES GERAIS</h2>
+  <p>23.1. O presente contrato obriga as partes, seus herdeiros e sucessores a qualquer título.</p>
+  <p>23.2. A tolerância de uma parte quanto ao descumprimento de qualquer cláusula pela outra não implicará novação ou renúncia de direitos, podendo a parte tolerante exigir o fiel cumprimento do contrato a qualquer tempo.</p>
+  <p>23.3. Este contrato representa a totalidade dos entendimentos entre as partes, substituindo quaisquer acordos, ajustes ou entendimentos anteriores, verbais ou escritos, relativos ao seu objeto.</p>
+  <p>23.4. Alterações a este contrato somente serão válidas se realizadas por escrito e assinadas por ambas as partes.</p>
+
+  <h2>CLÁUSULA 24ª — DO FORO</h2>
+  <p>24.1. Fica eleito o foro da Comarca de ${esc(d.comarca)}, Estado de Goiás, para dirimir quaisquer dúvidas ou controvérsias oriundas do presente contrato, com renúncia expressa a qualquer outro, por mais privilegiado que seja.</p>
+
+  <p>E, por estarem assim justas e contratadas, as partes assinam o presente instrumento em 2 (duas) vias de igual teor e forma${(d.test1Nome || d.test2Nome) ? ', na presença das testemunhas abaixo firmadas,' : ''} para que produza seus jurídicos e legais efeitos.</p>
+
+  <p>${esc(d.cidadeAssinatura)}, ${fmtDateLong(d.dataAssinatura)}.</p>
+
+  <div class="sig-block avoid-break">
+    <div class="sig-line"></div>
+    <p style="margin:0;"><strong>LOCADOR(A)</strong> — ${esc(d.locadorNome)}</p>
+  </div>
+  <div class="sig-block avoid-break">
+    <div class="sig-line"></div>
+    <p style="margin:0;"><strong>LOCATÁRIO(A)</strong> — ${esc(d.locatarioNome)}</p>
+  </div>
+  ${d.garantia === 'fiador' ? `
+  <div class="sig-block avoid-break">
+    <div class="sig-line"></div>
+    <p style="margin:0;"><strong>FIADOR(A)</strong> — ${esc(d.fiadorNome)}</p>
+  </div>` : ''}
+
+  ${(d.test1Nome || d.test2Nome) ? `
+  <p style="margin-top:24px;"><strong>Testemunhas:</strong></p>
+  ${d.test1Nome ? `<p>1) ______________________________________  Nome: ${esc(d.test1Nome)} ${d.test1Cpf ? '— CPF: ' + esc(d.test1Cpf) : ''}</p>` : ''}
+  ${d.test2Nome ? `<p>2) ______________________________________  Nome: ${esc(d.test2Nome)} ${d.test2Cpf ? '— CPF: ' + esc(d.test2Cpf) : ''}</p>` : ''}
+  ` : ''}
+
+  <p style="margin-top:24px;"><strong>Assinatura Digital via GOV.BR:</strong></p>
+  <p>LOCADOR(A): ______________________________________ (QR Code / Selo de Autenticação GOV.BR)</p>
+  <p>LOCATÁRIO(A): ______________________________________ (QR Code / Selo de Autenticação GOV.BR)</p>
+  `;
+}
+
+/* =========================================================
+   Geração de PDF
+   (o contrato é renderizado por trás de um overlay de carregamento,
+   pois html2canvas não captura corretamente elementos fora da tela)
+   ========================================================= */
+async function gerarPDF(dados) {
+  const root = document.getElementById('contractRoot');
+  const overlay = document.getElementById('loadingOverlay');
+  root.innerHTML = montarContrato(dados);
+  root.style.display = 'block';
+  overlay.style.display = 'flex';
+
+  const nomeArquivo = `Contrato_Locacao_${(dados.locatarioNome || 'contrato').replace(/[^a-zA-Z0-9]+/g,'_')}.pdf`;
+  const opt = {
+    margin: [12, 14, 16, 14],
+    filename: nomeArquivo,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true, scrollX: 0, scrollY: 0 },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    pagebreak: { mode: ['css', 'avoid-all'] }
+  };
+
+  try {
+    await html2pdf().set(opt).from(root).save();
+    return true;
+  } finally {
+    root.style.display = 'none';
+    root.innerHTML = '';
+    overlay.style.display = 'none';
+  }
+}
+
+async function gerarPDFDeRegistro(registro) {
+  await gerarPDF(registro.dados);
+  if (registro.status !== 'assinado') {
+    registro.status = 'gerado';
+    registro.atualizadoEm = Date.now();
+    await dbPut(registro);
+    renderLista();
+  }
+}
+
+/* =========================================================
+   Botões: salvar rascunho / salvar e gerar PDF
+   ========================================================= */
+async function salvar(dados, novoStatusSeRascunho) {
+  const agora = Date.now();
+  if (editingId) {
+    const existente = await dbGet(editingId);
+    const registro = {
+      id: editingId,
+      dados,
+      status: existente && existente.status === 'assinado' ? 'assinado' : novoStatusSeRascunho,
+      arquivoAssinado: existente ? existente.arquivoAssinado : null,
+      criadoEm: existente ? existente.criadoEm : agora,
+      atualizadoEm: agora
+    };
+    await dbPut(registro);
+    return registro;
+  } else {
+    const registro = { dados, status: novoStatusSeRascunho, arquivoAssinado: null, criadoEm: agora, atualizadoEm: agora };
+    const id = await dbAdd(registro);
+    editingId = id;
+    registro.id = id;
+    return registro;
+  }
+}
+
+document.getElementById('btnSalvarRascunho').addEventListener('click', async () => {
+  const statusEl = document.getElementById('statusMsg');
+  statusEl.className = ''; statusEl.textContent = '';
+  const dados = coletarDados();
+  if (!dados.valorExtenso && dados.valorAluguel) dados.valorExtenso = valorPorExtenso(dados.valorAluguel);
+  await salvar(dados, 'rascunho');
+  statusEl.className = 'ok';
+  statusEl.textContent = 'Rascunho salvo neste navegador.';
+});
+
+document.getElementById('generateBtn').addEventListener('click', async () => {
+  const statusEl = document.getElementById('statusMsg');
+  statusEl.className = ''; statusEl.textContent = '';
+
+  if (!validar()) {
+    statusEl.className = 'error';
+    statusEl.textContent = 'Por favor, preencha todos os campos obrigatórios destacados.';
+    return;
+  }
+
+  const btn = document.getElementById('generateBtn');
+  btn.disabled = true;
+  btn.textContent = 'Gerando PDF...';
+  statusEl.textContent = 'Montando o documento, aguarde...';
+
+  const dados = coletarDados();
+  if (!dados.valorExtenso) dados.valorExtenso = valorPorExtenso(dados.valorAluguel);
+
+  try {
+    await salvar(dados, 'gerado');
+    await gerarPDF(dados);
+    statusEl.className = 'ok';
+    statusEl.textContent = 'Contrato salvo e PDF gerado com sucesso! Verifique a pasta de downloads.';
+  } catch (err) {
+    statusEl.className = 'error';
+    statusEl.textContent = 'Ocorreu um erro ao gerar o PDF. Tente novamente.';
+    console.error(err);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Salvar e Gerar PDF';
+  }
+});
+
+/* =========================================================
+   Backup: exportar / importar (apenas dados de formulário —
+   arquivos assinados anexados não são incluídos no backup)
+   ========================================================= */
+document.getElementById('btnExportar').addEventListener('click', async () => {
+  const contratos = await dbGetAll();
+  const backup = contratos.map(c => ({
+    dados: c.dados, status: c.status === 'assinado' ? 'gerado' : c.status,
+    criadoEm: c.criadoEm, atualizadoEm: c.atualizadoEm
+  }));
+  const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'backup-contratos-' + new Date().toISOString().slice(0,10) + '.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 3000);
+});
+
+document.getElementById('inputImportar').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  try {
+    const text = await file.text();
+    const registros = JSON.parse(text);
+    if (!Array.isArray(registros)) throw new Error('Formato inválido');
+    for (const r of registros) {
+      await dbAdd({ dados: r.dados, status: r.status || 'rascunho', arquivoAssinado: null, criadoEm: r.criadoEm || Date.now(), atualizadoEm: r.atualizadoEm || Date.now() });
+    }
+    renderLista();
+    alert(`${registros.length} contrato(s) importado(s) com sucesso.`);
+  } catch (err) {
+    alert('Não foi possível importar este arquivo. Verifique se é um backup válido gerado por este site.');
+    console.error(err);
+  }
+  e.target.value = '';
+});
+
+/* =========================================================
+   Inicialização
+   ========================================================= */
+renderLista();
+</script>
+</body>
+</html>
