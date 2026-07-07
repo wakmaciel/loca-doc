@@ -8,6 +8,7 @@ Agora funciona como um pequeno "app":
 - **Gerar PDF**: gera o PDF do contrato a qualquer momento a partir dos dados salvos.
 - **Anexar assinado**: depois de assinado (digitalizado ou assinatura digital via GOV.BR), anexe o arquivo (PDF ou imagem) ao contrato correspondente — ele fica guardado junto com o registro e pode ser baixado depois.
 - **Backup**: botão para exportar todos os contratos em um `.json` (não inclui os arquivos assinados anexados) e reimportar depois, útil se quiser levar os dados para outro navegador/computador.
+- **App instalável (PWA)**: quando aberto pelo link publicado (GitHub Pages), o navegador oferece a opção "Instalar app" / "Adicionar à tela inicial" — o site vira um aplicativo com ícone próprio e, depois da primeira visita, funciona mesmo sem internet (os arquivos ficam guardados pelo `sw.js`).
 
 ## Importante sobre onde os dados ficam salvos
 
@@ -25,7 +26,7 @@ Isso significa:
 ## Como publicar no GitHub Pages
 
 1. Crie um repositório novo no GitHub (pode ser privado ou público).
-2. Suba o arquivo `index.html` (e este `README.md`, se quiser) para a raiz do repositório.
+2. Suba `index.html`, `manifest.webmanifest`, `sw.js` e a pasta `icons/` para a raiz do repositório (e este `README.md`, se quiser).
 3. Vá em **Settings → Pages**.
 4. Em "Source", selecione a branch `main` e a pasta `/ (root)`. Salve.
 5. Em alguns minutos o GitHub mostrará o link do site, algo como:
@@ -37,6 +38,8 @@ Isso significa:
 Basta abrir o arquivo `index.html` diretamente no navegador (duplo clique).
 É necessário estar conectado à internet apenas porque o site usa uma
 biblioteca (html2pdf.js) carregada de um CDN para montar o PDF.
+(No site publicado, essa biblioteca fica guardada no cache do app após a
+primeira visita, permitindo gerar PDFs mesmo offline.)
 
 ## Observações jurídicas
 
