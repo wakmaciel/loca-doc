@@ -1146,35 +1146,10 @@ function montarContrato(d) {
 
   <h2>CLÁUSULA 24ª — DO FORO</h2>
   <p>24.1. Fica eleito o foro da Comarca de ${esc(d.comarca)}, Estado de Goiás, para dirimir quaisquer dúvidas ou controvérsias oriundas do presente contrato, com renúncia expressa a qualquer outro, por mais privilegiado que seja.</p>
-
-  <p>E, por estarem assim justas e contratadas, as partes assinam o presente instrumento em 2 (duas) vias de igual teor e forma${(d.test1Nome || d.test2Nome) ? ', na presença das testemunhas abaixo firmadas,' : ''} para que produza seus jurídicos e legais efeitos.</p>
-
-  <p>${esc(d.cidadeAssinatura)}, ${fmtDateLong(d.dataAssinatura)}.</p>
-
-  <div class="sig-block avoid-break">
-    <div class="sig-line"></div>
-    <p style="margin:0;"><strong>LOCADOR(A)</strong> — ${esc(d.locadorNome)}</p>
-  </div>
-  <div class="sig-block avoid-break">
-    <div class="sig-line"></div>
-    <p style="margin:0;"><strong>LOCATÁRIO(A)</strong> — ${esc(d.locatarioNome)}</p>
-  </div>
-  ${d.garantia === 'fiador' ? `
-  <div class="sig-block avoid-break">
-    <div class="sig-line"></div>
-    <p style="margin:0;"><strong>FIADOR(A)</strong> — ${esc(d.fiadorNome)}</p>
-  </div>` : ''}
-
-  ${(d.test1Nome || d.test2Nome) ? `
-  <p style="margin-top:24px;"><strong>Testemunhas:</strong></p>
-  ${d.test1Nome ? `<p>1) ______________________________________  Nome: ${esc(d.test1Nome)} ${d.test1Cpf ? '— CPF: ' + esc(d.test1Cpf) : ''}</p>` : ''}
-  ${d.test2Nome ? `<p>2) ______________________________________  Nome: ${esc(d.test2Nome)} ${d.test2Cpf ? '— CPF: ' + esc(d.test2Cpf) : ''}</p>` : ''}
-  ` : ''}
-
-  <p style="margin-top:24px;"><strong>Assinatura Digital via GOV.BR:</strong></p>
-  <p>LOCADOR(A): ______________________________________ (QR Code / Selo de Autenticação GOV.BR)</p>
-  <p>LOCATÁRIO(A): ______________________________________ (QR Code / Selo de Autenticação GOV.BR)</p>
   `;
+  /* O fecho, a data e as assinaturas (linha manual + quadro gov.br) são
+     desenhados diretamente no PDF por desenharAssinaturas(), para permitir
+     espaçamento adequado e manter os blocos de assinatura juntos. */
 }
 
 /* =========================================================
@@ -1268,18 +1243,11 @@ function montarDocumentoPDF(d) {
     return out;
   }
 
-  function paragrafo(runs, opts) {
-    opts = opts || {};
-    const size = opts.size || 11.5;
-    const italic = !!opts.italic;
-    const indent = opts.indent || 0;
-    const largura = CW - indent;
-    const lh = size * PT * 1.45;
-
-    const larguraPalavra = w => w.seg.reduce((s, sg) => s + larguraTexto(sg.t, size, sg.b || opts.bold, italic), 0);
+  /* Quebra os runs em linhas respeitando a largura útil — usada tanto para
+     desenhar (paragrafo) quanto para medir a altura (alturaParagrafo) */
+  function quebrarEmLinhas(runs, size, bold, italic, largura) {
+    const larguraPalavra = w => w.seg.reduce((s, sg) => s + larguraTexto(sg.t, size, sg.b || bold, italic), 0);
     const esp = larguraTexto(' ', size, false, italic);
-
-    // quebra em linhas
     const linhas = [];
     let linha = [], w = 0;
     palavras(runs).forEach(word => {
@@ -1289,6 +1257,28 @@ function montarDocumentoPDF(d) {
       else { w += (linha.length ? esp : 0) + pw; linha.push(word); }
     });
     if (linha.length) linhas.push({ palavras: linha, w, dura: true });
+    return linhas;
+  }
+
+  function alturaParagrafo(runs, opts) {
+    opts = opts || {};
+    const size = opts.size || 11.5;
+    const italic = !!opts.italic;
+    const indent = opts.indent || 0;
+    const lh = size * PT * 1.45;
+    const linhas = quebrarEmLinhas(runs, size, opts.bold, italic, CW - indent);
+    return linhas.length * lh + (opts.depois !== undefined ? opts.depois : 2.2);
+  }
+
+  function paragrafo(runs, opts) {
+    opts = opts || {};
+    const size = opts.size || 11.5;
+    const italic = !!opts.italic;
+    const indent = opts.indent || 0;
+    const largura = CW - indent;
+    const lh = size * PT * 1.45;
+    const esp = larguraTexto(' ', size, false, italic);
+    const linhas = quebrarEmLinhas(runs, size, opts.bold, italic, largura);
 
     if (opts.cor) doc.setTextColor(opts.cor[0], opts.cor[1], opts.cor[2]);
     linhas.forEach((ln, i) => {
@@ -1338,6 +1328,89 @@ function montarDocumentoPDF(d) {
     }
     else paragrafo(b.runs, { align: 'justify', depois: 2.2 });
   });
+
+  /* =========================================================
+     Fecho + data + assinaturas (linha manual + quadro gov.br)
+     Desenhado à parte para controlar o espaçamento e impedir
+     que uma assinatura seja partida entre duas páginas ou que
+     sobre uma página final contendo somente assinaturas.
+     ========================================================= */
+  const cinza = [120, 120, 120];
+  const boxW = 58, boxH = 20, espacoTopo = 14, rotuloGap = 5;
+  const blocoAltAssin = espacoTopo + boxH + rotuloGap + 5;
+
+  function blocoAssinatura(papel, nome) {
+    quebraPagina(blocoAltAssin);
+    const topo = y + espacoTopo;
+    const lineY = topo + boxH;
+    const lineW = CW - boxW - 14;
+    // linha de assinatura manual (à esquerda)
+    doc.setDrawColor(51, 51, 51); doc.setLineWidth(0.3);
+    doc.line(ML, lineY, ML + lineW, lineY);
+    // quadro para a assinatura digital gov.br (à direita, na mesma base)
+    const boxX = ML + CW - boxW;
+    doc.setDrawColor(31, 58, 77); doc.setLineWidth(0.4);
+    doc.roundedRect(boxX, topo, boxW, boxH, 2, 2);
+    setFonte(8, true, false); doc.setTextColor(31, 58, 77);
+    const t1 = 'Assinatura gov.br';
+    doc.text(t1, boxX + (boxW - larguraTexto(t1, 8, true, false)) / 2, topo + 8);
+    setFonte(7, false, true); doc.setTextColor(cinza[0], cinza[1], cinza[2]);
+    const t2 = 'selo / QR Code';
+    doc.text(t2, boxX + (boxW - larguraTexto(t2, 7, false, true)) / 2, topo + 14);
+    doc.setTextColor(0, 0, 0);
+    // rótulo abaixo da linha
+    setFonte(10.5, true, false);
+    doc.text(papel, ML, lineY + rotuloGap);
+    const wPapel = larguraTexto(papel, 10.5, true, false);
+    setFonte(10.5, false, false);
+    doc.text(' — ' + (nome || ''), ML + wPapel, lineY + rotuloGap);
+    y = lineY + rotuloGap + 5;
+  }
+
+  function testemunha(num, nome, cpf) {
+    quebraPagina(16);
+    y += 10;
+    doc.setDrawColor(51, 51, 51); doc.setLineWidth(0.3);
+    doc.line(ML, y, ML + 90, y);
+    setFonte(10, false, false);
+    doc.text(`${num}) ${nome || ''}${cpf ? '   —   CPF: ' + cpf : ''}`, ML, y + 5);
+    y += 8;
+  }
+
+  const fechoTxt = `E, por estarem assim justas e contratadas, as partes assinam o presente instrumento em 2 (duas) vias de igual teor e forma${(d.test1Nome || d.test2Nome) ? ', na presença das testemunhas abaixo firmadas,' : ''} para que produza seus jurídicos e legais efeitos.`;
+  const dataTxt = `${d.cidadeAssinatura}, ${fmtDateLong(d.dataAssinatura)}.`;
+  const notaTxt = 'Assine de próprio punho sobre a linha OU aplique a assinatura digital gov.br no quadro ao lado.';
+  const rFecho = [{ t: fechoTxt, b: false }];
+  const rData = [{ t: dataTxt, b: false }];
+  const rNota = [{ t: notaTxt, b: false }];
+
+  /* Mede o conjunto essencial (fecho + data + nota + as duas assinaturas
+     principais) e quebra a página antes se ele não couber inteiro no que
+     resta — assim o texto de fecho sempre acompanha as assinaturas e nunca
+     sobra uma página só de assinaturas. */
+  const precisa =
+    alturaParagrafo(rFecho, { align: 'justify', depois: 6 }) +
+    alturaParagrafo(rData, { depois: 6 }) +
+    alturaParagrafo(rNota, { size: 9, italic: true, depois: 3 }) +
+    2 * blocoAltAssin;
+  if (y + precisa > PH - MB) { doc.addPage(); y = MT; }
+  else { y += 6; }
+
+  paragrafo(rFecho, { align: 'justify', depois: 6 });
+  paragrafo(rData, { depois: 6 });
+  paragrafo(rNota, { size: 9, italic: true, cor: cinza, depois: 3 });
+
+  blocoAssinatura('LOCADOR(A)', d.locadorNome);
+  blocoAssinatura('LOCATÁRIO(A)', d.locatarioNome);
+  if (d.garantia === 'fiador') blocoAssinatura('FIADOR(A)', d.fiadorNome);
+
+  if (d.test1Nome || d.test2Nome) {
+    quebraPagina(6 + 12 + (d.test1Nome ? 18 : 0) + (d.test2Nome ? 18 : 0));
+    y += 6;
+    paragrafo([{ t: 'Testemunhas:', b: true }], { depois: 1 });
+    if (d.test1Nome) testemunha(1, d.test1Nome, d.test1Cpf);
+    if (d.test2Nome) testemunha(2, d.test2Nome, d.test2Cpf);
+  }
 
   return doc;
 }
@@ -1426,8 +1499,10 @@ document.getElementById('generateBtn').addEventListener('click', async () => {
   try {
     await salvar(dados, 'gerado');
     await gerarPDF(dados);
-    statusEl.className = 'ok';
-    statusEl.textContent = 'Contrato salvo e PDF gerado com sucesso! Verifique a pasta de downloads.';
+    statusEl.className = '';
+    statusEl.textContent = '';
+    // volta para a lista de contratos após gerar o PDF
+    irParaLista();
   } catch (err) {
     statusEl.className = 'error';
     statusEl.textContent = 'Ocorreu um erro ao gerar o PDF. Tente novamente.';
