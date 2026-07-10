@@ -1,7 +1,7 @@
 {
   "name": "LocaDoc — Contratos de Locação",
   "short_name": "LocaDoc",
-  "description": "Crie, salve e gere PDFs de contratos de locação residencial — Goiânia e Trindade (GO).",
+  "description": "Crie, salve e gere PDFs de contratos de locação residencial — Abadia de Goiás e Trindade (GO).",
   "lang": "pt-BR",
   "start_url": "./",
   "scope": "./",

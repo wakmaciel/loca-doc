@@ -1,4 +1,4 @@
-# Contratos de Locação Residencial (Goiânia/Trindade – GO)
+# Contratos de Locação Residencial (Abadia de Goiás/Trindade – GO)
 
 Site estático, sem servidor: tudo roda no navegador de quem abrir o link.
 Agora funciona como um pequeno "app":
@@ -43,6 +43,6 @@ primeira visita, permitindo gerar PDFs mesmo offline.)
 
 ## Observações jurídicas
 
-- O modelo de contrato segue a Lei do Inquilinato (Lei nº 8.245/1991) e inclui cláusulas específicas para Goiânia/Trindade (GO), como a transferência de titularidade das contas de água (SANEAGO) e energia (Equatorial Goiás).
+- O modelo de contrato segue a Lei do Inquilinato (Lei nº 8.245/1991) e inclui cláusulas específicas para Abadia de Goiás/Trindade (GO), como a transferência de titularidade das contas de água (SANEAGO) e energia (Equatorial Goiás).
 - A opção "Não se aplica" em Garantia Locatícia insere uma cláusula dispensando expressamente a exigência de garantia.
 - Este é um modelo de referência. Recomenda-se revisão por um advogado antes da assinatura definitiva.
