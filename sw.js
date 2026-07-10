@@ -1,6 +1,6 @@
 /* Service worker: deixa o app instalável e funcionando offline.
    Estratégia: cache-first com atualização em segundo plano (stale-while-revalidate). */
-const CACHE = 'loca-doc-v2';
+const CACHE = 'loca-doc-v3';
 const PRECACHE = [
   './',
   './index.html',

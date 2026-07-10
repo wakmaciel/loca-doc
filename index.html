@@ -574,16 +574,26 @@
         <p>Endereço e localização do imóvel que será alugado.</p>
       </div>
       <div class="form-card">
-        <div class="field full"><label for="imovelEndereco">Endereço completo do imóvel *</label><input type="text" id="imovelEndereco" required placeholder="Ex.: Rua das Flores, 123 — Jardim das Oliveiras"></div>
+        <div class="field full"><label for="imovelLogradouro">Endereço (rua/avenida) *</label><input type="text" id="imovelLogradouro" required placeholder="Ex.: Rua das Flores"></div>
+        <div class="row">
+          <div class="field"><label for="imovelNumero">Número *</label><input type="text" id="imovelNumero" required placeholder="Ex.: 123 ou SN"></div>
+          <div class="field"><label for="imovelComplemento">Complemento <span class="opt">(opcional)</span></label><input type="text" id="imovelComplemento" placeholder="Ex.: Qd. 5, Lt. 10"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="imovelBairro">Bairro *</label><input type="text" id="imovelBairro" required placeholder="Ex.: Jardim das Oliveiras"></div>
+          <div class="field"><label for="imovelCep">CEP *</label><input type="text" id="imovelCep" required placeholder="00000-000" inputmode="numeric" maxlength="9"></div>
+        </div>
         <div class="row">
           <div class="field"><label for="imovelCidade">Cidade *</label>
             <select id="imovelCidade" required>
               <option value="">Selecione</option>
-              <option>Abadia de Goiás – GO</option>
-              <option>Trindade – GO</option>
+              <option>Abadia de Goiás</option>
+              <option>Trindade</option>
             </select>
           </div>
-          <div class="field"><label for="imovelCep">CEP *</label><input type="text" id="imovelCep" required placeholder="00000-000" inputmode="numeric" maxlength="9"></div>
+          <div class="field"><label for="imovelEstado">Estado *</label>
+            <select id="imovelEstado"><option value="GO" selected>GO</option></select>
+          </div>
         </div>
       </div>
     </div>
@@ -594,6 +604,13 @@
         <div class="step-icon"><svg class="icon icon-lg"><use href="#i-person"/></svg></div>
         <h2>Locador</h2>
         <p>Quem está alugando o imóvel (proprietário).</p>
+      </div>
+      <div class="form-card" id="locadorReuseCard" hidden>
+        <div class="card-title">Preenchimento rápido</div>
+        <div class="field" style="margin-bottom:4px;">
+          <label for="locadorExistente">Usar dados de um locador já cadastrado</label>
+          <select id="locadorExistente"><option value="">Selecionar…</option></select>
+        </div>
       </div>
       <div class="form-card">
         <div class="field full"><label for="locadorNome">Nome completo *</label><input type="text" id="locadorNome" required placeholder="Ex.: João da Silva"></div>
@@ -611,7 +628,27 @@
           <div class="field"><label for="locadorRg">RG *</label><input type="text" id="locadorRg" required placeholder="Ex.: 1234567"></div>
           <div class="field"><label for="locadorCpf">CPF *</label><input type="text" id="locadorCpf" required placeholder="000.000.000-00" inputmode="numeric" maxlength="14"></div>
         </div>
-        <div class="field full"><label for="locadorEndereco">Endereço completo *</label><input type="text" id="locadorEndereco" required placeholder="Rua, número, bairro, cidade – UF"></div>
+        <div class="field full"><label for="locadorLogradouro">Endereço (rua/avenida) *</label><input type="text" id="locadorLogradouro" required placeholder="Ex.: Rua das Flores"></div>
+        <div class="row">
+          <div class="field"><label for="locadorNumero">Número *</label><input type="text" id="locadorNumero" required placeholder="Ex.: 123 ou SN"></div>
+          <div class="field"><label for="locadorComplemento">Complemento <span class="opt">(opcional)</span></label><input type="text" id="locadorComplemento" placeholder="Ex.: Qd. 5, Lt. 10"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="locadorBairro">Bairro *</label><input type="text" id="locadorBairro" required placeholder="Ex.: Centro"></div>
+          <div class="field"><label for="locadorCep">CEP *</label><input type="text" id="locadorCep" required placeholder="00000-000" inputmode="numeric" maxlength="9"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="locadorCidade">Cidade *</label>
+            <select id="locadorCidade" required>
+              <option value="">Selecione</option>
+              <option>Abadia de Goiás</option>
+              <option>Trindade</option>
+            </select>
+          </div>
+          <div class="field"><label for="locadorEstado">Estado *</label>
+            <select id="locadorEstado"><option value="GO" selected>GO</option></select>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -621,6 +658,13 @@
         <div class="step-icon"><svg class="icon icon-lg"><use href="#i-people"/></svg></div>
         <h2>Locatário</h2>
         <p>Quem vai morar no imóvel (inquilino).</p>
+      </div>
+      <div class="form-card" id="locatarioReuseCard" hidden>
+        <div class="card-title">Preenchimento rápido</div>
+        <div class="field" style="margin-bottom:4px;">
+          <label for="locatarioExistente">Usar dados de um locatário já cadastrado</label>
+          <select id="locatarioExistente"><option value="">Selecionar…</option></select>
+        </div>
       </div>
       <div class="form-card">
         <div class="field full"><label for="locatarioNome">Nome completo *</label><input type="text" id="locatarioNome" required placeholder="Ex.: Maria Oliveira"></div>
@@ -638,7 +682,27 @@
           <div class="field"><label for="locatarioRg">RG *</label><input type="text" id="locatarioRg" required placeholder="Ex.: 1234567"></div>
           <div class="field"><label for="locatarioCpf">CPF *</label><input type="text" id="locatarioCpf" required placeholder="000.000.000-00" inputmode="numeric" maxlength="14"></div>
         </div>
-        <div class="field full"><label for="locatarioEndereco">Endereço completo (atual) *</label><input type="text" id="locatarioEndereco" required placeholder="Rua, número, bairro, cidade – UF"></div>
+        <div class="field full"><label for="locatarioLogradouro">Endereço atual (rua/avenida) *</label><input type="text" id="locatarioLogradouro" required placeholder="Ex.: Rua das Flores"></div>
+        <div class="row">
+          <div class="field"><label for="locatarioNumero">Número *</label><input type="text" id="locatarioNumero" required placeholder="Ex.: 123 ou SN"></div>
+          <div class="field"><label for="locatarioComplemento">Complemento <span class="opt">(opcional)</span></label><input type="text" id="locatarioComplemento" placeholder="Ex.: Qd. 5, Lt. 10"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="locatarioBairro">Bairro *</label><input type="text" id="locatarioBairro" required placeholder="Ex.: Centro"></div>
+          <div class="field"><label for="locatarioCep">CEP *</label><input type="text" id="locatarioCep" required placeholder="00000-000" inputmode="numeric" maxlength="9"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="locatarioCidade">Cidade *</label>
+            <select id="locatarioCidade" required>
+              <option value="">Selecione</option>
+              <option>Abadia de Goiás</option>
+              <option>Trindade</option>
+            </select>
+          </div>
+          <div class="field"><label for="locatarioEstado">Estado *</label>
+            <select id="locatarioEstado"><option value="GO" selected>GO</option></select>
+          </div>
+        </div>
       </div>
       <div class="form-card">
         <div class="card-title">Contato (opcional)</div>
@@ -724,6 +788,12 @@
         </div>
 
         <div class="conditional" id="fiadorWrap" style="display:none;">
+          <div id="fiadorReuseCard" hidden>
+            <div class="field full">
+              <label for="fiadorExistente">Usar dados de um fiador já cadastrado</label>
+              <select id="fiadorExistente"><option value="">Selecionar…</option></select>
+            </div>
+          </div>
           <div class="field full"><label for="fiadorNome">Nome completo do fiador *</label><input type="text" id="fiadorNome" placeholder="Ex.: Carlos Souza"></div>
           <div class="row">
             <div class="field"><label for="fiadorEstadoCivil">Estado civil *</label>
@@ -739,7 +809,27 @@
             <div class="field"><label for="fiadorRg">RG *</label><input type="text" id="fiadorRg"></div>
             <div class="field"><label for="fiadorCpf">CPF *</label><input type="text" id="fiadorCpf" placeholder="000.000.000-00" inputmode="numeric" maxlength="14"></div>
           </div>
-          <div class="field full"><label for="fiadorEndereco">Endereço completo *</label><input type="text" id="fiadorEndereco"></div>
+          <div class="field full"><label for="fiadorLogradouro">Endereço (rua/avenida) *</label><input type="text" id="fiadorLogradouro" placeholder="Ex.: Rua das Flores"></div>
+          <div class="row">
+            <div class="field"><label for="fiadorNumero">Número *</label><input type="text" id="fiadorNumero" placeholder="Ex.: 123 ou SN"></div>
+            <div class="field"><label for="fiadorComplemento">Complemento <span class="opt">(opcional)</span></label><input type="text" id="fiadorComplemento" placeholder="Ex.: Qd. 5, Lt. 10"></div>
+          </div>
+          <div class="row">
+            <div class="field"><label for="fiadorBairro">Bairro *</label><input type="text" id="fiadorBairro" placeholder="Ex.: Centro"></div>
+            <div class="field"><label for="fiadorCep">CEP *</label><input type="text" id="fiadorCep" placeholder="00000-000" inputmode="numeric" maxlength="9"></div>
+          </div>
+          <div class="row">
+            <div class="field"><label for="fiadorCidade">Cidade *</label>
+              <select id="fiadorCidade">
+                <option value="">Selecione</option>
+                <option>Abadia de Goiás</option>
+                <option>Trindade</option>
+              </select>
+            </div>
+            <div class="field"><label for="fiadorEstado">Estado *</label>
+              <select id="fiadorEstado"><option value="GO" selected>GO</option></select>
+            </div>
+          </div>
         </div>
 
         <div class="conditional" id="seguroWrap" style="display:none;">
@@ -940,6 +1030,36 @@ function fmtMoney(v) {
   const n = parseMoney(v);
   if (isNaN(n)) return '';
   return n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+/* =========================================================
+   Endereços — campos separados unidos em uma linha só.
+   Contratos antigos guardavam o endereço em um campo único
+   (ex.: locadorEndereco); as funções abaixo caem nesse campo
+   quando as partes separadas não existem no registro.
+   ========================================================= */
+function cidadeSemUF(v) { return String(v || '').replace(/\s*[–—-]\s*GO\s*$/, ''); }
+function juntarEndereco(p) {
+  const partes = [];
+  if (p.logradouro) partes.push(p.logradouro);
+  if (p.numero) partes.push(/^s\/?\.?\s*n/i.test(String(p.numero).trim()) ? 's/nº' : 'nº ' + p.numero);
+  if (p.complemento) partes.push(p.complemento);
+  if (p.bairro) partes.push('Bairro ' + p.bairro);
+  if (p.cidade) partes.push(p.cidade + (p.estado ? ' – ' + p.estado : ''));
+  if (p.cep) partes.push('CEP ' + p.cep);
+  return partes.join(', ');
+}
+function enderecoPessoa(d, prefix) {
+  if (!d[prefix + 'Logradouro'] && d[prefix + 'Endereco']) return d[prefix + 'Endereco'];
+  return juntarEndereco({
+    logradouro: d[prefix + 'Logradouro'], numero: d[prefix + 'Numero'], complemento: d[prefix + 'Complemento'],
+    bairro: d[prefix + 'Bairro'], cidade: d[prefix + 'Cidade'], estado: d[prefix + 'Estado'], cep: d[prefix + 'Cep']
+  });
+}
+/* Endereço do imóvel sem cidade/CEP — a cláusula 1ª e as telas já os citam à parte */
+function enderecoImovel(d) {
+  if (!d.imovelLogradouro && d.imovelEndereco) return d.imovelEndereco;
+  return juntarEndereco({ logradouro: d.imovelLogradouro, numero: d.imovelNumero, complemento: d.imovelComplemento, bairro: d.imovelBairro });
 }
 
 /* =========================================================
@@ -1304,11 +1424,11 @@ async function abrirDetalhes(id) {
 
     <div class="group-label">Informações</div>
     ${sectionCard('i-house', 'Imóvel',
-      kvRow('Endereço', d.imovelEndereco) + kvRow('Cidade', d.imovelCidade) + kvRow('CEP', d.imovelCep))}
+      kvRow('Endereço', enderecoImovel(d)) + kvRow('Cidade', d.imovelCidade) + kvRow('CEP', d.imovelCep))}
     ${sectionCard('i-person', 'Locador',
-      kvRow('Nome', d.locadorNome) + kvRow('CPF', d.locadorCpf))}
+      kvRow('Nome', d.locadorNome) + kvRow('CPF', d.locadorCpf) + kvRow('Endereço', enderecoPessoa(d, 'locador')))}
     ${sectionCard('i-people', 'Locatário',
-      kvRow('Nome', d.locatarioNome) + kvRow('CPF', d.locatarioCpf) + kvRow('E-mail', d.locatarioEmail) + kvRow('WhatsApp', d.locatarioWhats))}
+      kvRow('Nome', d.locatarioNome) + kvRow('CPF', d.locatarioCpf) + kvRow('Endereço', enderecoPessoa(d, 'locatario')) + kvRow('E-mail', d.locatarioEmail) + kvRow('WhatsApp', d.locatarioWhats))}
     ${sectionCard('i-money', 'Financeiro',
       kvRow('Aluguel', d.valorAluguel ? 'R$ ' + fmtMoney(d.valorAluguel) : '') +
       kvRow('Vencimento', d.diaVencimento ? 'dia ' + d.diaVencimento : '') +
@@ -1409,6 +1529,7 @@ let currentStep = 0;
 function abrirWizard(titulo) {
   $('formTitulo').textContent = titulo;
   currentStep = 0;
+  montarDiretorioPessoas();
   atualizarWizard();
   showView('form');
 }
@@ -1466,11 +1587,11 @@ function renderResumo() {
 
   $('resumoContent').innerHTML =
     bloco('i-house', 'Imóvel', 0,
-      kvRow('Endereço', d.imovelEndereco) + kvRow('Cidade', d.imovelCidade) + kvRow('CEP', d.imovelCep)) +
+      kvRow('Endereço', enderecoImovel(d)) + kvRow('Cidade', d.imovelCidade) + kvRow('CEP', d.imovelCep)) +
     bloco('i-person', 'Locador', 1,
-      kvRow('Nome', d.locadorNome) + kvRow('CPF', d.locadorCpf)) +
+      kvRow('Nome', d.locadorNome) + kvRow('CPF', d.locadorCpf) + kvRow('Endereço', enderecoPessoa(d, 'locador'))) +
     bloco('i-people', 'Locatário', 2,
-      kvRow('Nome', d.locatarioNome) + kvRow('CPF', d.locatarioCpf) + kvRow('E-mail', d.locatarioEmail) + kvRow('WhatsApp', d.locatarioWhats)) +
+      kvRow('Nome', d.locatarioNome) + kvRow('CPF', d.locatarioCpf) + kvRow('Endereço', enderecoPessoa(d, 'locatario')) + kvRow('E-mail', d.locatarioEmail) + kvRow('WhatsApp', d.locatarioWhats)) +
     bloco('i-money', 'Financeiro', 3,
       kvRow('Aluguel', d.valorAluguel ? 'R$ ' + fmtMoney(d.valorAluguel) : '') +
       kvRow('Vencimento', d.diaVencimento ? 'dia ' + d.diaVencimento : '') +
@@ -1505,13 +1626,23 @@ function limparFormulario() {
 
 function preencherFormulario(d) {
   const set = (id, val) => { const el = $(id); if (el && val !== undefined) el.value = val; };
-  set('locadorNome', d.locadorNome); set('locadorEstadoCivil', d.locadorEstadoCivil); set('locadorProfissao', d.locadorProfissao);
   const comMascara = (mask, val) => (val === undefined ? undefined : mask(val));
-  set('locadorRg', d.locadorRg); set('locadorCpf', comMascara(maskCPF, d.locadorCpf)); set('locadorEndereco', d.locadorEndereco);
+  /* Registros antigos: joga o endereço único no campo de logradouro para o
+     usuário redistribuir; cidade antiga vinha com " – GO" no fim */
+  const setEndereco = prefix => {
+    set(prefix + 'Logradouro', d[prefix + 'Logradouro'] !== undefined ? d[prefix + 'Logradouro'] : d[prefix + 'Endereco']);
+    set(prefix + 'Numero', d[prefix + 'Numero']); set(prefix + 'Complemento', d[prefix + 'Complemento']);
+    set(prefix + 'Bairro', d[prefix + 'Bairro']);
+    set(prefix + 'Cidade', d[prefix + 'Cidade'] !== undefined ? cidadeSemUF(d[prefix + 'Cidade']) : undefined);
+    set(prefix + 'Estado', d[prefix + 'Estado'] || 'GO');
+    set(prefix + 'Cep', comMascara(maskCEP, d[prefix + 'Cep']));
+  };
+  set('locadorNome', d.locadorNome); set('locadorEstadoCivil', d.locadorEstadoCivil); set('locadorProfissao', d.locadorProfissao);
+  set('locadorRg', d.locadorRg); set('locadorCpf', comMascara(maskCPF, d.locadorCpf)); setEndereco('locador');
   set('locatarioNome', d.locatarioNome); set('locatarioEstadoCivil', d.locatarioEstadoCivil); set('locatarioProfissao', d.locatarioProfissao);
-  set('locatarioRg', d.locatarioRg); set('locatarioCpf', comMascara(maskCPF, d.locatarioCpf)); set('locatarioEndereco', d.locatarioEndereco);
+  set('locatarioRg', d.locatarioRg); set('locatarioCpf', comMascara(maskCPF, d.locatarioCpf)); setEndereco('locatario');
   set('locatarioEmail', d.locatarioEmail); set('locatarioWhats', comMascara(maskFone, d.locatarioWhats));
-  set('imovelEndereco', d.imovelEndereco); set('imovelCidade', d.imovelCidade); set('imovelCep', comMascara(maskCEP, d.imovelCep));
+  setEndereco('imovel');
   set('valorAluguel', comMascara(moneyParaCampo, d.valorAluguel)); set('diaVencimento', d.diaVencimento); set('formaPagamento', d.formaPagamento);
   set('valorExtenso', d.valorExtenso);
   set('indiceReajuste', d.indiceReajuste); set('indiceOutro', d.indiceOutro);
@@ -1525,7 +1656,7 @@ function preencherFormulario(d) {
   if (radio) { radio.checked = true; radio.dispatchEvent(new Event('change')); }
   set('valorCaucao', comMascara(moneyParaCampo, d.valorCaucao));
   set('fiadorNome', d.fiadorNome); set('fiadorEstadoCivil', d.fiadorEstadoCivil); set('fiadorProfissao', d.fiadorProfissao);
-  set('fiadorRg', d.fiadorRg); set('fiadorCpf', comMascara(maskCPF, d.fiadorCpf)); set('fiadorEndereco', d.fiadorEndereco);
+  set('fiadorRg', d.fiadorRg); set('fiadorCpf', comMascara(maskCPF, d.fiadorCpf)); setEndereco('fiador');
   set('seguroInfo', d.seguroInfo);
 
   const iptuRadio = document.querySelector(`input[name=iptu][value="${d.iptu || 'Locador'}"]`);
@@ -1543,13 +1674,18 @@ function preencherFormulario(d) {
 
 function coletarDados() {
   const g = id => $(id).value;
+  const endereco = prefix => ({
+    [prefix + 'Logradouro']: g(prefix + 'Logradouro'), [prefix + 'Numero']: g(prefix + 'Numero'),
+    [prefix + 'Complemento']: g(prefix + 'Complemento'), [prefix + 'Bairro']: g(prefix + 'Bairro'),
+    [prefix + 'Cidade']: g(prefix + 'Cidade'), [prefix + 'Estado']: g(prefix + 'Estado'), [prefix + 'Cep']: g(prefix + 'Cep')
+  });
   return {
     locadorNome: g('locadorNome'), locadorEstadoCivil: g('locadorEstadoCivil'), locadorProfissao: g('locadorProfissao'),
-    locadorRg: g('locadorRg'), locadorCpf: g('locadorCpf'), locadorEndereco: g('locadorEndereco'),
+    locadorRg: g('locadorRg'), locadorCpf: g('locadorCpf'), ...endereco('locador'),
     locatarioNome: g('locatarioNome'), locatarioEstadoCivil: g('locatarioEstadoCivil'), locatarioProfissao: g('locatarioProfissao'),
-    locatarioRg: g('locatarioRg'), locatarioCpf: g('locatarioCpf'), locatarioEndereco: g('locatarioEndereco'),
+    locatarioRg: g('locatarioRg'), locatarioCpf: g('locatarioCpf'), ...endereco('locatario'),
     locatarioEmail: g('locatarioEmail'), locatarioWhats: g('locatarioWhats'),
-    imovelEndereco: g('imovelEndereco'), imovelCidade: g('imovelCidade'), imovelCep: g('imovelCep'),
+    ...endereco('imovel'),
     valorAluguel: g('valorAluguel'), diaVencimento: g('diaVencimento'), formaPagamento: g('formaPagamento'),
     valorExtenso: g('valorExtenso'),
     indiceReajuste: g('indiceReajuste'), indiceOutro: g('indiceOutro'),
@@ -1557,7 +1693,7 @@ function coletarDados() {
     garantia: document.querySelector('input[name=garantia]:checked').value,
     valorCaucao: g('valorCaucao'),
     fiadorNome: g('fiadorNome'), fiadorEstadoCivil: g('fiadorEstadoCivil'), fiadorProfissao: g('fiadorProfissao'),
-    fiadorRg: g('fiadorRg'), fiadorCpf: g('fiadorCpf'), fiadorEndereco: g('fiadorEndereco'),
+    fiadorRg: g('fiadorRg'), fiadorCpf: g('fiadorCpf'), ...endereco('fiador'),
     seguroInfo: g('seguroInfo'),
     iptu: document.querySelector('input[name=iptu]:checked').value,
     dataInicio: g('dataInicio'), prazoLocacao: g('prazoLocacao'),
@@ -1574,7 +1710,7 @@ function aplicarMascara(id, mask) {
   el.addEventListener('input', () => { el.value = mask(el.value); });
 }
 ['locadorCpf','locatarioCpf','fiadorCpf','test1Cpf','test2Cpf'].forEach(id => aplicarMascara(id, maskCPF));
-aplicarMascara('imovelCep', maskCEP);
+['imovelCep','locadorCep','locatarioCep','fiadorCep'].forEach(id => aplicarMascara(id, maskCEP));
 aplicarMascara('locatarioWhats', maskFone);
 ['valorAluguel','valorCaucao'].forEach(id => aplicarMascara(id, maskMoney));
 aplicarMascara('prazoLocacao', v => soDigitos(v).slice(0, 3));
@@ -1617,17 +1753,75 @@ document.querySelectorAll('input[type=radio]:checked').forEach(r => r.closest('.
 $('imovelCidade').addEventListener('change', function(){
   const comarca = $('comarca');
   const cidadeAssin = $('cidadeAssinatura');
-  if (!comarca.value) comarca.value = this.value;
-  if (!cidadeAssin.value) cidadeAssin.value = this.value;
+  const completo = this.value ? this.value + ' – GO' : '';
+  if (!comarca.value) comarca.value = completo;
+  if (!cidadeAssin.value) cidadeAssin.value = completo;
+});
+
+/* =========================================================
+   Autopreenchimento com pessoas de contratos existentes
+   ========================================================= */
+const PESSOA_CAMPOS = ['Nome','EstadoCivil','Profissao','Rg','Cpf','Endereco','Logradouro','Numero','Complemento','Bairro','Cidade','Estado','Cep','Email','Whats'];
+let pessoasDir = { locador: [], locatario: [], fiador: [] };
+
+async function montarDiretorioPessoas() {
+  const contratos = await dbGetAll();
+  contratos.sort((a, b) => (b.atualizadoEm || 0) - (a.atualizadoEm || 0));
+  const coletarPessoas = prefix => {
+    const vistos = new Set(), out = [];
+    contratos.forEach(c => {
+      const d = c.dados || {};
+      const nome = (d[prefix + 'Nome'] || '').trim();
+      if (!nome) return;
+      const chave = soDigitos(d[prefix + 'Cpf']) || nome.toLowerCase();
+      if (vistos.has(chave)) return;
+      vistos.add(chave);
+      const p = {};
+      PESSOA_CAMPOS.forEach(f => { p[f] = d[prefix + f]; });
+      out.push(p);
+    });
+    return out;
+  };
+  pessoasDir = { locador: coletarPessoas('locador'), locatario: coletarPessoas('locatario'), fiador: coletarPessoas('fiador') };
+  ['locador','locatario','fiador'].forEach(tipo => {
+    const lista = pessoasDir[tipo];
+    $(tipo + 'Existente').innerHTML = '<option value="">Selecionar…</option>' +
+      lista.map((p, i) => `<option value="${i}">${esc(p.Nome)}${p.Cpf ? ' — CPF ' + esc(p.Cpf) : ''}</option>`).join('');
+    $(tipo + 'ReuseCard').hidden = lista.length === 0;
+  });
+}
+
+function aplicarPessoa(prefix, p) {
+  const set = (suf, val, mask) => { const el = $(prefix + suf); if (el) el.value = val == null ? '' : (mask ? mask(val) : val); };
+  set('Nome', p.Nome); set('EstadoCivil', p.EstadoCivil); set('Profissao', p.Profissao);
+  set('Rg', p.Rg); set('Cpf', p.Cpf, maskCPF);
+  set('Logradouro', p.Logradouro || p.Endereco);
+  set('Numero', p.Numero); set('Complemento', p.Complemento); set('Bairro', p.Bairro);
+  set('Cidade', cidadeSemUF(p.Cidade));
+  set('Estado', p.Estado || 'GO');
+  set('Cep', p.Cep, maskCEP);
+  if (prefix === 'locatario') { set('Email', p.Email); set('Whats', p.Whats, maskFone); }
+}
+
+['locador','locatario','fiador'].forEach(tipo => {
+  $(tipo + 'Existente').addEventListener('change', function(){
+    if (this.value === '') return;
+    const p = pessoasDir[tipo][Number(this.value)];
+    if (!p) return;
+    aplicarPessoa(tipo, p);
+    snackbar('Dados preenchidos. Confira antes de continuar.');
+  });
 });
 
 /* =========================================================
    Validação (por passo e completa)
    ========================================================= */
+const ENDERECO_OBRIGATORIO = ['Logradouro','Numero','Bairro','Cidade','Cep'];
+const camposEndereco = prefix => ENDERECO_OBRIGATORIO.map(s => prefix + s);
 const CAMPOS_PASSO = [
-  ['imovelEndereco','imovelCidade','imovelCep'],
-  ['locadorNome','locadorEstadoCivil','locadorProfissao','locadorRg','locadorCpf','locadorEndereco'],
-  ['locatarioNome','locatarioEstadoCivil','locatarioProfissao','locatarioRg','locatarioCpf','locatarioEndereco'],
+  camposEndereco('imovel'),
+  ['locadorNome','locadorEstadoCivil','locadorProfissao','locadorRg','locadorCpf'].concat(camposEndereco('locador')),
+  ['locatarioNome','locatarioEstadoCivil','locatarioProfissao','locatarioRg','locatarioCpf'].concat(camposEndereco('locatario')),
   ['valorAluguel','diaVencimento','formaPagamento','indiceReajuste'],
   ['dataInicio','prazoLocacao','comarca','dataAssinatura','cidadeAssinatura'],
   []
@@ -1645,7 +1839,7 @@ function marcarCampos(ids) {
 function camposGarantia() {
   const garantia = document.querySelector('input[name=garantia]:checked').value;
   if (garantia === 'caucao') return ['valorCaucao'];
-  if (garantia === 'fiador') return ['fiadorNome','fiadorEstadoCivil','fiadorProfissao','fiadorRg','fiadorCpf','fiadorEndereco'];
+  if (garantia === 'fiador') return ['fiadorNome','fiadorEstadoCivil','fiadorProfissao','fiadorRg','fiadorCpf'].concat(camposEndereco('fiador'));
   return [];
 }
 function validarPasso(step) {
@@ -1676,7 +1870,7 @@ function clausulaGarantia(d) {
   }
   if (d.garantia === 'fiador') {
     return `<p>8.1. Como garantia do fiel cumprimento das obrigações assumidas neste contrato, as partes elegem a modalidade de <strong>fiança</strong>, nos termos do art. 37 da Lei nº 8.245/1991, apresentando-se como fiador(a):</p>
-    <p>${esc(d.fiadorNome)}, ${esc(d.fiadorEstadoCivil)}, profissão ${esc(d.fiadorProfissao)}, portador(a) do RG nº ${esc(d.fiadorRg)} e inscrito(a) no CPF sob o nº ${esc(d.fiadorCpf)}, residente e domiciliado(a) em ${esc(d.fiadorEndereco)}, doravante denominado(a) simplesmente <strong>FIADOR(A)</strong>.</p>
+    <p>${esc(d.fiadorNome)}, ${esc(d.fiadorEstadoCivil)}, profissão ${esc(d.fiadorProfissao)}, portador(a) do RG nº ${esc(d.fiadorRg)} e inscrito(a) no CPF sob o nº ${esc(d.fiadorCpf)}, residente e domiciliado(a) em ${esc(enderecoPessoa(d, 'fiador'))}, doravante denominado(a) simplesmente <strong>FIADOR(A)</strong>.</p>
     <p>8.2. O FIADOR(A) responde solidariamente por todas as obrigações do LOCATÁRIO decorrentes deste contrato, incluindo aluguéis, encargos, multas e danos ao imóvel, renunciando expressamente aos benefícios de ordem previstos nos arts. 827 e 835 do Código Civil, permanecendo sua responsabilidade até a efetiva entrega das chaves e quitação integral de eventuais débitos, ainda que o contrato seja prorrogado por prazo indeterminado, salvo manifestação expressa de exoneração nos termos da lei.</p>`;
   }
   if (d.garantia === 'nenhuma') {
@@ -1705,15 +1899,15 @@ function montarContrato(d) {
   <p>Pelo presente instrumento particular de <strong>Contrato de Locação Residencial</strong>, de um lado:</p>
 
   <p class="party-block"><strong>LOCADOR(A):</strong><br>
-  ${esc(d.locadorNome)}, nacionalidade brasileira, estado civil ${esc(d.locadorEstadoCivil)}, profissão ${esc(d.locadorProfissao)}, portador(a) do RG nº ${esc(d.locadorRg)} e inscrito(a) no CPF sob o nº ${esc(d.locadorCpf)}, residente e domiciliado(a) em ${esc(d.locadorEndereco)}, doravante denominado(a) simplesmente <strong>LOCADOR(A)</strong>;</p>
+  ${esc(d.locadorNome)}, nacionalidade brasileira, estado civil ${esc(d.locadorEstadoCivil)}, profissão ${esc(d.locadorProfissao)}, portador(a) do RG nº ${esc(d.locadorRg)} e inscrito(a) no CPF sob o nº ${esc(d.locadorCpf)}, residente e domiciliado(a) em ${esc(enderecoPessoa(d, 'locador'))}, doravante denominado(a) simplesmente <strong>LOCADOR(A)</strong>;</p>
 
   <p class="party-block"><strong>LOCATÁRIO(A):</strong><br>
-  ${esc(d.locatarioNome)}, nacionalidade brasileira, estado civil ${esc(d.locatarioEstadoCivil)}, profissão ${esc(d.locatarioProfissao)}, portador(a) do RG nº ${esc(d.locatarioRg)} e inscrito(a) no CPF sob o nº ${esc(d.locatarioCpf)}, residente e domiciliado(a) em ${esc(d.locatarioEndereco)}, doravante denominado(a) simplesmente <strong>LOCATÁRIO(A)</strong>;</p>
+  ${esc(d.locatarioNome)}, nacionalidade brasileira, estado civil ${esc(d.locatarioEstadoCivil)}, profissão ${esc(d.locatarioProfissao)}, portador(a) do RG nº ${esc(d.locatarioRg)} e inscrito(a) no CPF sob o nº ${esc(d.locatarioCpf)}, residente e domiciliado(a) em ${esc(enderecoPessoa(d, 'locatario'))}, doravante denominado(a) simplesmente <strong>LOCATÁRIO(A)</strong>;</p>
 
   <p>Têm entre si, justo e contratado, o presente Contrato de Locação Residencial, que se regerá pela Lei nº 8.245/1991, pelo Código Civil Brasileiro e pelas cláusulas e condições a seguir estabelecidas:</p>
 
   <h2>CLÁUSULA 1ª — DO OBJETO E IDENTIFICAÇÃO DO IMÓVEL</h2>
-  <p>1.1. O LOCADOR, na qualidade de legítimo proprietário e/ou possuidor com poderes de disposição, dá em locação ao LOCATÁRIO o imóvel residencial situado à ${esc(d.imovelEndereco)}, Município de ${esc(d.imovelCidade)}, Estado de Goiás, CEP ${esc(d.imovelCep)}, doravante denominado simplesmente "IMÓVEL".</p>
+  <p>1.1. O LOCADOR, na qualidade de legítimo proprietário e/ou possuidor com poderes de disposição, dá em locação ao LOCATÁRIO o imóvel residencial situado à ${esc(enderecoImovel(d))}, Município de ${esc(cidadeSemUF(d.imovelCidade))}, Estado de Goiás, CEP ${esc(d.imovelCep)}, doravante denominado simplesmente "IMÓVEL".</p>
   <p>1.2. O imóvel é entregue ao LOCATÁRIO em perfeitas condições de habitabilidade, higiene e funcionamento, conforme laudo de vistoria inicial que integra este contrato como Anexo I.</p>
 
   <h2>CLÁUSULA 2ª — DA DESTINAÇÃO</h2>
