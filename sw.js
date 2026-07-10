@@ -1,6 +1,6 @@
 /* Service worker: deixa o app instalável e funcionando offline.
    Estratégia: cache-first com atualização em segundo plano (stale-while-revalidate). */
-const CACHE = 'loca-doc-v1';
+const CACHE = 'loca-doc-v2';
 const PRECACHE = [
   './',
   './index.html',
@@ -11,7 +11,7 @@ const PRECACHE = [
   './icons/icon-maskable-512.png',
   './icons/apple-touch-icon.png',
   './icons/favicon-64.png',
-  'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js'
+  'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'
 ];
 
 self.addEventListener('install', (e) => {

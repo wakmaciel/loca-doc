@@ -3,471 +3,854 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Contratos de Locação Residencial — Goiânia/Trindade (GO)</title>
-<meta name="theme-color" content="#B4232D">
+<title>LocaDoc — Contratos de Locação</title>
+<meta name="theme-color" content="#F7F7F8">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Contratos">
+<meta name="apple-mobile-web-app-title" content="LocaDoc">
 <style>
+  /* =====================================================
+     Design tokens — tema único centralizado
+     ===================================================== */
   :root{
-    --ink:#1F3A4D;
-    --ink-soft:#3D5A73;
-    --paper:#F6F3EC;
-    --paper-line:#DCD5C3;
+    --bg:#F7F7F8;
     --card:#FFFFFF;
-    --accent:#B4232D;
-    --accent-soft:#F8E4E5;
-    --ok:#2F6F4F;
-    --ok-soft:#E5F0EA;
-    --warn:#8A6D1D;
-    --warn-soft:#F6EFD9;
-    --radius:10px;
-    --serif: Georgia, 'Times New Roman', serif;
-    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  }
-  *{box-sizing:border-box; touch-action:manipulation;}
-  body{
-    margin:0;
-    background:var(--paper);
-    background-image:linear-gradient(var(--paper-line) 1px, transparent 1px);
-    background-size:100% 32px;
-    color:var(--ink);
-    font-family:var(--sans);
-    line-height:1.5;
-    padding-bottom:60px;
-  }
-  header.top{
-    max-width:820px;
-    margin:0 auto;
-    padding:32px 20px 16px;
-    display:flex;
-    gap:16px;
-    align-items:center;
-  }
-  .seal{ flex:0 0 auto; width:50px;height:50px; }
-  header.top h1{ font-family:var(--serif); font-size:1.35rem; margin:0 0 3px; color:var(--ink); }
-  header.top p{ margin:0; color:var(--ink-soft); font-size:0.86rem; }
-  main{ max-width:820px; margin:0 auto; padding:0 20px; }
+    --ink:#111114;
+    --ink-2:#6E6E73;
+    --ink-3:#AEAEB2;
+    --line:#E9E9EC;
+    --accent:#C62828;
+    --accent-dark:#A81F1F;
+    --accent-soft:#FBEAEA;
+    --green:#1E8E3E;  --green-soft:#E6F4EA;
+    --orange:#D97706; --orange-soft:#FCF0DF;
+    --blue:#1A6FE8;   --blue-soft:#E8F0FE;
 
-  /* ---------- List view ---------- */
-  .list-toolbar{
-    display:flex; justify-content:space-between; align-items:center;
-    margin-bottom:16px; gap:10px; flex-wrap:wrap;
+    --r-xl:24px; --r-lg:20px; --r-md:14px; --r-sm:10px;
+    --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:20px; --sp-6:24px; --sp-8:32px;
+
+    --shadow-card:0 1px 2px rgba(17,17,20,.04), 0 6px 20px rgba(17,17,20,.05);
+    --shadow-float:0 -6px 24px rgba(17,17,20,.06);
+    --shadow-sheet:0 -12px 40px rgba(17,17,20,.18);
+    --shadow-dialog:0 24px 60px rgba(17,17,20,.22);
+
+    --sans:-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Inter, Roboto, Helvetica, Arial, sans-serif;
+    --ease:cubic-bezier(.32,.72,.28,1);
+    --nav-h:64px;
   }
-  .list-toolbar h2{ font-family:var(--serif); font-size:1.15rem; margin:0; color:var(--ink); }
-  .btn{
-    display:inline-flex; align-items:center; gap:6px;
-    background:var(--accent); color:#fff; border:none;
-    padding:10px 16px; border-radius:7px; font-size:0.9rem;
-    font-family:var(--sans); font-weight:600; cursor:pointer;
+  *{ box-sizing:border-box; touch-action:manipulation; -webkit-tap-highlight-color:transparent; }
+  [hidden]{ display:none !important; }
+  html{ background:var(--bg); }
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:var(--sans); line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom, 0px) + 12px);
+  }
+  button{ font-family:var(--sans); }
+  .view{ max-width:640px; margin:0 auto; padding:0 var(--sp-5); }
+  .view[hidden]{ display:none; }
+  .view.enter{ animation:viewIn .32s var(--ease); }
+  @keyframes viewIn{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+
+  /* =====================================================
+     Botões
+     ===================================================== */
+  .btn-primary, .btn-secondary, .btn-ghost{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    border:none; cursor:pointer; font-weight:600; font-size:1rem;
+    border-radius:var(--r-md); padding:15px 20px;
+    transition:transform .15s var(--ease), background .15s, box-shadow .15s;
     text-decoration:none;
   }
-  .btn:hover{ background:#93161F; }
-  .btn.secondary{ background:#fff; color:var(--ink); border:1px solid var(--paper-line); }
-  .btn.secondary:hover{ background:var(--paper); }
-  .btn.small{ padding:7px 11px; font-size:0.8rem; }
-  .btn.ghost{ background:transparent; color:var(--accent); border:1px solid transparent; padding:7px 10px; }
-  .btn.ghost:hover{ background:var(--accent-soft); }
-  .btn:disabled{ opacity:0.5; cursor:not-allowed; }
+  .btn-primary{ background:var(--accent); color:#fff; box-shadow:0 6px 16px rgba(198,40,40,.25); }
+  .btn-primary:active{ transform:scale(.97); background:var(--accent-dark); }
+  .btn-secondary{ background:#fff; color:var(--ink); border:1px solid var(--line); }
+  .btn-secondary:active{ transform:scale(.97); background:var(--bg); }
+  .btn-ghost{ background:transparent; color:var(--accent); padding:10px 14px; box-shadow:none; }
+  .btn-ghost:active{ background:var(--accent-soft); }
+  .btn-block{ width:100%; }
+  .btn-xl{ padding:17px 20px; font-size:1.05rem; border-radius:var(--r-lg); }
+  button:disabled{ opacity:.5; pointer-events:none; }
+  .icon{ width:20px; height:20px; flex:0 0 auto; }
+  .icon-lg{ width:24px; height:24px; }
 
-  .empty-state{
-    background:var(--card); border:1px dashed var(--paper-line); border-radius:var(--radius);
-    padding:40px 20px; text-align:center; color:var(--ink-soft);
-  }
-  .empty-state p{ margin:0 0 14px; }
+  /* =====================================================
+     Home
+     ===================================================== */
+  .home-header{ padding:calc(env(safe-area-inset-top, 0px) + 28px) 2px 4px; }
+  .home-brand{ display:flex; align-items:center; gap:12px; }
+  .home-brand img{ width:44px; height:44px; border-radius:12px; }
+  .home-brand h1{ margin:0; font-size:1.9rem; font-weight:800; letter-spacing:-.03em; }
+  .home-brand h1 span{ color:var(--accent); }
+  .home-sub{ margin:18px 0 14px; font-size:1.25rem; font-weight:700; letter-spacing:-.02em; }
+  .home-hint{ margin:-8px 0 16px; color:var(--ink-2); font-size:.86rem; }
 
+  /* =====================================================
+     Card de contrato
+     ===================================================== */
   .contract-card{
-    background:var(--card); border:1px solid var(--paper-line); border-radius:var(--radius);
+    position:relative; background:var(--card); border:1px solid var(--line);
+    border-radius:var(--r-lg); box-shadow:var(--shadow-card);
+    padding:16px 18px; margin-bottom:12px; cursor:pointer;
+    transition:transform .15s var(--ease);
+  }
+  .contract-card:active{ transform:scale(.985); }
+  .contract-card h3{ margin:0 44px 2px 0; font-size:1.05rem; font-weight:700; letter-spacing:-.01em; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .contract-card .meta{ font-size:.84rem; color:var(--ink-2); margin:0 44px 0 0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .contract-card .card-foot{ display:flex; align-items:center; gap:10px; margin-top:10px; }
+  .kebab{
+    position:absolute; top:10px; right:10px; width:38px; height:38px;
+    border:none; background:transparent; border-radius:50%; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; color:var(--ink-2);
+  }
+  .kebab:active{ background:var(--bg); }
+
+  .chip{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:.72rem; font-weight:700; letter-spacing:.03em; text-transform:uppercase;
+    padding:4px 10px; border-radius:999px;
+  }
+  .chip::before{ content:''; width:7px; height:7px; border-radius:50%; background:currentColor; }
+  .chip.gerado{ background:var(--green-soft); color:var(--green); }
+  .chip.rascunho{ background:var(--orange-soft); color:var(--orange); }
+  .chip.assinado{ background:var(--blue-soft); color:var(--blue); }
+  .chip-anexo{ font-size:.78rem; color:var(--ink-2); display:inline-flex; align-items:center; gap:4px; }
+
+  /* =====================================================
+     Estado vazio + skeleton
+     ===================================================== */
+  .empty-state{ text-align:center; padding:56px 24px; color:var(--ink-2); }
+  .empty-state .empty-icon{
+    width:76px; height:76px; margin:0 auto 16px; border-radius:24px;
+    background:var(--accent-soft); color:var(--accent);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .empty-state h3{ margin:0 0 6px; color:var(--ink); font-size:1.1rem; }
+  .empty-state p{ margin:0 0 20px; font-size:.9rem; }
+  .skeleton-card{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--r-lg);
     padding:16px 18px; margin-bottom:12px;
-    display:flex; justify-content:space-between; gap:14px; flex-wrap:wrap;
   }
-  .contract-info h3{ margin:0 0 4px; font-family:var(--serif); font-size:1.02rem; color:var(--ink); }
-  .contract-info .meta{ font-size:0.8rem; color:var(--ink-soft); }
-  .badge{
-    display:inline-block; font-size:0.72rem; font-weight:700; letter-spacing:0.02em;
-    padding:3px 9px; border-radius:20px; margin-top:6px; text-transform:uppercase;
-  }
-  .badge.rascunho{ background:var(--paper-line); color:var(--ink-soft); }
-  .badge.gerado{ background:var(--warn-soft); color:var(--warn); }
-  .badge.assinado{ background:var(--ok-soft); color:var(--ok); }
-  .contract-actions{
-    display:flex; flex-wrap:wrap; gap:6px; align-items:flex-start;
-  }
-  .file-btn{ position:relative; overflow:hidden; }
-  .file-btn input[type=file]{
-    position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%;
-  }
+  .sk-line{ height:12px; border-radius:6px; margin-bottom:10px;
+    background:linear-gradient(90deg, #EFEFF1 25%, #F8F8FA 50%, #EFEFF1 75%);
+    background-size:200% 100%; animation:shimmer 1.3s infinite; }
+  @keyframes shimmer{ from{ background-position:200% 0; } to{ background-position:-200% 0; } }
 
-  /* ---------- Form view ---------- */
-  .form-topbar{
-    display:flex; align-items:center; justify-content:space-between;
-    margin-bottom:16px; gap:10px; flex-wrap:wrap;
+  /* =====================================================
+     Navbar de subtelas
+     ===================================================== */
+  .navbar{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; gap:6px;
+    padding:calc(env(safe-area-inset-top, 0px) + 10px) 0 10px;
+    background:linear-gradient(to bottom, var(--bg) 82%, transparent);
   }
-  .form-topbar h2{ font-family:var(--serif); font-size:1.15rem; margin:0; color:var(--ink); }
-  .card{
-    background:var(--card); border:1px solid var(--paper-line); border-radius:var(--radius);
-    padding:26px 26px 10px; margin-bottom:22px; box-shadow:0 1px 2px rgba(31,58,77,0.04);
+  .nav-btn{
+    width:40px; height:40px; border:none; border-radius:50%;
+    background:#fff; box-shadow:var(--shadow-card); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink);
   }
-  fieldset{ border:none; padding:0; margin:0 0 6px; }
-  legend{
-    font-family:var(--serif); font-size:1.05rem; color:var(--accent);
-    padding:0; margin-bottom:14px; display:flex; align-items:baseline; gap:8px;
+  .nav-btn:active{ transform:scale(.94); }
+  .nav-title{
+    flex:1; text-align:center; font-weight:700; font-size:1rem; letter-spacing:-.01em;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
   }
-  legend .num{
-    font-size:0.75rem; font-weight:600; color:var(--ink-soft);
-    border:1px solid var(--paper-line); border-radius:50%; width:22px;height:22px;
-    display:inline-flex; align-items:center; justify-content:center; font-family:var(--sans);
+  .nav-action{
+    border:none; background:transparent; color:var(--accent); font-weight:600;
+    font-size:.95rem; padding:8px 10px; border-radius:10px; cursor:pointer;
   }
-  .row{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-  .field{ margin-bottom:14px; }
+  .nav-action:active{ background:var(--accent-soft); }
+  .nav-spacer{ width:40px; flex:0 0 auto; }
+
+  /* =====================================================
+     Wizard
+     ===================================================== */
+  .progress-wrap{ display:flex; align-items:center; gap:12px; margin:2px 2px 18px; }
+  .progress-track{ flex:1; height:5px; border-radius:99px; background:#E7E7EA; overflow:hidden; }
+  #progressFill{ height:100%; width:0; border-radius:99px; background:var(--accent); transition:width .35s var(--ease); }
+  #progressLabel{ font-size:.8rem; font-weight:600; color:var(--ink-2); white-space:nowrap; }
+
+  .step{ display:none; }
+  .step.active{ display:block; animation:viewIn .3s var(--ease); }
+  .step-head{ margin:2px 2px 16px; }
+  .step-head .step-icon{
+    width:46px; height:46px; border-radius:15px; margin-bottom:10px;
+    background:var(--accent-soft); color:var(--accent);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .step-head h2{ margin:0 0 2px; font-size:1.35rem; font-weight:800; letter-spacing:-.02em; }
+  .step-head p{ margin:0; color:var(--ink-2); font-size:.88rem; }
+
+  .form-card{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--r-lg);
+    box-shadow:var(--shadow-card); padding:18px; margin-bottom:14px;
+  }
+  .form-card .card-title{
+    margin:0 0 12px; font-size:.8rem; font-weight:700; letter-spacing:.05em;
+    text-transform:uppercase; color:var(--ink-2);
+  }
+  .row{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .field{ margin-bottom:13px; }
   .field.full{ grid-column:1 / -1; }
-  label{ display:block; font-size:0.82rem; color:var(--ink-soft); margin-bottom:5px; font-weight:600; }
-  label .opt{ font-weight:400; color:#8a8a8a; font-size:0.78rem; }
+  .field:last-child{ margin-bottom:4px; }
+  label{ display:block; font-size:.82rem; color:var(--ink-2); margin-bottom:6px; font-weight:600; }
+  label .opt{ font-weight:400; color:var(--ink-3); font-size:.76rem; }
   input[type=text], input[type=number], input[type=date], input[type=email], select, textarea{
-    width:100%; padding:9px 11px; border:1px solid var(--paper-line); border-radius:6px;
-    font-size:16px; font-family:var(--sans); color:var(--ink); background:#FEFEFC;
+    width:100%; padding:13px 14px; border:1px solid var(--line); border-radius:var(--r-md);
+    font-size:16px; font-family:var(--sans); color:var(--ink); background:#FBFBFC;
+    appearance:none; -webkit-appearance:none;
+    transition:border-color .15s, box-shadow .15s, background .15s;
   }
-  input:focus, select:focus, textarea:focus{ outline:2px solid var(--accent); outline-offset:1px; border-color:var(--accent); }
-  .radio-group{ display:flex; flex-wrap:wrap; gap:10px; }
+  input::placeholder{ color:var(--ink-3); }
+  input:focus, select:focus, textarea:focus{
+    outline:none; border-color:var(--accent); background:#fff;
+    box-shadow:0 0 0 3px rgba(198,40,40,.12);
+  }
+  input.invalid, select.invalid{ border-color:var(--accent); background:#FFF9F9; }
+  select{
+    background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236E6E73' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 12px center; padding-right:38px;
+  }
+  input[type=date]{ min-height:48px; }
+
+  .radio-group{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:6px; }
   .radio-option{
-    border:1px solid var(--paper-line); border-radius:6px; padding:8px 12px; font-size:0.88rem;
-    display:flex; align-items:center; gap:7px; cursor:pointer; flex:1 1 auto;
+    border:1.5px solid var(--line); border-radius:var(--r-md); padding:13px 14px;
+    font-size:.92rem; font-weight:600; color:var(--ink-2);
+    display:flex; align-items:center; gap:9px; cursor:pointer; background:#FBFBFC;
+    transition:all .15s var(--ease);
   }
-  .radio-option input{ width:auto; }
-  .radio-option.checked{ border-color:var(--accent); background:var(--accent-soft); }
-  .conditional{ border-left:2px solid var(--accent-soft); padding-left:14px; margin:6px 0 16px; }
-  .checkbox-line{ display:flex; align-items:center; gap:8px; font-size:0.9rem; margin-bottom:10px; }
-  .checkbox-line input{ width:auto; }
-
-  .sticky-bar{
-    position:sticky; bottom:0;
-    background:linear-gradient(to top, var(--paper) 65%, transparent);
-    padding:18px 0 0; display:flex; gap:10px; flex-wrap:wrap;
+  .radio-option input{ position:absolute; opacity:0; pointer-events:none; }
+  .radio-option .dot{
+    width:20px; height:20px; border-radius:50%; border:2px solid var(--ink-3);
+    flex:0 0 auto; display:flex; align-items:center; justify-content:center;
+    transition:all .15s var(--ease);
   }
-  .sticky-bar .btn{ flex:1 1 auto; justify-content:center; }
-  #statusMsg{ width:100%; text-align:center; font-size:0.85rem; margin-top:4px; min-height:1.2em; color:var(--ink-soft); }
-  #statusMsg.error{ color:var(--accent); font-weight:600; }
-  #statusMsg.ok{ color:var(--ok); font-weight:600; }
+  .radio-option.checked{ border-color:var(--accent); background:var(--accent-soft); color:var(--accent); }
+  .radio-option.checked .dot{ border-color:var(--accent); background:var(--accent); }
+  .radio-option.checked .dot::after{ content:''; width:7px; height:7px; border-radius:50%; background:#fff; }
 
-  footer{ max-width:820px; margin:0 auto; padding:10px 20px 30px; font-size:0.78rem; color:#9a9a9a; text-align:center; }
+  .conditional{ border-left:3px solid var(--accent-soft); padding-left:14px; margin:12px 0 4px; }
+  .hint{ color:var(--ink-2); font-size:.86rem; }
 
-  @media (max-width:560px){
-    .row{ grid-template-columns:1fr; }
-    .card{ padding:20px 16px 6px; }
-    .contract-card{ flex-direction:column; }
-    .contract-actions{ width:100%; }
+  .switch-line{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:4px 0; }
+  .switch-line span{ font-size:.92rem; font-weight:500; }
+  .switch{ position:relative; display:inline-block; width:50px; height:30px; flex:0 0 auto; }
+  .switch input{ opacity:0; width:0; height:0; }
+  .switch .track{
+    position:absolute; inset:0; border-radius:99px; background:#E4E4E7;
+    transition:background .2s var(--ease); cursor:pointer;
+  }
+  .switch .track::before{
+    content:''; position:absolute; width:26px; height:26px; left:2px; top:2px;
+    border-radius:50%; background:#fff; box-shadow:0 2px 6px rgba(0,0,0,.2);
+    transition:transform .2s var(--ease);
+  }
+  .switch input:checked + .track{ background:var(--green); }
+  .switch input:checked + .track::before{ transform:translateX(20px); }
+
+  .wizard-footer{
+    position:fixed; left:0; right:0; bottom:0; z-index:60;
+    background:rgba(247,247,248,.92); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
+    box-shadow:var(--shadow-float); border-top:1px solid var(--line);
+    padding:12px 20px calc(env(safe-area-inset-bottom, 0px) + 12px);
+  }
+  .wizard-footer .inner{ max-width:640px; margin:0 auto; display:flex; gap:10px; }
+  .wizard-footer .btn-secondary{ flex:0 0 32%; }
+  .wizard-footer .btn-primary{ flex:1; }
+
+  /* =====================================================
+     Resumo / detalhes — cards de seção
+     ===================================================== */
+  .section-card{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--r-lg);
+    box-shadow:var(--shadow-card); padding:16px 18px; margin-bottom:12px;
+  }
+  .section-card .sec-head{ display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+  .section-card .sec-icon{
+    width:34px; height:34px; border-radius:11px; background:var(--accent-soft); color:var(--accent);
+    display:flex; align-items:center; justify-content:center; flex:0 0 auto;
+  }
+  .section-card .sec-head h3{ margin:0; font-size:.95rem; font-weight:700; flex:1; }
+  .sec-edit{ border:none; background:transparent; color:var(--accent); cursor:pointer; padding:6px; border-radius:8px; display:flex; }
+  .sec-edit:active{ background:var(--accent-soft); }
+  .kv{ display:flex; justify-content:space-between; gap:16px; padding:7px 0; border-bottom:1px solid var(--bg); font-size:.9rem; }
+  .kv:last-child{ border-bottom:none; }
+  .kv .k{ color:var(--ink-2); flex:0 0 auto; }
+  .kv .v{ text-align:right; font-weight:600; overflow-wrap:anywhere; }
+
+  /* Detalhes */
+  .detail-hero{ text-align:center; padding:6px 0 18px; }
+  .detail-hero h2{ margin:10px 0 2px; font-size:1.45rem; font-weight:800; letter-spacing:-.02em; }
+  .detail-hero .meta{ color:var(--ink-2); font-size:.88rem; }
+  .quick-actions{ display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; margin:4px 0 18px; }
+  .qa-btn{
+    border:1px solid var(--line); background:var(--card); border-radius:var(--r-md);
+    box-shadow:var(--shadow-card); cursor:pointer; padding:12px 4px 10px;
+    display:flex; flex-direction:column; align-items:center; gap:6px;
+    font-size:.74rem; font-weight:600; color:var(--ink);
+    transition:transform .15s var(--ease);
+  }
+  .qa-btn:active{ transform:scale(.94); }
+  .qa-btn .icon{ color:var(--accent); }
+  .group-label{
+    margin:20px 4px 8px; font-size:.8rem; font-weight:700;
+    letter-spacing:.05em; text-transform:uppercase; color:var(--ink-2);
+  }
+  .file-row{
+    display:flex; align-items:center; gap:12px; padding:12px 14px;
+    background:var(--card); border:1px solid var(--line); border-radius:var(--r-md);
+    box-shadow:var(--shadow-card); cursor:pointer; width:100%; text-align:left;
+    transition:transform .15s var(--ease);
+  }
+  .file-row:active{ transform:scale(.985); }
+  .file-row .file-badge{
+    width:40px; height:40px; border-radius:11px; background:var(--accent); color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    font-size:.6rem; font-weight:800; letter-spacing:.04em; flex:0 0 auto;
+  }
+  .file-row .file-info{ flex:1; min-width:0; }
+  .file-row .file-info b{ display:block; font-size:.9rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .file-row .file-info small{ color:var(--ink-2); font-size:.78rem; }
+  .file-row .chev{ color:var(--ink-3); flex:0 0 auto; }
+  .anexo-actions{ display:flex; gap:10px; margin-top:10px; }
+  .anexo-actions .btn-secondary{ flex:1; padding:11px 12px; font-size:.88rem; }
+
+  /* =====================================================
+     Configurações
+     ===================================================== */
+  .settings-card{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--r-lg);
+    box-shadow:var(--shadow-card); overflow:hidden; margin-bottom:8px;
+  }
+  .settings-row{
+    display:flex; align-items:center; gap:12px; width:100%;
+    padding:15px 16px; border:none; background:transparent; cursor:pointer;
+    font-size:.95rem; color:var(--ink); text-align:left;
+    border-bottom:1px solid var(--bg);
+  }
+  .settings-row:last-child{ border-bottom:none; }
+  .settings-row:active{ background:var(--bg); }
+  .settings-row.static{ cursor:default; }
+  .settings-row .row-icon{
+    width:32px; height:32px; border-radius:9px; display:flex; align-items:center;
+    justify-content:center; flex:0 0 auto; background:var(--accent-soft); color:var(--accent);
+  }
+  .settings-row .row-text{ flex:1; font-weight:500; }
+  .settings-row .row-value{ color:var(--ink-2); font-size:.9rem; }
+  .settings-row .chev{ color:var(--ink-3); }
+  .legal-text{ padding:14px 16px; font-size:.8rem; color:var(--ink-2); line-height:1.55; }
+
+  /* =====================================================
+     Bottom navigation
+     ===================================================== */
+  #bottomNav{
+    position:fixed; left:0; right:0; bottom:0; z-index:70;
+    display:flex; justify-content:center; gap:8px;
+    background:rgba(255,255,255,.88); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px);
+    border-top:1px solid var(--line);
+    padding:8px 16px calc(env(safe-area-inset-bottom, 0px) + 8px);
+  }
+  #bottomNav button{
+    flex:1; max-width:180px; border:none; background:transparent; cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; gap:3px;
+    font-size:.72rem; font-weight:600; color:var(--ink-3); padding:5px 0; border-radius:12px;
+    transition:color .15s;
+  }
+  #bottomNav button.active{ color:var(--accent); }
+  #bottomNav[hidden]{ display:none; }
+
+  /* =====================================================
+     Action sheet (menu ⋯)
+     ===================================================== */
+  .backdrop{
+    position:fixed; inset:0; z-index:90; background:rgba(17,17,20,.4);
+    opacity:0; transition:opacity .25s var(--ease);
+  }
+  .backdrop.show{ opacity:1; }
+  .backdrop[hidden]{ display:none; }
+  .sheet{
+    position:absolute; left:0; right:0; bottom:0;
+    background:var(--card); border-radius:var(--r-xl) var(--r-xl) 0 0;
+    box-shadow:var(--shadow-sheet); max-width:640px; margin:0 auto;
+    padding:8px 16px calc(env(safe-area-inset-bottom, 0px) + 16px);
+    transform:translateY(100%); transition:transform .3s var(--ease);
+  }
+  .backdrop.show .sheet{ transform:none; }
+  .sheet .grabber{ width:38px; height:5px; border-radius:99px; background:#E4E4E7; margin:6px auto 10px; }
+  .sheet h4{ margin:2px 8px 10px; font-size:.95rem; color:var(--ink-2); font-weight:600; text-align:center;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .sheet-item{
+    display:flex; align-items:center; gap:14px; width:100%;
+    padding:14px 12px; border:none; background:transparent; cursor:pointer;
+    font-size:1rem; font-weight:500; color:var(--ink); border-radius:var(--r-md); text-align:left;
+  }
+  .sheet-item:active{ background:var(--bg); }
+  .sheet-item .icon{ color:var(--ink-2); }
+  .sheet-item.destructive{ color:var(--accent); }
+  .sheet-item.destructive .icon{ color:var(--accent); }
+  .sheet-cancel{
+    width:100%; margin-top:8px; padding:14px; border:none; cursor:pointer;
+    background:var(--bg); border-radius:var(--r-md); font-size:1rem; font-weight:700; color:var(--ink);
   }
 
-  /* ---------- Loading overlay ---------- */
+  /* =====================================================
+     Dialog
+     ===================================================== */
+  .dialog-backdrop{ display:flex; align-items:center; justify-content:center; padding:24px; }
+  .dialog{
+    background:var(--card); border-radius:var(--r-lg); box-shadow:var(--shadow-dialog);
+    width:100%; max-width:340px; padding:24px 20px 16px; text-align:center;
+    transform:scale(.92); opacity:0; transition:all .22s var(--ease);
+  }
+  .backdrop.show .dialog{ transform:none; opacity:1; }
+  .dialog h3{ margin:0 0 6px; font-size:1.05rem; }
+  .dialog p{ margin:0 0 18px; color:var(--ink-2); font-size:.9rem; }
+  .dialog .dialog-actions{ display:flex; flex-direction:column; gap:8px; }
+  .dialog .dialog-actions button{
+    padding:13px; border-radius:var(--r-md); border:none; cursor:pointer;
+    font-size:.95rem; font-weight:700;
+  }
+  .dialog .d-confirm{ background:var(--accent); color:#fff; }
+  .dialog .d-confirm.neutral{ background:var(--ink); }
+  .dialog .d-cancel{ background:var(--bg); color:var(--ink); }
+
+  /* =====================================================
+     Snackbar
+     ===================================================== */
+  #snackbar{
+    position:fixed; left:50%; bottom:calc(var(--nav-h) + env(safe-area-inset-bottom, 0px) + 16px);
+    transform:translate(-50%, 20px); z-index:120;
+    background:var(--ink); color:#fff; font-size:.9rem; font-weight:500;
+    padding:12px 20px; border-radius:14px; box-shadow:var(--shadow-dialog);
+    opacity:0; pointer-events:none; transition:all .3s var(--ease);
+    max-width:calc(100vw - 40px); text-align:center;
+  }
+  #snackbar.show{ opacity:1; transform:translate(-50%, 0); }
+
+  /* =====================================================
+     Loading overlay
+     ===================================================== */
   #loadingOverlay{
-    position:fixed; inset:0; background:#F6F3EC; z-index:99999;
-    display:none; align-items:center; justify-content:center; flex-direction:column; gap:14px;
+    position:fixed; inset:0; z-index:200;
+    background:rgba(247,247,248,.85); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+    display:none; align-items:center; justify-content:center; flex-direction:column; gap:16px;
   }
   #loadingOverlay .spinner{
-    width:40px; height:40px; border-radius:50%;
-    border:4px solid var(--paper-line); border-top-color:var(--accent);
-    animation:spin 0.9s linear infinite;
+    width:44px; height:44px; border-radius:50%;
+    border:4px solid #E7E7EA; border-top-color:var(--accent);
+    animation:spin .8s linear infinite;
   }
-  #loadingOverlay p{ font-family:var(--serif); color:var(--ink); font-size:1rem; }
+  #loadingOverlay p{ margin:0; color:var(--ink); font-weight:600; }
   @keyframes spin{ to{ transform:rotate(360deg); } }
+
+  @media (max-width:480px){
+    .row{ grid-template-columns:1fr 1fr; }
+    .row.stack{ grid-template-columns:1fr; }
+  }
 </style>
 </head>
 <body>
+<!-- Ícones (estilo SF Symbols) -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none;">
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5M9 13h6M9 17h4"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.01a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></symbol>
+  <symbol id="i-export" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M16 6l-4-4-4 4M12 2v13"/></symbol>
+  <symbol id="i-clip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14M10 11v6M14 11v6"/></symbol>
+  <symbol id="i-house" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></symbol>
+  <symbol id="i-person" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></symbol>
+  <symbol id="i-people" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.5 3-5.5 6.5-5.5s6.5 2 6.5 5.5"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M17.5 14.7c2.4.6 4 2.3 4 5.3"/></symbol>
+  <symbol id="i-money" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2.5"/><circle cx="12" cy="12" r="2.6"/><path d="M6 12h.01M18 12h.01"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7.5 11-7.5S23 12 23 12s-4 7.5-11 7.5S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 19h16"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5"/><path d="M4 19h16"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+</svg>
 
-<header class="top">
-  <img class="seal" src="icons/icon-192.png" alt="Ícone do app: contrato e casa" width="50" height="50">
-  <div>
-    <h1>Contratos de Locação Residencial</h1>
-    <p>Goiânia e Trindade (GO) · Os contratos ficam salvos neste navegador</p>
+<!-- ===================== HOME ===================== -->
+<section id="viewList" class="view">
+  <header class="home-header">
+    <div class="home-brand">
+      <img src="icons/icon-192.png" alt="LocaDoc" width="44" height="44">
+      <h1>Loca<span>Doc</span></h1>
+    </div>
+    <p class="home-sub">Seus contratos</p>
+  </header>
+  <button class="btn-primary btn-xl btn-block" id="btnNovoContrato" type="button">
+    <svg class="icon"><use href="#i-plus"/></svg> Novo contrato
+  </button>
+  <div style="height:18px;"></div>
+  <div id="listaSkeleton">
+    <div class="skeleton-card"><div class="sk-line" style="width:60%;"></div><div class="sk-line" style="width:40%;"></div><div class="sk-line" style="width:30%; margin-bottom:0;"></div></div>
+    <div class="skeleton-card"><div class="sk-line" style="width:55%;"></div><div class="sk-line" style="width:45%;"></div><div class="sk-line" style="width:30%; margin-bottom:0;"></div></div>
   </div>
-</header>
+  <div id="listaVazia" class="empty-state" style="display:none;">
+    <div class="empty-icon"><svg class="icon" style="width:34px;height:34px;"><use href="#i-doc"/></svg></div>
+    <h3>Nenhum contrato criado</h3>
+    <p>Crie seu primeiro contrato de locação em poucos minutos.</p>
+    <button class="btn-primary" type="button" id="btnNovoContratoVazio">Criar primeiro contrato</button>
+  </div>
+  <div id="listaContratos"></div>
+</section>
 
-<main>
+<!-- ===================== CONFIGURAÇÕES ===================== -->
+<section id="viewSettings" class="view" hidden>
+  <header class="home-header">
+    <p class="home-sub" style="margin-top:6px; font-size:1.9rem; font-weight:800;">Configurações</p>
+  </header>
+  <div class="group-label" style="margin-top:4px;">Backup</div>
+  <div class="settings-card">
+    <button class="settings-row" id="btnExportar" type="button">
+      <span class="row-icon"><svg class="icon"><use href="#i-download"/></svg></span>
+      <span class="row-text">Exportar backup (.json)</span>
+      <svg class="icon chev"><use href="#i-chev"/></svg>
+    </button>
+    <button class="settings-row" id="btnImportar" type="button">
+      <span class="row-icon"><svg class="icon"><use href="#i-upload"/></svg></span>
+      <span class="row-text">Importar backup</span>
+      <svg class="icon chev"><use href="#i-chev"/></svg>
+    </button>
+  </div>
+  <p class="home-hint" style="margin:6px 4px 0;">O backup inclui os dados dos contratos. Arquivos assinados anexados não são incluídos.</p>
+  <div class="group-label">Sobre</div>
+  <div class="settings-card">
+    <div class="settings-row static">
+      <span class="row-icon"><svg class="icon"><use href="#i-info"/></svg></span>
+      <span class="row-text">Versão</span>
+      <span class="row-value">2.0</span>
+    </div>
+    <div class="legal-text">
+      Modelo de referência com base na Lei nº 8.245/1991 (Lei do Inquilinato) — Goiânia e Trindade (GO).
+      Os dados ficam salvos apenas neste navegador/dispositivo; nada é enviado para servidores.
+      Recomenda-se revisão por advogado antes da assinatura.
+    </div>
+  </div>
+  <input type="file" id="inputImportar" accept="application/json" hidden>
+</section>
 
-  <!-- ===================== LISTA ===================== -->
-  <section id="viewList">
-    <div class="list-toolbar">
-      <h2>Meus contratos</h2>
-      <button class="btn" id="btnNovoContrato" type="button">+ Novo contrato</button>
+<!-- ===================== DETALHES ===================== -->
+<section id="viewDetail" class="view sub" hidden>
+  <nav class="navbar">
+    <button class="nav-btn" id="btnDetailVoltar" type="button" aria-label="Voltar"><svg class="icon"><use href="#i-back"/></svg></button>
+    <span class="nav-title">Contrato</span>
+    <button class="nav-btn" id="btnDetailMenu" type="button" aria-label="Mais opções"><svg class="icon"><use href="#i-more"/></svg></button>
+  </nav>
+  <div id="detailContent"></div>
+</section>
+
+<!-- ===================== WIZARD (NOVO/EDITAR) ===================== -->
+<section id="viewForm" class="view sub" hidden>
+  <nav class="navbar">
+    <button class="nav-btn" id="btnWizVoltar" type="button" aria-label="Voltar"><svg class="icon"><use href="#i-back"/></svg></button>
+    <span class="nav-title" id="formTitulo">Novo contrato</span>
+    <button class="nav-action" id="btnSalvarRascunho" type="button">Salvar</button>
+  </nav>
+  <div class="progress-wrap">
+    <div class="progress-track"><div id="progressFill"></div></div>
+    <span id="progressLabel">1 de 6</span>
+  </div>
+
+  <form id="contractForm" novalidate>
+
+    <!-- Passo 1 — Imóvel -->
+    <div class="step" data-step="0">
+      <div class="step-head">
+        <div class="step-icon"><svg class="icon icon-lg"><use href="#i-house"/></svg></div>
+        <h2>O imóvel</h2>
+        <p>Endereço e localização do imóvel que será alugado.</p>
+      </div>
+      <div class="form-card">
+        <div class="field full"><label for="imovelEndereco">Endereço completo do imóvel *</label><input type="text" id="imovelEndereco" required placeholder="Ex.: Rua das Flores, 123 — Jardim das Oliveiras"></div>
+        <div class="row">
+          <div class="field"><label for="imovelCidade">Cidade *</label>
+            <select id="imovelCidade" required>
+              <option value="">Selecione</option>
+              <option>Goiânia – GO</option>
+              <option>Trindade – GO</option>
+            </select>
+          </div>
+          <div class="field"><label for="imovelCep">CEP *</label><input type="text" id="imovelCep" required placeholder="00000-000" inputmode="numeric" maxlength="9"></div>
+        </div>
+      </div>
     </div>
-    <div id="listaVazia" class="empty-state" style="display:none;">
-      <p>Nenhum contrato salvo ainda.</p>
-      <button class="btn secondary" type="button" id="btnNovoContratoVazio">Criar o primeiro contrato</button>
+
+    <!-- Passo 2 — Locador -->
+    <div class="step" data-step="1">
+      <div class="step-head">
+        <div class="step-icon"><svg class="icon icon-lg"><use href="#i-person"/></svg></div>
+        <h2>Locador</h2>
+        <p>Quem está alugando o imóvel (proprietário).</p>
+      </div>
+      <div class="form-card">
+        <div class="field full"><label for="locadorNome">Nome completo *</label><input type="text" id="locadorNome" required placeholder="Ex.: João da Silva"></div>
+        <div class="row">
+          <div class="field"><label for="locadorEstadoCivil">Estado civil *</label>
+            <select id="locadorEstadoCivil" required>
+              <option value="">Selecione</option>
+              <option>solteiro(a)</option><option>casado(a)</option><option>divorciado(a)</option>
+              <option>viúvo(a)</option><option>separado(a) judicialmente</option><option>união estável</option>
+            </select>
+          </div>
+          <div class="field"><label for="locadorProfissao">Profissão *</label><input type="text" id="locadorProfissao" required placeholder="Ex.: empresário(a)"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="locadorRg">RG *</label><input type="text" id="locadorRg" required placeholder="Ex.: 1234567"></div>
+          <div class="field"><label for="locadorCpf">CPF *</label><input type="text" id="locadorCpf" required placeholder="000.000.000-00" inputmode="numeric" maxlength="14"></div>
+        </div>
+        <div class="field full"><label for="locadorEndereco">Endereço completo *</label><input type="text" id="locadorEndereco" required placeholder="Rua, número, bairro, cidade – UF"></div>
+      </div>
     </div>
-    <div id="listaContratos"></div>
-    <div style="text-align:center; margin-top:18px;">
-      <button class="btn ghost small" id="btnExportar" type="button">Exportar backup (.json)</button>
-      <button class="btn ghost small file-btn" type="button">Importar backup
-        <input type="file" id="inputImportar" accept="application/json">
+
+    <!-- Passo 3 — Locatário -->
+    <div class="step" data-step="2">
+      <div class="step-head">
+        <div class="step-icon"><svg class="icon icon-lg"><use href="#i-people"/></svg></div>
+        <h2>Locatário</h2>
+        <p>Quem vai morar no imóvel (inquilino).</p>
+      </div>
+      <div class="form-card">
+        <div class="field full"><label for="locatarioNome">Nome completo *</label><input type="text" id="locatarioNome" required placeholder="Ex.: Maria Oliveira"></div>
+        <div class="row">
+          <div class="field"><label for="locatarioEstadoCivil">Estado civil *</label>
+            <select id="locatarioEstadoCivil" required>
+              <option value="">Selecione</option>
+              <option>solteiro(a)</option><option>casado(a)</option><option>divorciado(a)</option>
+              <option>viúvo(a)</option><option>separado(a) judicialmente</option><option>união estável</option>
+            </select>
+          </div>
+          <div class="field"><label for="locatarioProfissao">Profissão *</label><input type="text" id="locatarioProfissao" required placeholder="Ex.: professor(a)"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="locatarioRg">RG *</label><input type="text" id="locatarioRg" required placeholder="Ex.: 1234567"></div>
+          <div class="field"><label for="locatarioCpf">CPF *</label><input type="text" id="locatarioCpf" required placeholder="000.000.000-00" inputmode="numeric" maxlength="14"></div>
+        </div>
+        <div class="field full"><label for="locatarioEndereco">Endereço completo (atual) *</label><input type="text" id="locatarioEndereco" required placeholder="Rua, número, bairro, cidade – UF"></div>
+      </div>
+      <div class="form-card">
+        <div class="card-title">Contato (opcional)</div>
+        <div class="row">
+          <div class="field"><label for="locatarioEmail">E-mail <span class="opt">(opcional)</span></label><input type="email" id="locatarioEmail" placeholder="Ex.: maria@email.com"></div>
+          <div class="field"><label for="locatarioWhats">WhatsApp <span class="opt">(opcional)</span></label><input type="text" id="locatarioWhats" inputmode="tel" maxlength="15" placeholder="(62) 90000-0000"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Passo 4 — Valores -->
+    <div class="step" data-step="3">
+      <div class="step-head">
+        <div class="step-icon"><svg class="icon icon-lg"><use href="#i-money"/></svg></div>
+        <h2>Valores</h2>
+        <p>Aluguel, forma de pagamento e reajuste.</p>
+      </div>
+      <div class="form-card">
+        <div class="row">
+          <div class="field"><label for="valorAluguel">Valor do aluguel (R$) *</label><input type="text" id="valorAluguel" required inputmode="numeric" placeholder="0,00"></div>
+          <div class="field"><label for="diaVencimento">Dia do vencimento *</label><input type="text" id="diaVencimento" required inputmode="numeric" maxlength="2" placeholder="Ex.: 10"></div>
+        </div>
+        <div class="field full">
+          <label for="valorExtenso">Valor por extenso <span class="opt">(automático — confira)</span></label>
+          <input type="text" id="valorExtenso" placeholder="Preenchido automaticamente">
+        </div>
+        <div class="field full">
+          <label for="formaPagamento">Forma de pagamento *</label>
+          <input type="text" id="formaPagamento" required placeholder="Ex.: PIX, transferência bancária">
+        </div>
+      </div>
+      <div class="form-card">
+        <div class="card-title">Reajuste e tolerância</div>
+        <div class="row">
+          <div class="field">
+            <label for="indiceReajuste">Índice de reajuste anual *</label>
+            <select id="indiceReajuste" required>
+              <option value="IPCA/IBGE">IPCA/IBGE (recomendado)</option>
+              <option value="IGP-M/FGV">IGP-M/FGV</option>
+              <option value="INPC/IBGE">INPC/IBGE</option>
+              <option value="outro">Outro (especificar)</option>
+            </select>
+          </div>
+          <div class="field" id="indiceOutroWrap" style="display:none;">
+            <label for="indiceOutro">Qual índice?</label>
+            <input type="text" id="indiceOutro" placeholder="Ex.: IVAR/FGV">
+          </div>
+        </div>
+        <div class="switch-line">
+          <span>Tolerância de dias para atraso, sem multa</span>
+          <label class="switch"><input type="checkbox" id="temTolerancia"><span class="track"></span></label>
+        </div>
+        <div class="conditional" id="toleranciaWrap" style="display:none;">
+          <div class="field" style="max-width:180px;">
+            <label for="diasTolerancia">Dias de tolerância</label>
+            <input type="text" id="diasTolerancia" value="5" inputmode="numeric" maxlength="2">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Passo 5 — Cláusulas -->
+    <div class="step" data-step="4">
+      <div class="step-head">
+        <div class="step-icon"><svg class="icon icon-lg"><use href="#i-shield"/></svg></div>
+        <h2>Cláusulas</h2>
+        <p>Garantia, IPTU, prazo, foro e testemunhas.</p>
+      </div>
+      <div class="form-card">
+        <div class="card-title">Garantia locatícia</div>
+        <div class="radio-group" id="garantiaGroup">
+          <label class="radio-option"><input type="radio" name="garantia" value="caucao" checked><span class="dot"></span> Caução em dinheiro</label>
+          <label class="radio-option"><input type="radio" name="garantia" value="fiador"><span class="dot"></span> Fiador</label>
+          <label class="radio-option"><input type="radio" name="garantia" value="seguro"><span class="dot"></span> Seguro-fiança</label>
+          <label class="radio-option"><input type="radio" name="garantia" value="nenhuma"><span class="dot"></span> Não se aplica</label>
+        </div>
+
+        <div class="conditional" id="caucaoWrap">
+          <div class="field" style="max-width:220px;">
+            <label for="valorCaucao">Valor da caução (R$) *</label>
+            <input type="text" id="valorCaucao" inputmode="numeric" placeholder="0,00">
+          </div>
+        </div>
+
+        <div class="conditional" id="fiadorWrap" style="display:none;">
+          <div class="field full"><label for="fiadorNome">Nome completo do fiador *</label><input type="text" id="fiadorNome" placeholder="Ex.: Carlos Souza"></div>
+          <div class="row">
+            <div class="field"><label for="fiadorEstadoCivil">Estado civil *</label>
+              <select id="fiadorEstadoCivil">
+                <option value="">Selecione</option>
+                <option>solteiro(a)</option><option>casado(a)</option><option>divorciado(a)</option>
+                <option>viúvo(a)</option><option>união estável</option>
+              </select>
+            </div>
+            <div class="field"><label for="fiadorProfissao">Profissão *</label><input type="text" id="fiadorProfissao"></div>
+          </div>
+          <div class="row">
+            <div class="field"><label for="fiadorRg">RG *</label><input type="text" id="fiadorRg"></div>
+            <div class="field"><label for="fiadorCpf">CPF *</label><input type="text" id="fiadorCpf" placeholder="000.000.000-00" inputmode="numeric" maxlength="14"></div>
+          </div>
+          <div class="field full"><label for="fiadorEndereco">Endereço completo *</label><input type="text" id="fiadorEndereco"></div>
+        </div>
+
+        <div class="conditional" id="seguroWrap" style="display:none;">
+          <div class="field full">
+            <label for="seguroInfo">Seguradora / nº da apólice <span class="opt">(opcional)</span></label>
+            <input type="text" id="seguroInfo">
+          </div>
+        </div>
+
+        <div class="conditional" id="nenhumaWrap" style="display:none;">
+          <p class="hint" style="margin:0;">Nenhuma garantia locatícia será exigida neste contrato. O LOCATÁRIO permanece responsável por todas as demais obrigações contratuais.</p>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <div class="card-title">IPTU</div>
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="iptu" value="Locador" checked><span class="dot"></span> Locador paga</label>
+          <label class="radio-option"><input type="radio" name="iptu" value="Locatário"><span class="dot"></span> Locatário paga</label>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <div class="card-title">Prazo da locação</div>
+        <div class="row">
+          <div class="field"><label for="dataInicio">Data de início *</label><input type="date" id="dataInicio" required></div>
+          <div class="field"><label for="prazoLocacao">Prazo em meses *</label><input type="text" id="prazoLocacao" required placeholder="Ex.: 12" inputmode="numeric" maxlength="3"></div>
+        </div>
+        <p class="hint" style="margin:0;">O texto "12 (doze) meses" é gerado automaticamente.</p>
+      </div>
+
+      <div class="form-card">
+        <div class="card-title">Foro e assinatura</div>
+        <div class="row">
+          <div class="field"><label for="comarca">Comarca do foro *</label>
+            <select id="comarca" required>
+              <option value="">Selecione</option>
+              <option>Goiânia – GO</option>
+              <option>Trindade – GO</option>
+            </select>
+          </div>
+          <div class="field"><label for="dataAssinatura">Data da assinatura *</label><input type="date" id="dataAssinatura" required></div>
+        </div>
+        <div class="field full"><label for="cidadeAssinatura">Cidade da assinatura *</label><input type="text" id="cidadeAssinatura" required placeholder="Ex.: Goiânia – GO"></div>
+      </div>
+
+      <div class="form-card">
+        <div class="card-title">Testemunhas (opcional)</div>
+        <div class="row">
+          <div class="field"><label for="test1Nome">Nome da testemunha 1</label><input type="text" id="test1Nome"></div>
+          <div class="field"><label for="test1Cpf">CPF da testemunha 1</label><input type="text" id="test1Cpf" placeholder="000.000.000-00" inputmode="numeric" maxlength="14"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="test2Nome">Nome da testemunha 2</label><input type="text" id="test2Nome"></div>
+          <div class="field"><label for="test2Cpf">CPF da testemunha 2</label><input type="text" id="test2Cpf" placeholder="000.000.000-00" inputmode="numeric" maxlength="14"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Passo 6 — Resumo -->
+    <div class="step" data-step="5">
+      <div class="step-head">
+        <div class="step-icon"><svg class="icon icon-lg"><use href="#i-doc"/></svg></div>
+        <h2>Revisar contrato</h2>
+        <p>Confira os dados antes de gerar o PDF.</p>
+      </div>
+      <div id="resumoContent"></div>
+    </div>
+
+  </form>
+
+  <div class="wizard-footer">
+    <div class="inner">
+      <button class="btn-secondary" id="btnAnterior" type="button">Anterior</button>
+      <button class="btn-primary" id="btnProximo" type="button">Próximo</button>
+      <button class="btn-primary" id="generateBtn" type="button" hidden>
+        <svg class="icon"><use href="#i-export"/></svg> Gerar contrato
       </button>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ===================== FORMULÁRIO ===================== -->
-  <section id="viewForm" style="display:none;">
-    <div class="form-topbar">
-      <button class="btn secondary small" id="btnVoltar" type="button">← Voltar aos contratos</button>
-      <h2 id="formTitulo">Novo contrato</h2>
+<!-- ===================== NAV / OVERLAYS ===================== -->
+<nav id="bottomNav">
+  <button data-nav="list" class="active" type="button"><svg class="icon icon-lg"><use href="#i-doc"/></svg> Contratos</button>
+  <button data-nav="settings" type="button"><svg class="icon icon-lg"><use href="#i-gear"/></svg> Configurações</button>
+</nav>
+
+<div id="sheetBackdrop" class="backdrop" hidden>
+  <div class="sheet" id="sheetContent"></div>
+</div>
+
+<div id="dialogBackdrop" class="backdrop dialog-backdrop" hidden>
+  <div class="dialog">
+    <h3 id="dialogTitle"></h3>
+    <p id="dialogMsg"></p>
+    <div class="dialog-actions">
+      <button class="d-confirm" id="dialogConfirm" type="button"></button>
+      <button class="d-cancel" id="dialogCancel" type="button">Cancelar</button>
     </div>
+  </div>
+</div>
 
-    <form id="contractForm" novalidate>
-
-      <!-- 1. LOCADOR -->
-      <div class="card">
-        <fieldset>
-          <legend><span class="num">1</span> Dados do Locador (quem está alugando o imóvel)</legend>
-          <div class="row">
-            <div class="field full"><label for="locadorNome">Nome completo *</label><input type="text" id="locadorNome" required></div>
-          </div>
-          <div class="row">
-            <div class="field"><label for="locadorEstadoCivil">Estado civil *</label>
-              <select id="locadorEstadoCivil" required>
-                <option value="">Selecione</option>
-                <option>solteiro(a)</option><option>casado(a)</option><option>divorciado(a)</option>
-                <option>viúvo(a)</option><option>separado(a) judicialmente</option><option>união estável</option>
-              </select>
-            </div>
-            <div class="field"><label for="locadorProfissao">Profissão *</label><input type="text" id="locadorProfissao" required></div>
-          </div>
-          <div class="row">
-            <div class="field"><label for="locadorRg">RG *</label><input type="text" id="locadorRg" required></div>
-            <div class="field"><label for="locadorCpf">CPF *</label><input type="text" id="locadorCpf" required placeholder="000.000.000-00" inputmode="numeric" maxlength="14"></div>
-          </div>
-          <div class="row">
-            <div class="field full"><label for="locadorEndereco">Endereço completo *</label><input type="text" id="locadorEndereco" required></div>
-          </div>
-        </fieldset>
-      </div>
-
-      <!-- 2. LOCATARIO -->
-      <div class="card">
-        <fieldset>
-          <legend><span class="num">2</span> Dados do Locatário (quem vai morar no imóvel)</legend>
-          <div class="row">
-            <div class="field full"><label for="locatarioNome">Nome completo *</label><input type="text" id="locatarioNome" required></div>
-          </div>
-          <div class="row">
-            <div class="field"><label for="locatarioEstadoCivil">Estado civil *</label>
-              <select id="locatarioEstadoCivil" required>
-                <option value="">Selecione</option>
-                <option>solteiro(a)</option><option>casado(a)</option><option>divorciado(a)</option>
-                <option>viúvo(a)</option><option>separado(a) judicialmente</option><option>união estável</option>
-              </select>
-            </div>
-            <div class="field"><label for="locatarioProfissao">Profissão *</label><input type="text" id="locatarioProfissao" required></div>
-          </div>
-          <div class="row">
-            <div class="field"><label for="locatarioRg">RG *</label><input type="text" id="locatarioRg" required></div>
-            <div class="field"><label for="locatarioCpf">CPF *</label><input type="text" id="locatarioCpf" required placeholder="000.000.000-00" inputmode="numeric" maxlength="14"></div>
-          </div>
-          <div class="row">
-            <div class="field full"><label for="locatarioEndereco">Endereço completo (atual) *</label><input type="text" id="locatarioEndereco" required></div>
-          </div>
-          <div class="row">
-            <div class="field"><label for="locatarioEmail">E-mail <span class="opt">(opcional)</span></label><input type="email" id="locatarioEmail"></div>
-            <div class="field"><label for="locatarioWhats">WhatsApp <span class="opt">(opcional)</span></label><input type="text" id="locatarioWhats" inputmode="tel" maxlength="15" placeholder="(62) 90000-0000"></div>
-          </div>
-        </fieldset>
-      </div>
-
-      <!-- 3. IMOVEL -->
-      <div class="card">
-        <fieldset>
-          <legend><span class="num">3</span> O Imóvel</legend>
-          <div class="row">
-            <div class="field full"><label for="imovelEndereco">Endereço completo do imóvel *</label><input type="text" id="imovelEndereco" required></div>
-          </div>
-          <div class="row">
-            <div class="field"><label for="imovelCidade">Cidade *</label>
-              <select id="imovelCidade" required>
-                <option value="">Selecione</option>
-                <option>Goiânia – GO</option>
-                <option>Trindade – GO</option>
-              </select>
-            </div>
-            <div class="field"><label for="imovelCep">CEP *</label><input type="text" id="imovelCep" required placeholder="00000-000" inputmode="numeric" maxlength="9"></div>
-          </div>
-        </fieldset>
-      </div>
-
-      <!-- 4. CONDIÇÕES FINANCEIRAS -->
-      <div class="card">
-        <fieldset>
-          <legend><span class="num">4</span> Condições Financeiras</legend>
-          <div class="row">
-            <div class="field"><label for="valorAluguel">Valor do aluguel (R$) *</label><input type="text" id="valorAluguel" required inputmode="numeric" placeholder="0,00"></div>
-            <div class="field"><label for="diaVencimento">Dia do vencimento *</label><input type="text" id="diaVencimento" required inputmode="numeric" maxlength="2" placeholder="Ex.: 10"></div>
-          </div>
-          <div class="field full">
-            <label for="valorExtenso">Valor por extenso <span class="opt">(preenchido automaticamente — confira antes de gerar)</span></label>
-            <input type="text" id="valorExtenso">
-          </div>
-          <div class="field full">
-            <label for="formaPagamento">Forma de pagamento *</label>
-            <input type="text" id="formaPagamento" required placeholder="Ex.: PIX, transferência bancária, depósito em conta">
-          </div>
-          <div class="row">
-            <div class="field">
-              <label for="indiceReajuste">Índice de reajuste anual *</label>
-              <select id="indiceReajuste" required>
-                <option value="IPCA/IBGE">IPCA/IBGE (recomendado)</option>
-                <option value="IGP-M/FGV">IGP-M/FGV</option>
-                <option value="INPC/IBGE">INPC/IBGE</option>
-                <option value="outro">Outro (especificar)</option>
-              </select>
-            </div>
-            <div class="field" id="indiceOutroWrap" style="display:none;">
-              <label for="indiceOutro">Qual índice?</label>
-              <input type="text" id="indiceOutro">
-            </div>
-          </div>
-          <div class="checkbox-line">
-            <input type="checkbox" id="temTolerancia">
-            <label for="temTolerancia" style="margin:0;">Aplicar tolerância de dias para pagamento em atraso, sem multa</label>
-          </div>
-          <div class="conditional" id="toleranciaWrap" style="display:none;">
-            <div class="field" style="max-width:180px;">
-              <label for="diasTolerancia">Dias de tolerância</label>
-              <input type="text" id="diasTolerancia" value="5" inputmode="numeric" maxlength="2">
-            </div>
-          </div>
-        </fieldset>
-      </div>
-
-      <!-- 5. GARANTIA -->
-      <div class="card">
-        <fieldset>
-          <legend><span class="num">5</span> Garantia Locatícia</legend>
-          <div class="radio-group" id="garantiaGroup">
-            <label class="radio-option"><input type="radio" name="garantia" value="caucao" checked> Caução em dinheiro</label>
-            <label class="radio-option"><input type="radio" name="garantia" value="fiador"> Fiador</label>
-            <label class="radio-option"><input type="radio" name="garantia" value="seguro"> Seguro-fiança</label>
-            <label class="radio-option"><input type="radio" name="garantia" value="nenhuma"> Não se aplica</label>
-          </div>
-
-          <div class="conditional" id="caucaoWrap">
-            <div class="field" style="max-width:220px;">
-              <label for="valorCaucao">Valor da caução (R$) *</label>
-              <input type="text" id="valorCaucao" inputmode="numeric" placeholder="0,00">
-            </div>
-          </div>
-
-          <div class="conditional" id="fiadorWrap" style="display:none;">
-            <div class="row">
-              <div class="field full"><label for="fiadorNome">Nome completo do fiador *</label><input type="text" id="fiadorNome"></div>
-            </div>
-            <div class="row">
-              <div class="field"><label for="fiadorEstadoCivil">Estado civil *</label>
-                <select id="fiadorEstadoCivil">
-                  <option value="">Selecione</option>
-                  <option>solteiro(a)</option><option>casado(a)</option><option>divorciado(a)</option>
-                  <option>viúvo(a)</option><option>união estável</option>
-                </select>
-              </div>
-              <div class="field"><label for="fiadorProfissao">Profissão *</label><input type="text" id="fiadorProfissao"></div>
-            </div>
-            <div class="row">
-              <div class="field"><label for="fiadorRg">RG *</label><input type="text" id="fiadorRg"></div>
-              <div class="field"><label for="fiadorCpf">CPF *</label><input type="text" id="fiadorCpf" placeholder="000.000.000-00" inputmode="numeric" maxlength="14"></div>
-            </div>
-            <div class="row">
-              <div class="field full"><label for="fiadorEndereco">Endereço completo *</label><input type="text" id="fiadorEndereco"></div>
-            </div>
-          </div>
-
-          <div class="conditional" id="seguroWrap" style="display:none;">
-            <div class="field full">
-              <label for="seguroInfo">Seguradora / nº da apólice <span class="opt">(opcional)</span></label>
-              <input type="text" id="seguroInfo">
-            </div>
-          </div>
-
-          <div class="conditional" id="nenhumaWrap" style="display:none;">
-            <p class="hint" style="margin:0;">Nenhuma garantia locatícia será exigida neste contrato. O LOCATÁRIO permanece responsável por todas as demais obrigações contratuais.</p>
-          </div>
-        </fieldset>
-      </div>
-
-      <!-- 6. IPTU -->
-      <div class="card">
-        <fieldset>
-          <legend><span class="num">6</span> Responsabilidade pelo IPTU</legend>
-          <div class="radio-group">
-            <label class="radio-option"><input type="radio" name="iptu" value="Locador" checked> Locador paga o IPTU</label>
-            <label class="radio-option"><input type="radio" name="iptu" value="Locatário"> Locatário paga o IPTU</label>
-          </div>
-        </fieldset>
-      </div>
-
-      <!-- 7. PRAZO E DATAS -->
-      <div class="card">
-        <fieldset>
-          <legend><span class="num">7</span> Prazo da Locação</legend>
-          <div class="row">
-            <div class="field"><label for="dataInicio">Data de início *</label><input type="date" id="dataInicio" required></div>
-            <div class="field"><label for="prazoLocacao">Prazo em meses * <span class="opt">(só o número — o texto "12 (doze) meses" é gerado automaticamente)</span></label><input type="text" id="prazoLocacao" required placeholder="Ex.: 12" inputmode="numeric" maxlength="3"></div>
-          </div>
-        </fieldset>
-      </div>
-
-      <!-- 8. FORO E ASSINATURA -->
-      <div class="card">
-        <fieldset>
-          <legend><span class="num">8</span> Foro e Local/Data da Assinatura</legend>
-          <div class="row">
-            <div class="field"><label for="comarca">Comarca do foro *</label>
-              <select id="comarca" required>
-                <option value="">Selecione</option>
-                <option>Goiânia – GO</option>
-                <option>Trindade – GO</option>
-              </select>
-            </div>
-            <div class="field"><label for="dataAssinatura">Data da assinatura *</label><input type="date" id="dataAssinatura" required></div>
-          </div>
-          <div class="row">
-            <div class="field full"><label for="cidadeAssinatura">Cidade da assinatura *</label><input type="text" id="cidadeAssinatura" required placeholder="Ex.: Goiânia – GO"></div>
-          </div>
-        </fieldset>
-      </div>
-
-      <!-- 9. TESTEMUNHAS -->
-      <div class="card">
-        <fieldset>
-          <legend><span class="num">9</span> Testemunhas <span class="opt" style="font-weight:400;">(opcional, mas recomendado)</span></legend>
-          <div class="row">
-            <div class="field"><label for="test1Nome">Nome da testemunha 1</label><input type="text" id="test1Nome"></div>
-            <div class="field"><label for="test1Cpf">CPF da testemunha 1</label><input type="text" id="test1Cpf" placeholder="000.000.000-00" inputmode="numeric" maxlength="14"></div>
-          </div>
-          <div class="row">
-            <div class="field"><label for="test2Nome">Nome da testemunha 2</label><input type="text" id="test2Nome"></div>
-            <div class="field"><label for="test2Cpf">CPF da testemunha 2</label><input type="text" id="test2Cpf" placeholder="000.000.000-00" inputmode="numeric" maxlength="14"></div>
-          </div>
-        </fieldset>
-      </div>
-
-    </form>
-
-    <div class="sticky-bar">
-      <button class="btn secondary" id="btnSalvarRascunho" type="button">Salvar rascunho</button>
-      <button class="btn" id="generateBtn" type="button">Salvar e Gerar PDF</button>
-      <div id="statusMsg"></div>
-    </div>
-  </section>
-
-</main>
-
-<footer>
-  Modelo de referência com base na Lei nº 8.245/1991. Os dados ficam salvos apenas neste navegador/dispositivo — não há envio para nenhum servidor. Recomenda-se revisão por advogado antes da assinatura.
-</footer>
+<div id="snackbar"></div>
 
 <div id="loadingOverlay">
   <div class="spinner"></div>
   <p id="loadingText">Gerando PDF...</p>
 </div>
+
+<input type="file" id="inputAnexo" accept="application/pdf,image/*" hidden>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
@@ -614,6 +997,12 @@ function fmtDateShort(isoOrTimestamp) {
   const dt = new Date(isoOrTimestamp);
   return dt.toLocaleDateString('pt-BR') + ' ' + dt.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
 }
+function fmtBytes(b) {
+  if (!b && b !== 0) return '';
+  if (b < 1024) return b + ' B';
+  if (b < 1048576) return (b / 1024).toFixed(0) + ' KB';
+  return (b / 1048576).toFixed(1) + ' MB';
+}
 
 /* =========================================================
    IndexedDB — armazenamento local dos contratos
@@ -682,40 +1071,135 @@ async function dbDelete(id) {
 }
 
 /* =========================================================
-   Estado do app / navegação entre telas
+   Navegação entre telas
    ========================================================= */
-let editingId = null; // null = novo contrato
+const $ = id => document.getElementById(id);
+let editingId = null;      // null = novo contrato
+let detailId = null;       // contrato aberto na tela de detalhes
+let anexoTargetId = null;  // contrato alvo do input de anexo
 
+const VIEWS = { list: 'viewList', settings: 'viewSettings', detail: 'viewDetail', form: 'viewForm' };
+
+function showView(name) {
+  Object.values(VIEWS).forEach(v => { $(v).hidden = true; $(v).classList.remove('enter'); });
+  const el = $(VIEWS[name]);
+  el.hidden = false;
+  requestAnimationFrame(() => el.classList.add('enter'));
+  const isRoot = name === 'list' || name === 'settings';
+  $('bottomNav').hidden = !isRoot;
+  document.querySelectorAll('#bottomNav button').forEach(b => b.classList.toggle('active', b.dataset.nav === name));
+  window.scrollTo(0, 0);
+}
 function irParaLista() {
   editingId = null;
-  document.getElementById('viewForm').style.display = 'none';
-  document.getElementById('viewList').style.display = 'block';
+  showView('list');
   renderLista();
 }
-function irParaFormulario(titulo) {
-  document.getElementById('viewList').style.display = 'none';
-  document.getElementById('viewForm').style.display = 'block';
-  document.getElementById('formTitulo').textContent = titulo;
-  window.scrollTo(0,0);
-}
-
-document.getElementById('btnNovoContrato').addEventListener('click', () => {
-  limparFormulario();
-  irParaFormulario('Novo contrato');
+document.querySelectorAll('#bottomNav button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (btn.dataset.nav === 'list') irParaLista();
+    else showView('settings');
+  });
 });
-document.getElementById('btnNovoContratoVazio').addEventListener('click', () => {
-  limparFormulario();
-  irParaFormulario('Novo contrato');
-});
-document.getElementById('btnVoltar').addEventListener('click', irParaLista);
 
 /* =========================================================
-   Renderização da lista
+   Snackbar
    ========================================================= */
+let snackTimer = null;
+function snackbar(msg) {
+  const el = $('snackbar');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(snackTimer);
+  snackTimer = setTimeout(() => el.classList.remove('show'), 2600);
+}
+
+/* =========================================================
+   Dialog de confirmação
+   ========================================================= */
+function confirmDialog({ title, msg, confirmText, destructive = true }) {
+  return new Promise(resolve => {
+    const bd = $('dialogBackdrop');
+    $('dialogTitle').textContent = title;
+    $('dialogMsg').textContent = msg;
+    const btn = $('dialogConfirm');
+    btn.textContent = confirmText;
+    btn.classList.toggle('neutral', !destructive);
+    bd.hidden = false;
+    requestAnimationFrame(() => bd.classList.add('show'));
+    function close(result) {
+      bd.classList.remove('show');
+      setTimeout(() => { bd.hidden = true; }, 220);
+      btn.onclick = null;
+      $('dialogCancel').onclick = null;
+      bd.onclick = null;
+      resolve(result);
+    }
+    btn.onclick = () => close(true);
+    $('dialogCancel').onclick = () => close(false);
+    bd.onclick = e => { if (e.target === bd) close(false); };
+  });
+}
+
+/* =========================================================
+   Action sheet (menu ⋯)
+   ========================================================= */
+function openSheet(title, items) {
+  const bd = $('sheetBackdrop');
+  const sheet = $('sheetContent');
+  sheet.innerHTML = '<div class="grabber"></div>' + (title ? `<h4>${esc(title)}</h4>` : '');
+  items.forEach((item, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'sheet-item' + (item.destructive ? ' destructive' : '');
+    b.innerHTML = `<svg class="icon"><use href="#${item.icon}"/></svg> ${esc(item.label)}`;
+    b.addEventListener('click', () => { closeSheet(); setTimeout(item.action, 120); });
+    sheet.appendChild(b);
+  });
+  const cancel = document.createElement('button');
+  cancel.type = 'button';
+  cancel.className = 'sheet-cancel';
+  cancel.textContent = 'Cancelar';
+  cancel.addEventListener('click', closeSheet);
+  sheet.appendChild(cancel);
+  bd.hidden = false;
+  requestAnimationFrame(() => bd.classList.add('show'));
+  bd.onclick = e => { if (e.target === bd) closeSheet(); };
+}
+function closeSheet() {
+  const bd = $('sheetBackdrop');
+  bd.classList.remove('show');
+  setTimeout(() => { bd.hidden = true; }, 300);
+}
+
+function statusChip(c) {
+  const cls = c.status === 'assinado' ? 'assinado' : (c.status === 'gerado' ? 'gerado' : 'rascunho');
+  const txt = c.status === 'assinado' ? 'Assinado' : (c.status === 'gerado' ? 'PDF gerado' : 'Rascunho');
+  return `<span class="chip ${cls}">${txt}</span>`;
+}
+
+function menuDoContrato(c) {
+  const items = [
+    { icon: 'i-edit', label: 'Editar', action: () => editarContrato(c.id) },
+    { icon: 'i-export', label: 'Exportar PDF', action: () => exportarPDF(c.id) },
+    { icon: 'i-share', label: 'Compartilhar', action: () => compartilharPDF(c.id) },
+    { icon: 'i-clip', label: c.arquivoAssinado ? 'Substituir contrato assinado' : 'Anexar contrato assinado', action: () => pedirAnexo(c.id) },
+  ];
+  if (c.arquivoAssinado) items.push({ icon: 'i-eye', label: 'Ver contrato assinado', action: () => verAnexo(c.id) });
+  items.push({ icon: 'i-trash', label: 'Excluir', destructive: true, action: () => excluirContrato(c.id) });
+  openSheet(c.dados && c.dados.locatarioNome ? c.dados.locatarioNome : 'Contrato', items);
+}
+
+/* =========================================================
+   Lista de contratos
+   ========================================================= */
+let listaCache = [];
 async function renderLista() {
   const contratos = await dbGetAll();
-  const container = document.getElementById('listaContratos');
-  const vazio = document.getElementById('listaVazia');
+  $('listaSkeleton').style.display = 'none';
+  listaCache = contratos;
+  const container = $('listaContratos');
+  const vazio = $('listaVazia');
   container.innerHTML = '';
   if (!contratos.length) { vazio.style.display = 'block'; return; }
   vazio.style.display = 'none';
@@ -726,106 +1210,301 @@ async function renderLista() {
     const d = c.dados || {};
     const card = document.createElement('div');
     card.className = 'contract-card';
-
-    const badgeClass = c.status === 'assinado' ? 'assinado' : (c.status === 'gerado' ? 'gerado' : 'rascunho');
-    const badgeText = c.status === 'assinado' ? 'Assinado' : (c.status === 'gerado' ? 'PDF gerado' : 'Rascunho');
-
     card.innerHTML = `
-      <div class="contract-info">
-        <h3>${esc(d.locatarioNome || '(sem nome do locatário)')}</h3>
-        <div class="meta">${esc(d.imovelCidade || '')}${d.imovelEndereco ? ' · ' + esc(d.imovelEndereco) : ''}</div>
-        <div class="meta">Atualizado em ${fmtDateShort(c.atualizadoEm)}</div>
-        <span class="badge ${badgeClass}">${badgeText}</span>
-        ${c.arquivoAssinado ? `<div class="meta" style="margin-top:4px;">📎 ${esc(c.arquivoAssinado.nome)}</div>` : ''}
+      <h3>${esc(d.locatarioNome || '(sem nome do locatário)')}</h3>
+      <div class="meta">${esc(d.imovelCidade || 'Cidade não informada')}</div>
+      <div class="meta">Atualizado em ${fmtDateShort(c.atualizadoEm)}</div>
+      <div class="card-foot">
+        ${statusChip(c)}
+        ${c.arquivoAssinado ? `<span class="chip-anexo"><svg class="icon" style="width:14px;height:14px;"><use href="#i-clip"/></svg> anexo</span>` : ''}
       </div>
-      <div class="contract-actions">
-        <button class="btn secondary small" data-action="editar" data-id="${c.id}">Editar</button>
-        <button class="btn secondary small" data-action="pdf" data-id="${c.id}">Gerar PDF</button>
-        <button class="btn secondary small file-btn" data-action="anexo-label">
-          ${c.arquivoAssinado ? 'Substituir assinado' : 'Anexar assinado'}
-          <input type="file" accept="application/pdf,image/*" data-action="anexar" data-id="${c.id}">
-        </button>
-        ${c.arquivoAssinado ? `<button class="btn secondary small" data-action="baixar-assinado" data-id="${c.id}">Baixar assinado</button>` : ''}
-        <button class="btn ghost small" data-action="excluir" data-id="${c.id}">Excluir</button>
-      </div>
+      <button class="kebab" type="button" aria-label="Mais opções"><svg class="icon"><use href="#i-more"/></svg></button>
     `;
+    card.addEventListener('click', e => {
+      if (e.target.closest('.kebab')) { menuDoContrato(c); return; }
+      abrirDetalhes(c.id);
+    });
     container.appendChild(card);
   });
 }
 
-document.getElementById('listaContratos').addEventListener('click', async (e) => {
-  const btn = e.target.closest('button[data-action]');
-  if (!btn) return;
-  const id = Number(btn.dataset.id);
-  const action = btn.dataset.action;
+/* =========================================================
+   Tela de detalhes
+   ========================================================= */
+function kvRow(k, v) {
+  if (!v) return '';
+  return `<div class="kv"><span class="k">${esc(k)}</span><span class="v">${esc(v)}</span></div>`;
+}
+function sectionCard(icon, title, rowsHtml) {
+  if (!rowsHtml) return '';
+  return `
+    <div class="section-card">
+      <div class="sec-head">
+        <span class="sec-icon"><svg class="icon"><use href="#${icon}"/></svg></span>
+        <h3>${esc(title)}</h3>
+      </div>
+      ${rowsHtml}
+    </div>`;
+}
+function garantiaTexto(d) {
+  if (d.garantia === 'fiador') return 'Fiador' + (d.fiadorNome ? ' — ' + d.fiadorNome : '');
+  if (d.garantia === 'seguro') return 'Seguro-fiança';
+  if (d.garantia === 'nenhuma') return 'Sem garantia';
+  return 'Caução' + (d.valorCaucao ? ' — R$ ' + fmtMoney(d.valorCaucao) : '');
+}
 
-  if (action === 'editar') {
-    const registro = await dbGet(id);
-    if (!registro) return;
-    editingId = id;
-    limparFormulario();
-    preencherFormulario(registro.dados);
-    irParaFormulario('Editando: ' + (registro.dados.locatarioNome || 'contrato'));
-  }
+async function abrirDetalhes(id) {
+  const c = await dbGet(id);
+  if (!c) return;
+  detailId = id;
+  const d = c.dados || {};
+  const content = $('detailContent');
+  content.innerHTML = `
+    <div class="detail-hero">
+      ${statusChip(c)}
+      <h2>${esc(d.locatarioNome || '(sem nome do locatário)')}</h2>
+      <div class="meta">${esc(d.imovelCidade || '')}</div>
+      <div class="meta">Atualizado em ${fmtDateShort(c.atualizadoEm)}</div>
+    </div>
+    <div class="quick-actions">
+      <button class="qa-btn" type="button" data-qa="editar"><svg class="icon icon-lg"><use href="#i-edit"/></svg> Editar</button>
+      <button class="qa-btn" type="button" data-qa="pdf"><svg class="icon icon-lg"><use href="#i-export"/></svg> Exportar</button>
+      <button class="qa-btn" type="button" data-qa="share"><svg class="icon icon-lg"><use href="#i-share"/></svg> Compartilhar</button>
+      <button class="qa-btn" type="button" data-qa="anexar"><svg class="icon icon-lg"><use href="#i-clip"/></svg> Anexar</button>
+    </div>
 
-  if (action === 'pdf') {
-    const registro = await dbGet(id);
-    if (!registro) return;
-    await gerarPDFDeRegistro(registro);
-  }
+    <button class="file-row" type="button" data-qa="pdf">
+      <span class="file-badge">PDF</span>
+      <span class="file-info">
+        <b>Contrato_Locacao_${esc((d.locatarioNome || 'contrato').replace(/[^a-zA-Z0-9]+/g,'_'))}.pdf</b>
+        <small>Toque para gerar e baixar o PDF</small>
+      </span>
+      <svg class="icon chev"><use href="#i-chev"/></svg>
+    </button>
 
-  if (action === 'baixar-assinado') {
-    const registro = await dbGet(id);
-    if (!registro || !registro.arquivoAssinado) return;
-    const url = URL.createObjectURL(registro.arquivoAssinado.blob);
+    <div class="group-label">Anexos</div>
+    ${c.arquivoAssinado ? `
+      <div class="section-card" style="margin-bottom:12px;">
+        <div class="sec-head" style="margin-bottom:4px;">
+          <span class="sec-icon"><svg class="icon"><use href="#i-clip"/></svg></span>
+          <h3>Contrato assinado</h3>
+        </div>
+        ${kvRow('Arquivo', c.arquivoAssinado.nome)}
+        ${kvRow('Enviado em', c.arquivoAssinado.uploadedAt ? fmtDateShort(c.arquivoAssinado.uploadedAt) : '')}
+        ${kvRow('Tamanho', fmtBytes(c.arquivoAssinado.tamanho))}
+        <div class="anexo-actions">
+          <button class="btn-secondary" type="button" data-qa="ver-anexo"><svg class="icon"><use href="#i-eye"/></svg> Visualizar</button>
+          <button class="btn-secondary" type="button" data-qa="anexar"><svg class="icon"><use href="#i-upload"/></svg> Substituir</button>
+        </div>
+      </div>` : `
+      <div class="section-card" style="text-align:center; padding:22px 18px;">
+        <p class="hint" style="margin:0 0 12px;">Nenhum contrato assinado anexado.</p>
+        <button class="btn-secondary" type="button" data-qa="anexar" style="width:100%;"><svg class="icon"><use href="#i-clip"/></svg> Anexar contrato assinado</button>
+      </div>`}
+
+    <div class="group-label">Informações</div>
+    ${sectionCard('i-house', 'Imóvel',
+      kvRow('Endereço', d.imovelEndereco) + kvRow('Cidade', d.imovelCidade) + kvRow('CEP', d.imovelCep))}
+    ${sectionCard('i-person', 'Locador',
+      kvRow('Nome', d.locadorNome) + kvRow('CPF', d.locadorCpf))}
+    ${sectionCard('i-people', 'Locatário',
+      kvRow('Nome', d.locatarioNome) + kvRow('CPF', d.locatarioCpf) + kvRow('E-mail', d.locatarioEmail) + kvRow('WhatsApp', d.locatarioWhats))}
+    ${sectionCard('i-money', 'Financeiro',
+      kvRow('Aluguel', d.valorAluguel ? 'R$ ' + fmtMoney(d.valorAluguel) : '') +
+      kvRow('Vencimento', d.diaVencimento ? 'dia ' + d.diaVencimento : '') +
+      kvRow('Pagamento', d.formaPagamento) +
+      kvRow('Reajuste', d.indiceReajuste === 'outro' ? d.indiceOutro : d.indiceReajuste) +
+      kvRow('Garantia', garantiaTexto(d)) +
+      kvRow('IPTU', d.iptu ? d.iptu + ' paga' : ''))}
+    ${sectionCard('i-cal', 'Vigência',
+      kvRow('Início', d.dataInicio ? fmtDateLong(d.dataInicio) : '') +
+      kvRow('Prazo', d.prazoLocacao ? prazoTexto(d.prazoLocacao) : '') +
+      kvRow('Assinatura', d.dataAssinatura ? fmtDateLong(d.dataAssinatura) : '') +
+      kvRow('Foro', d.comarca))}
+  `;
+  content.querySelectorAll('[data-qa]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const qa = btn.dataset.qa;
+      if (qa === 'editar') editarContrato(id);
+      if (qa === 'pdf') exportarPDF(id);
+      if (qa === 'share') compartilharPDF(id);
+      if (qa === 'anexar') pedirAnexo(id);
+      if (qa === 'ver-anexo') verAnexo(id);
+    });
+  });
+  showView('detail');
+}
+
+$('btnDetailVoltar').addEventListener('click', irParaLista);
+$('btnDetailMenu').addEventListener('click', async () => {
+  const c = await dbGet(detailId);
+  if (c) menuDoContrato(c);
+});
+
+/* =========================================================
+   Ações de contrato (editar / excluir / anexar / ver anexo)
+   ========================================================= */
+async function editarContrato(id) {
+  const registro = await dbGet(id);
+  if (!registro) return;
+  editingId = id;
+  limparFormulario();
+  preencherFormulario(registro.dados);
+  abrirWizard('Editar contrato');
+}
+
+async function excluirContrato(id) {
+  const ok = await confirmDialog({
+    title: 'Excluir contrato?',
+    msg: 'Esta ação não pode ser desfeita. O contrato e o anexo serão removidos deste dispositivo.',
+    confirmText: 'Excluir'
+  });
+  if (!ok) return;
+  await dbDelete(id);
+  snackbar('Contrato excluído.');
+  irParaLista();
+}
+
+function pedirAnexo(id) {
+  anexoTargetId = id;
+  $('inputAnexo').click();
+}
+$('inputAnexo').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  e.target.value = '';
+  if (!file || !anexoTargetId) return;
+  const registro = await dbGet(anexoTargetId);
+  if (!registro) return;
+  registro.arquivoAssinado = { blob: file, nome: file.name, tipo: file.type, tamanho: file.size, uploadedAt: Date.now() };
+  registro.status = 'assinado';
+  registro.atualizadoEm = Date.now();
+  await dbPut(registro);
+  snackbar('Contrato assinado anexado.');
+  if (!$('viewDetail').hidden) abrirDetalhes(anexoTargetId);
+  else renderLista();
+});
+
+async function verAnexo(id) {
+  const registro = await dbGet(id);
+  if (!registro || !registro.arquivoAssinado) return;
+  const url = URL.createObjectURL(registro.arquivoAssinado.blob);
+  const win = window.open(url, '_blank');
+  if (!win) {
     const a = document.createElement('a');
     a.href = url;
     a.download = registro.arquivoAssinado.nome || 'contrato-assinado';
     document.body.appendChild(a);
     a.click();
     a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 3000);
   }
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+}
 
-  if (action === 'excluir') {
-    if (!confirm('Tem certeza que deseja excluir este contrato? Esta ação não pode ser desfeita.')) return;
-    await dbDelete(id);
-    renderLista();
+/* =========================================================
+   Wizard — passos do formulário
+   ========================================================= */
+const TOTAL_STEPS = 6;
+let currentStep = 0;
+
+function abrirWizard(titulo) {
+  $('formTitulo').textContent = titulo;
+  currentStep = 0;
+  atualizarWizard();
+  showView('form');
+}
+
+function atualizarWizard() {
+  document.querySelectorAll('.step').forEach(s => s.classList.toggle('active', Number(s.dataset.step) === currentStep));
+  $('progressFill').style.width = ((currentStep + 1) / TOTAL_STEPS * 100) + '%';
+  $('progressLabel').textContent = (currentStep + 1) + ' de ' + TOTAL_STEPS;
+  $('btnAnterior').style.visibility = currentStep === 0 ? 'hidden' : 'visible';
+  const ultimo = currentStep === TOTAL_STEPS - 1;
+  $('btnProximo').hidden = ultimo;
+  $('generateBtn').hidden = !ultimo;
+  if (ultimo) renderResumo();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+$('btnProximo').addEventListener('click', () => {
+  if (!validarPasso(currentStep)) {
+    snackbar('Preencha os campos obrigatórios destacados.');
+    return;
   }
+  currentStep = Math.min(currentStep + 1, TOTAL_STEPS - 1);
+  atualizarWizard();
+});
+$('btnAnterior').addEventListener('click', () => {
+  currentStep = Math.max(currentStep - 1, 0);
+  atualizarWizard();
+});
+$('btnWizVoltar').addEventListener('click', async () => {
+  if (currentStep > 0) { currentStep--; atualizarWizard(); return; }
+  const ok = await confirmDialog({
+    title: 'Sair do contrato?',
+    msg: 'Alterações não salvas serão perdidas. Você pode tocar em "Salvar" para guardar um rascunho.',
+    confirmText: 'Sair sem salvar'
+  });
+  if (ok) irParaLista();
 });
 
-document.getElementById('listaContratos').addEventListener('change', async (e) => {
-  const input = e.target.closest('input[data-action="anexar"]');
-  if (!input || !input.files.length) return;
-  const id = Number(input.dataset.id);
-  const file = input.files[0];
-  const registro = await dbGet(id);
-  if (!registro) return;
-  registro.arquivoAssinado = { blob: file, nome: file.name, tipo: file.type, tamanho: file.size, uploadedAt: Date.now() };
-  registro.status = 'assinado';
-  registro.atualizadoEm = Date.now();
-  await dbPut(registro);
-  renderLista();
-});
+/* =========================================================
+   Resumo (passo 6)
+   ========================================================= */
+function renderResumo() {
+  const d = coletarDados();
+  if (!d.valorExtenso && d.valorAluguel) d.valorExtenso = valorPorExtenso(d.valorAluguel);
+  const editBtn = step => `<button class="sec-edit" type="button" data-goto="${step}" aria-label="Editar seção"><svg class="icon"><use href="#i-edit"/></svg></button>`;
+  const bloco = (icon, title, step, rows) => rows ? `
+    <div class="section-card">
+      <div class="sec-head">
+        <span class="sec-icon"><svg class="icon"><use href="#${icon}"/></svg></span>
+        <h3>${title}</h3>
+        ${editBtn(step)}
+      </div>
+      ${rows}
+    </div>` : '';
+
+  $('resumoContent').innerHTML =
+    bloco('i-house', 'Imóvel', 0,
+      kvRow('Endereço', d.imovelEndereco) + kvRow('Cidade', d.imovelCidade) + kvRow('CEP', d.imovelCep)) +
+    bloco('i-person', 'Locador', 1,
+      kvRow('Nome', d.locadorNome) + kvRow('CPF', d.locadorCpf)) +
+    bloco('i-people', 'Locatário', 2,
+      kvRow('Nome', d.locatarioNome) + kvRow('CPF', d.locatarioCpf) + kvRow('E-mail', d.locatarioEmail) + kvRow('WhatsApp', d.locatarioWhats)) +
+    bloco('i-money', 'Financeiro', 3,
+      kvRow('Aluguel', d.valorAluguel ? 'R$ ' + fmtMoney(d.valorAluguel) : '') +
+      kvRow('Vencimento', d.diaVencimento ? 'dia ' + d.diaVencimento : '') +
+      kvRow('Pagamento', d.formaPagamento) +
+      kvRow('Reajuste', d.indiceReajuste === 'outro' ? d.indiceOutro : d.indiceReajuste)) +
+    bloco('i-cal', 'Vigência e cláusulas', 4,
+      kvRow('Início', d.dataInicio ? fmtDateLong(d.dataInicio) : '') +
+      kvRow('Prazo', d.prazoLocacao ? prazoTexto(d.prazoLocacao) : '') +
+      kvRow('Garantia', garantiaTexto(d)) +
+      kvRow('IPTU', d.iptu ? d.iptu + ' paga' : '') +
+      kvRow('Foro', d.comarca) +
+      kvRow('Assinatura', d.dataAssinatura ? fmtDateLong(d.dataAssinatura) + (d.cidadeAssinatura ? ' — ' + d.cidadeAssinatura : '') : ''));
+
+  $('resumoContent').querySelectorAll('[data-goto]').forEach(b => {
+    b.addEventListener('click', () => { currentStep = Number(b.dataset.goto); atualizarWizard(); });
+  });
+}
 
 /* =========================================================
    Formulário: limpar / preencher / coletar
    ========================================================= */
 function limparFormulario() {
-  document.getElementById('contractForm').reset();
-  document.getElementById('indiceOutroWrap').style.display = 'none';
-  document.getElementById('toleranciaWrap').style.display = 'none';
-  ['caucaoWrap','fiadorWrap','seguroWrap','nenhumaWrap'].forEach(id => document.getElementById(id).style.display = 'none');
-  document.getElementById('caucaoWrap').style.display = 'block';
+  $('contractForm').reset();
+  $('indiceOutroWrap').style.display = 'none';
+  $('toleranciaWrap').style.display = 'none';
+  ['caucaoWrap','fiadorWrap','seguroWrap','nenhumaWrap'].forEach(id => $(id).style.display = 'none');
+  $('caucaoWrap').style.display = 'block';
   document.querySelectorAll('.radio-option').forEach(o => o.classList.remove('checked'));
   document.querySelectorAll('input[type=radio]:checked').forEach(r => r.closest('.radio-option').classList.add('checked'));
-  document.getElementById('statusMsg').textContent = '';
-  document.getElementById('statusMsg').className = '';
-  document.querySelectorAll('input, select').forEach(el => el.style.borderColor = '');
+  document.querySelectorAll('input, select').forEach(el => el.classList.remove('invalid'));
 }
 
 function preencherFormulario(d) {
-  const set = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined) el.value = val; };
+  const set = (id, val) => { const el = $(id); if (el && val !== undefined) el.value = val; };
   set('locadorNome', d.locadorNome); set('locadorEstadoCivil', d.locadorEstadoCivil); set('locadorProfissao', d.locadorProfissao);
   const comMascara = (mask, val) => (val === undefined ? undefined : mask(val));
   set('locadorRg', d.locadorRg); set('locadorCpf', comMascara(maskCPF, d.locadorCpf)); set('locadorEndereco', d.locadorEndereco);
@@ -836,10 +1515,10 @@ function preencherFormulario(d) {
   set('valorAluguel', comMascara(moneyParaCampo, d.valorAluguel)); set('diaVencimento', d.diaVencimento); set('formaPagamento', d.formaPagamento);
   set('valorExtenso', d.valorExtenso);
   set('indiceReajuste', d.indiceReajuste); set('indiceOutro', d.indiceOutro);
-  document.getElementById('temTolerancia').checked = !!d.temTolerancia;
+  $('temTolerancia').checked = !!d.temTolerancia;
   set('diasTolerancia', d.diasTolerancia || 5);
-  document.getElementById('indiceOutroWrap').style.display = d.indiceReajuste === 'outro' ? 'block' : 'none';
-  document.getElementById('toleranciaWrap').style.display = d.temTolerancia ? 'block' : 'none';
+  $('indiceOutroWrap').style.display = d.indiceReajuste === 'outro' ? 'block' : 'none';
+  $('toleranciaWrap').style.display = d.temTolerancia ? 'block' : 'none';
 
   const garantiaVal = d.garantia || 'caucao';
   const radio = document.querySelector(`input[name=garantia][value="${garantiaVal}"]`);
@@ -863,7 +1542,7 @@ function preencherFormulario(d) {
 }
 
 function coletarDados() {
-  const g = id => document.getElementById(id).value;
+  const g = id => $(id).value;
   return {
     locadorNome: g('locadorNome'), locadorEstadoCivil: g('locadorEstadoCivil'), locadorProfissao: g('locadorProfissao'),
     locadorRg: g('locadorRg'), locadorCpf: g('locadorCpf'), locadorEndereco: g('locadorEndereco'),
@@ -874,7 +1553,7 @@ function coletarDados() {
     valorAluguel: g('valorAluguel'), diaVencimento: g('diaVencimento'), formaPagamento: g('formaPagamento'),
     valorExtenso: g('valorExtenso'),
     indiceReajuste: g('indiceReajuste'), indiceOutro: g('indiceOutro'),
-    temTolerancia: document.getElementById('temTolerancia').checked, diasTolerancia: g('diasTolerancia'),
+    temTolerancia: $('temTolerancia').checked, diasTolerancia: g('diasTolerancia'),
     garantia: document.querySelector('input[name=garantia]:checked').value,
     valorCaucao: g('valorCaucao'),
     fiadorNome: g('fiadorNome'), fiadorEstadoCivil: g('fiadorEstadoCivil'), fiadorProfissao: g('fiadorProfissao'),
@@ -891,7 +1570,7 @@ function coletarDados() {
    Interações do formulário
    ========================================================= */
 function aplicarMascara(id, mask) {
-  const el = document.getElementById(id);
+  const el = $(id);
   el.addEventListener('input', () => { el.value = mask(el.value); });
 }
 ['locadorCpf','locatarioCpf','fiadorCpf','test1Cpf','test2Cpf'].forEach(id => aplicarMascara(id, maskCPF));
@@ -902,26 +1581,26 @@ aplicarMascara('prazoLocacao', v => soDigitos(v).slice(0, 3));
 aplicarMascara('diaVencimento', v => soDigitos(v).slice(0, 2));
 aplicarMascara('diasTolerancia', v => soDigitos(v).slice(0, 2));
 
-const valorAluguelEl = document.getElementById('valorAluguel');
-const valorExtensoEl = document.getElementById('valorExtenso');
+const valorAluguelEl = $('valorAluguel');
+const valorExtensoEl = $('valorExtenso');
 valorAluguelEl.addEventListener('input', () => {
   valorExtensoEl.value = valorAluguelEl.value ? valorPorExtenso(valorAluguelEl.value) : '';
 });
 
-document.getElementById('indiceReajuste').addEventListener('change', function(){
-  document.getElementById('indiceOutroWrap').style.display = this.value === 'outro' ? 'block' : 'none';
+$('indiceReajuste').addEventListener('change', function(){
+  $('indiceOutroWrap').style.display = this.value === 'outro' ? 'block' : 'none';
 });
-document.getElementById('temTolerancia').addEventListener('change', function(){
-  document.getElementById('toleranciaWrap').style.display = this.checked ? 'block' : 'none';
+$('temTolerancia').addEventListener('change', function(){
+  $('toleranciaWrap').style.display = this.checked ? 'block' : 'none';
 });
 document.querySelectorAll('input[name=garantia]').forEach(radio => {
   radio.addEventListener('change', () => {
-    ['caucaoWrap','fiadorWrap','seguroWrap','nenhumaWrap'].forEach(id => document.getElementById(id).style.display = 'none');
+    ['caucaoWrap','fiadorWrap','seguroWrap','nenhumaWrap'].forEach(id => $(id).style.display = 'none');
     const val = document.querySelector('input[name=garantia]:checked').value;
-    if (val === 'caucao') document.getElementById('caucaoWrap').style.display = 'block';
-    if (val === 'fiador') document.getElementById('fiadorWrap').style.display = 'block';
-    if (val === 'seguro') document.getElementById('seguroWrap').style.display = 'block';
-    if (val === 'nenhuma') document.getElementById('nenhumaWrap').style.display = 'block';
+    if (val === 'caucao') $('caucaoWrap').style.display = 'block';
+    if (val === 'fiador') $('fiadorWrap').style.display = 'block';
+    if (val === 'seguro') $('seguroWrap').style.display = 'block';
+    if (val === 'nenhuma') $('nenhumaWrap').style.display = 'block';
   });
 });
 document.querySelectorAll('.radio-option').forEach(opt => {
@@ -935,42 +1614,55 @@ document.querySelectorAll('.radio-option').forEach(opt => {
 });
 document.querySelectorAll('input[type=radio]:checked').forEach(r => r.closest('.radio-option').classList.add('checked'));
 
-document.getElementById('imovelCidade').addEventListener('change', function(){
-  const comarca = document.getElementById('comarca');
-  const cidadeAssin = document.getElementById('cidadeAssinatura');
+$('imovelCidade').addEventListener('change', function(){
+  const comarca = $('comarca');
+  const cidadeAssin = $('cidadeAssinatura');
   if (!comarca.value) comarca.value = this.value;
   if (!cidadeAssin.value) cidadeAssin.value = this.value;
 });
 
 /* =========================================================
-   Validação
+   Validação (por passo e completa)
    ========================================================= */
-function validar() {
-  const requiredIds = [
-    'locadorNome','locadorEstadoCivil','locadorProfissao','locadorRg','locadorCpf','locadorEndereco',
-    'locatarioNome','locatarioEstadoCivil','locatarioProfissao','locatarioRg','locatarioCpf','locatarioEndereco',
-    'imovelEndereco','imovelCidade','imovelCep',
-    'valorAluguel','diaVencimento','formaPagamento','indiceReajuste',
-    'dataInicio','prazoLocacao','comarca','dataAssinatura','cidadeAssinatura'
-  ];
+const CAMPOS_PASSO = [
+  ['imovelEndereco','imovelCidade','imovelCep'],
+  ['locadorNome','locadorEstadoCivil','locadorProfissao','locadorRg','locadorCpf','locadorEndereco'],
+  ['locatarioNome','locatarioEstadoCivil','locatarioProfissao','locatarioRg','locatarioCpf','locatarioEndereco'],
+  ['valorAluguel','diaVencimento','formaPagamento','indiceReajuste'],
+  ['dataInicio','prazoLocacao','comarca','dataAssinatura','cidadeAssinatura'],
+  []
+];
+
+function marcarCampos(ids) {
   let firstInvalid = null;
-  requiredIds.forEach(id => {
-    const el = document.getElementById(id);
-    if (!el.value || !el.value.trim()) { if (!firstInvalid) firstInvalid = el; el.style.borderColor = '#B4232D'; }
-    else el.style.borderColor = '';
+  ids.forEach(id => {
+    const el = $(id);
+    if (!el.value || !el.value.trim()) { if (!firstInvalid) firstInvalid = el; el.classList.add('invalid'); }
+    else el.classList.remove('invalid');
   });
+  return firstInvalid;
+}
+function camposGarantia() {
   const garantia = document.querySelector('input[name=garantia]:checked').value;
-  if (garantia === 'caucao') {
-    const v = document.getElementById('valorCaucao');
-    if (!v.value) { if (!firstInvalid) firstInvalid = v; v.style.borderColor = '#B4232D'; }
+  if (garantia === 'caucao') return ['valorCaucao'];
+  if (garantia === 'fiador') return ['fiadorNome','fiadorEstadoCivil','fiadorProfissao','fiadorRg','fiadorCpf','fiadorEndereco'];
+  return [];
+}
+function validarPasso(step) {
+  let ids = CAMPOS_PASSO[step].slice();
+  if (step === 4) ids = ids.concat(camposGarantia());
+  const firstInvalid = marcarCampos(ids);
+  if (firstInvalid) {
+    firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    firstInvalid.focus({ preventScroll: true });
+    return false;
   }
-  if (garantia === 'fiador') {
-    ['fiadorNome','fiadorEstadoCivil','fiadorProfissao','fiadorRg','fiadorCpf','fiadorEndereco'].forEach(id => {
-      const el = document.getElementById(id);
-      if (!el.value || !el.value.trim()) { if (!firstInvalid) firstInvalid = el; el.style.borderColor = '#B4232D'; }
-    });
+  return true;
+}
+function validar() {
+  for (let s = 0; s < TOTAL_STEPS - 1; s++) {
+    if (!validarPasso(s)) { currentStep = s; atualizarWizard(); return false; }
   }
-  if (firstInvalid) { firstInvalid.scrollIntoView({behavior:'smooth', block:'center'}); firstInvalid.focus(); return false; }
   return true;
 }
 
@@ -1415,17 +2107,21 @@ function montarDocumentoPDF(d) {
   return doc;
 }
 
+function nomeArquivoPDF(dados) {
+  return `Contrato_Locacao_${(dados.locatarioNome || 'contrato').replace(/[^a-zA-Z0-9]+/g,'_')}.pdf`;
+}
+
 async function gerarPDF(dados) {
-  const overlay = document.getElementById('loadingOverlay');
+  const overlay = $('loadingOverlay');
+  $('loadingText').textContent = 'Gerando PDF...';
   overlay.style.display = 'flex';
   try {
     if (!window.jspdf || !window.jspdf.jsPDF) {
       throw new Error('Biblioteca de PDF não carregada. Verifique a conexão com a internet e recarregue a página.');
     }
     await new Promise(r => setTimeout(r, 60)); // deixa o overlay aparecer
-    const nomeArquivo = `Contrato_Locacao_${(dados.locatarioNome || 'contrato').replace(/[^a-zA-Z0-9]+/g,'_')}.pdf`;
     const doc = montarDocumentoPDF(dados);
-    doc.save(nomeArquivo);
+    doc.save(nomeArquivoPDF(dados));
     return true;
   } finally {
     overlay.style.display = 'none';
@@ -1438,13 +2134,72 @@ async function gerarPDFDeRegistro(registro) {
     registro.status = 'gerado';
     registro.atualizadoEm = Date.now();
     await dbPut(registro);
-    renderLista();
+  }
+}
+
+async function exportarPDF(id) {
+  const registro = await dbGet(id);
+  if (!registro) return;
+  try {
+    await gerarPDFDeRegistro(registro);
+    snackbar('PDF gerado.');
+  } catch (err) {
+    snackbar('Erro ao gerar o PDF. Tente novamente.');
+    console.error(err);
+  }
+  if (!$('viewDetail').hidden) abrirDetalhes(id);
+  else renderLista();
+}
+
+/* Compartilhar: usa a Web Share API com o arquivo PDF quando disponível;
+   caso contrário, baixa o PDF normalmente. */
+async function compartilharPDF(id) {
+  const registro = await dbGet(id);
+  if (!registro) return;
+  const overlay = $('loadingOverlay');
+  $('loadingText').textContent = 'Preparando arquivo...';
+  overlay.style.display = 'flex';
+  try {
+    if (!window.jspdf || !window.jspdf.jsPDF) throw new Error('Biblioteca de PDF não carregada.');
+    await new Promise(r => setTimeout(r, 60));
+    const doc = montarDocumentoPDF(registro.dados);
+    const nome = nomeArquivoPDF(registro.dados);
+    const blob = doc.output('blob');
+    const file = new File([blob], nome, { type: 'application/pdf' });
+    overlay.style.display = 'none';
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({ files: [file], title: nome });
+    } else {
+      doc.save(nome);
+      snackbar('Compartilhamento não suportado — PDF baixado.');
+    }
+    if (registro.status === 'rascunho') {
+      registro.status = 'gerado';
+      registro.atualizadoEm = Date.now();
+      await dbPut(registro);
+      if (!$('viewDetail').hidden) abrirDetalhes(id);
+      else renderLista();
+    }
+  } catch (err) {
+    overlay.style.display = 'none';
+    if (err && err.name !== 'AbortError') {
+      snackbar('Não foi possível compartilhar.');
+      console.error(err);
+    }
   }
 }
 
 /* =========================================================
-   Botões: salvar rascunho / salvar e gerar PDF
+   Novo contrato / salvar rascunho / salvar e gerar PDF
    ========================================================= */
+function novoContrato() {
+  editingId = null;
+  limparFormulario();
+  abrirWizard('Novo contrato');
+}
+$('btnNovoContrato').addEventListener('click', novoContrato);
+$('btnNovoContratoVazio').addEventListener('click', novoContrato);
+
 async function salvar(dados, novoStatusSeRascunho) {
   const agora = Date.now();
   if (editingId) {
@@ -1468,48 +2223,29 @@ async function salvar(dados, novoStatusSeRascunho) {
   }
 }
 
-document.getElementById('btnSalvarRascunho').addEventListener('click', async () => {
-  const statusEl = document.getElementById('statusMsg');
-  statusEl.className = ''; statusEl.textContent = '';
+$('btnSalvarRascunho').addEventListener('click', async () => {
   const dados = coletarDados();
   if (!dados.valorExtenso && dados.valorAluguel) dados.valorExtenso = valorPorExtenso(dados.valorAluguel);
   await salvar(dados, 'rascunho');
-  statusEl.className = 'ok';
-  statusEl.textContent = 'Rascunho salvo neste navegador.';
+  snackbar('Rascunho salvo neste dispositivo.');
 });
 
-document.getElementById('generateBtn').addEventListener('click', async () => {
-  const statusEl = document.getElementById('statusMsg');
-  statusEl.className = ''; statusEl.textContent = '';
-
+$('generateBtn').addEventListener('click', async () => {
   if (!validar()) {
-    statusEl.className = 'error';
-    statusEl.textContent = 'Por favor, preencha todos os campos obrigatórios destacados.';
+    snackbar('Preencha os campos obrigatórios destacados.');
     return;
   }
-
-  const btn = document.getElementById('generateBtn');
-  btn.disabled = true;
-  btn.textContent = 'Gerando PDF...';
-  statusEl.textContent = 'Montando o documento, aguarde...';
-
   const dados = coletarDados();
   if (!dados.valorExtenso) dados.valorExtenso = valorPorExtenso(dados.valorAluguel);
-
   try {
-    await salvar(dados, 'gerado');
+    const registro = await salvar(dados, 'gerado');
     await gerarPDF(dados);
-    statusEl.className = '';
-    statusEl.textContent = '';
-    // volta para a lista de contratos após gerar o PDF
-    irParaLista();
+    snackbar('Contrato gerado com sucesso.');
+    abrirDetalhes(registro.id);
+    editingId = null;
   } catch (err) {
-    statusEl.className = 'error';
-    statusEl.textContent = 'Ocorreu um erro ao gerar o PDF. Tente novamente.';
+    snackbar('Ocorreu um erro ao gerar o PDF. Tente novamente.');
     console.error(err);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Salvar e Gerar PDF';
   }
 });
 
@@ -1517,7 +2253,7 @@ document.getElementById('generateBtn').addEventListener('click', async () => {
    Backup: exportar / importar (apenas dados de formulário —
    arquivos assinados anexados não são incluídos no backup)
    ========================================================= */
-document.getElementById('btnExportar').addEventListener('click', async () => {
+$('btnExportar').addEventListener('click', async () => {
   const contratos = await dbGetAll();
   const backup = contratos.map(c => ({
     dados: c.dados, status: c.status === 'assinado' ? 'gerado' : c.status,
@@ -1532,9 +2268,11 @@ document.getElementById('btnExportar').addEventListener('click', async () => {
   a.click();
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 3000);
+  snackbar('Backup exportado.');
 });
 
-document.getElementById('inputImportar').addEventListener('change', async (e) => {
+$('btnImportar').addEventListener('click', () => $('inputImportar').click());
+$('inputImportar').addEventListener('change', async (e) => {
   const file = e.target.files[0];
   if (!file) return;
   try {
@@ -1545,9 +2283,9 @@ document.getElementById('inputImportar').addEventListener('change', async (e) =>
       await dbAdd({ dados: r.dados, status: r.status || 'rascunho', arquivoAssinado: null, criadoEm: r.criadoEm || Date.now(), atualizadoEm: r.atualizadoEm || Date.now() });
     }
     renderLista();
-    alert(`${registros.length} contrato(s) importado(s) com sucesso.`);
+    snackbar(`${registros.length} contrato(s) importado(s) com sucesso.`);
   } catch (err) {
-    alert('Não foi possível importar este arquivo. Verifique se é um backup válido gerado por este site.');
+    snackbar('Arquivo inválido. Use um backup gerado por este app.');
     console.error(err);
   }
   e.target.value = '';
